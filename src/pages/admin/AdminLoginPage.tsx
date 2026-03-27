@@ -12,16 +12,26 @@ export function AdminLoginPage() {
   const login = useAdminStore((s) => s.login);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    const ok = login(password);
-    if (ok) {
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const res = await fetch('https://api.modavance.co/admin/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (data.data?.token) {
+      localStorage.setItem('adminToken', data.data.token);
+      login(password);
       navigate('/admin');
     } else {
-      setError('Invalid credentials. Try admin@modavance.com / admin123');
+      setError('Invalid credentials');
     }
-  };
+  } catch {
+    setError('Connection error');
+  }
+};
 
   return (
     <div className="min-h-screen gradient-hero flex items-center justify-center px-4">
