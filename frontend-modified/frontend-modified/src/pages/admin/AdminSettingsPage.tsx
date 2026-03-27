@@ -1,0 +1,232 @@
+import { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Save, Mail, MapPin } from 'lucide-react';
+import { db } from '@/db/database';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+
+type SettingsMap = Record<string, string>;
+
+async function loadSettings(): Promise<SettingsMap> {
+  const all = await db.settings.toArray();
+  return Object.fromEntries(all.map(s => [s.key, s.value]));
+}
+
+async function saveSettings(map: SettingsMap): Promise<void> {
+  await db.transaction('rw', db.settings, async () => {
+    for (const [key, value] of Object.entries(map)) {
+      await db.settings.put({ key, value });
+    }
+  });
+}
+
+export function AdminSettingsPage() {
+  const qc = useQueryClient();
+  const [values, setValues] = useState<SettingsMap>({});
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const { data } = useQuery({
+    queryKey: ['admin-settings'],
+    queryFn: loadSettings,
+  });
+
+  useEffect(() => {
+    if (data) setValues(data);
+  }, [data]);
+
+  const set = (key: string, value: string) =>
+    setValues(v => ({ ...v, [key]: value }));
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await saveSettings(values);
+      qc.invalidateQueries({ queryKey: ['admin-settings'] });
+      qc.invalidateQueries({ queryKey: ['settings'] });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6 max-w-3xl">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
+          <p className="text-sm text-slate-500 mt-1">Payment configuration and contact information</p>
+        </div>
+        <Button onClick={handleSave} loading={saving}>
+          <Save className="w-4 h-4" />
+          {saved ? 'Saved!' : 'Save Changes'}
+        </Button>
+      </div>
+
+      {/* Contact info */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
+            <Mail className="w-4 h-4 text-blue-600" />
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900">Contact Information</h2>
+            <p className="text-xs text-slate-400">Displayed on Contact page and in emails</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input
+            label="Support Email"
+            type="email"
+            value={values['contact.email'] ?? ''}
+            onChange={e => set('contact.email', e.target.value)}
+            placeholder="support@modavance.com"
+          />
+          <Input
+            label="Response Time"
+            value={values['contact.response_time'] ?? ''}
+            onChange={e => set('contact.response_time', e.target.value)}
+            placeholder="Within 2 hours, 7 days a week"
+          />
+          <div className="md:col-span-2">
+            <Input
+              label="Phone (optional)"
+              value={values['contact.phone'] ?? ''}
+              onChange={e => set('contact.phone', e.target.value)}
+              placeholder="+1 (555) 000-0000"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Bitcoin */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
+            <span className="text-amber-600 font-bold text-sm">₿</span>
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900">Bitcoin (BTC)</h2>
+            <p className="text-xs text-slate-400">Wallet address shown in order confirmation emails</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            <Input
+              label="Bitcoin Wallet Address"
+              value={values['payment.bitcoin.wallet'] ?? ''}
+              onChange={e => set('payment.bitcoin.wallet', e.target.value)}
+              placeholder="bc1q..."
+            />
+          </div>
+          <Input
+            label="Discount (%)"
+            type="number"
+            value={values['payment.bitcoin.discount'] ?? '15'}
+            onChange={e => set('payment.bitcoin.discount', e.target.value)}
+            placeholder="15"
+          />
+        </div>
+      </div>
+
+      {/* Ethereum */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-9 h-9 bg-purple-50 rounded-xl flex items-center justify-center">
+            <span className="text-purple-600 font-bold text-sm">Ξ</span>
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900">Ethereum (ETH)</h2>
+            <p className="text-xs text-slate-400">Wallet address shown in order confirmation emails</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            <Input
+              label="Ethereum Wallet Address"
+              value={values['payment.ethereum.wallet'] ?? ''}
+              onChange={e => set('payment.ethereum.wallet', e.target.value)}
+              placeholder="0x..."
+            />
+          </div>
+          <Input
+            label="Discount (%)"
+            type="number"
+            value={values['payment.ethereum.discount'] ?? '15'}
+            onChange={e => set('payment.ethereum.discount', e.target.value)}
+            placeholder="15"
+          />
+        </div>
+      </div>
+
+      {/* Zelle */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
+            <span className="text-blue-600 font-bold text-sm">Z</span>
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900">Zelle</h2>
+            <p className="text-xs text-slate-400">Recipient shown in checkout and confirmation emails</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="md:col-span-2">
+            <Input
+              label="Zelle Recipient (email or phone)"
+              value={values['payment.zelle.recipient'] ?? ''}
+              onChange={e => set('payment.zelle.recipient', e.target.value)}
+              placeholder="payments@modavance.com"
+            />
+          </div>
+          <Input
+            label="Discount (%)"
+            type="number"
+            value={values['payment.zelle.discount'] ?? '10'}
+            onChange={e => set('payment.zelle.discount', e.target.value)}
+            placeholder="10"
+          />
+        </div>
+      </div>
+
+      {/* Cash by Mail */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-9 h-9 bg-slate-100 rounded-xl flex items-center justify-center">
+            <MapPin className="w-4 h-4 text-slate-600" />
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900">Cash by Mail</h2>
+            <p className="text-xs text-slate-400">Mailing address shown in order confirmation emails</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-4">
+          <Input
+            label="Mailing Address"
+            value={values['payment.bill.address'] ?? ''}
+            onChange={e => set('payment.bill.address', e.target.value)}
+            placeholder="P.O. Box 12345, New York, NY 10001"
+          />
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-700">Additional Instructions</label>
+            <textarea
+              rows={3}
+              className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              placeholder="Send cash only (no checks or money orders)..."
+              value={values['payment.bill.instructions'] ?? ''}
+              onChange={e => set('payment.bill.instructions', e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-end pb-4">
+        <Button onClick={handleSave} loading={saving} size="lg">
+          <Save className="w-4 h-4" />
+          {saved ? 'Saved!' : 'Save All Settings'}
+        </Button>
+      </div>
+    </div>
+  );
+}
