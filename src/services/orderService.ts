@@ -1,26 +1,28 @@
 import { api } from './api';
-import type { CartItem, Address, PaymentMethod } from '@/types';
 
 export const orderService = {
-  create: async (params: {
-    userId?: string;
-    items: CartItem[];
-    address: Address;
-    paymentMethod: PaymentMethod;
-    subtotal: number;
-    discount: number;
-    couponCode?: string;
-  }) => {
+  create: async (params: any) => {
     return api('/orders', {
       method: 'POST',
       body: JSON.stringify({
         userId: params.userId || null,
-        items: params.items.map(i => ({
+        items: params.items.map((i: any) => ({
           productId: i.productId,
           variantId: i.variantId,
           quantity: i.quantity,
         })),
-        shippingAddress: params.address,
+        shippingAddress: {
+          firstName: params.address.firstName || '',
+          lastName: params.address.lastName || '',
+          email: params.address.email || '',
+          phone: params.address.phone || '',
+          street: params.address.street || params.address.address1 || '',
+          apt: params.address.apt || '',
+          city: params.address.city || '',
+          state: params.address.state || '',
+          zip: params.address.zip || params.address.postalCode || '',
+          country: params.address.country || '',
+        },
         paymentMethod: String(params.paymentMethod).toUpperCase(),
         subtotal: params.subtotal,
         discount: params.discount || 0,
