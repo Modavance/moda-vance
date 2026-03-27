@@ -5,7 +5,7 @@ export const orderService = {
     return api('/orders', {
       method: 'POST',
       body: JSON.stringify({
-        userId: params.userId || null,
+        userId: (params.userId && params.userId !== 'guest') ? params.userId : null,
         items: params.items.map((i: any) => ({
           productId: i.productId,
           variantId: i.variantId,
