@@ -14,17 +14,17 @@ export const orderService = {
     return api('/orders', {
       method: 'POST',
       body: JSON.stringify({
-        userId: params.userId,
+        userId: params.userId || null,
         items: params.items.map(i => ({
           productId: i.productId,
           variantId: i.variantId,
           quantity: i.quantity,
         })),
         shippingAddress: params.address,
-        paymentMethod: params.paymentMethod.toUpperCase(),
+        paymentMethod: String(params.paymentMethod).toUpperCase(),
         subtotal: params.subtotal,
-        discount: params.discount,
-        couponCode: params.couponCode,
+        discount: params.discount || 0,
+        couponCode: params.couponCode || null,
       }),
     });
   },
