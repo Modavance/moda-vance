@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://146.190.78.135:3000';
+const API_URL = 'https://api.modavance.co';
 
 export async function api(path: string, options: RequestInit = {}) {
   const token = localStorage.getItem('token');
