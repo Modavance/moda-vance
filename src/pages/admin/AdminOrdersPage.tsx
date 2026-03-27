@@ -4,7 +4,7 @@ import {
   Search, Eye, ChevronDown, Package, Truck, CheckCircle,
   XCircle, Clock, RefreshCw, AlertTriangle, History,
 } from 'lucide-react';
-import { db } from '@/db/database';
+import { api } from '@/services/api';
 import { formatPrice, formatDate } from '@/utils/formatters';
 import type { Order, OrderStatus, OrderStatusLog } from '@/types';
 
@@ -156,10 +156,7 @@ function ConfirmStatusDialog({
 
 /* ─── Status Log Timeline ─────────────────────────────────────────── */
 function StatusLogTimeline({ orderId, orderCreatedAt }: { orderId: string; orderCreatedAt: Date }) {
-  const { data: logs } = useQuery({
-    queryKey: ['status-logs', orderId],
-    queryFn: () => db.orderStatusLogs.where('orderId').equals(orderId).sortBy('changedAt'),
-  });
+queryFn: () => api('/admin/orders');
 
   const fmtTime = (d: Date | string) =>
     new Date(d).toLocaleString(undefined, {
