@@ -8,6 +8,7 @@ const TEMPLATES = {
 
 async function sendEmail(templateId: string, params: Record<string, string>) {
   try {
+    console.log('Sending email:', templateId, params);
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -18,7 +19,12 @@ async function sendEmail(templateId: string, params: Record<string, string>) {
         template_params: params,
       }),
     });
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('EmailJS error response:', res.status, text);
+      throw new Error(text);
+    }
+    console.log('Email sent successfully!');
   } catch (err) {
     console.error('EmailJS error:', err);
   }
