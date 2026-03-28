@@ -93,7 +93,14 @@ type CheckoutForm = z.infer<typeof checkoutSchema>;
 
 /* ── Payment methods ─────────────────────────────────────────────── */
 
-const PAYMENT_METHODS = [
+const SHIPPING_REGIONS = [
+  { id: 'india', label: 'India (Standard)', fee: 0 },
+  { id: 'eu', label: 'Europe (EU)', fee: 30 },
+  { id: 'us', label: 'United States / Canada', fee: 45 },
+  { id: 'other', label: 'Rest of World', fee: 35 },
+] as const;
+
+type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
   { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'zelle'    as const, label: 'Zelle',           icon: 'Z', desc: 'Get 10% discount', discount: 0.10, highlight: false },
@@ -108,6 +115,7 @@ export function CheckoutPage() {
   const notify = useNotificationStore();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [shippingRegion, setShippingRegion] = useState<ShippingRegion>('us');
   const orderPlaced = useRef(false);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState('');
@@ -116,7 +124,6 @@ export function CheckoutPage() {
   const savedAddr = user?.savedAddress;
 
   const subtotal = getSubtotal();
-  const shipping  = 0; // Free shipping on all orders
 
   const {
     register,
@@ -146,8 +153,10 @@ export function CheckoutPage() {
 
   const paymentMethod  = PAYMENT_METHODS.find((p) => p.id === selectedPayment);
   const cryptoDiscount = paymentMethod?.discount ?? 0;
+  const shipping = 0; // Always free
+  const dispatchFee = SHIPPING_REGIONS.find(r => r.id === shippingRegion)?.fee ?? 0;
   const totalDiscount  = subtotal * cryptoDiscount + couponDiscount;
-  const total          = subtotal - totalDiscount + shipping;
+  const total          = subtotal - totalDiscount + dispatchFee;
 
   // State/province field config based on country
   const getStateConfig = () => {
@@ -228,6 +237,7 @@ export function CheckoutPage() {
         paymentMethod: data.paymentMethod as PaymentMethod,
         subtotal,
         discount: totalDiscount,
+        shipping: dispatchFee,
       });
 
       orderPlaced.current = true;
@@ -331,6 +341,31 @@ export function CheckoutPage() {
                     Your shipping address will be saved to your account for faster checkout next time.
                   </p>
                 )}
+              </div>
+
+              {/* Dispatch Center Fee */}
+              <div className="bg-white rounded-2xl border border-slate-100 p-6">
+                <h2 className="font-bold text-slate-900 text-lg mb-1">Dispatch Center</h2>
+                <p className="text-sm text-slate-500 mb-4">Select your region. A dispatch center fee is added based on destination.</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {SHIPPING_REGIONS.map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setShippingRegion(r.id)}
+                      className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all text-left ${
+                        shippingRegion === r.id
+                          ? 'border-blue-600 bg-blue-50'
+                          : 'border-slate-200 hover:border-blue-200'
+                      }`}
+                    >
+                      <span className="text-sm font-semibold text-slate-900">{r.label}</span>
+                      <span className={`text-sm font-bold ${r.fee === 0 ? 'text-emerald-600' : 'text-slate-700'}`}>
+                        {r.fee === 0 ? 'No fee' : `+$${r.fee}`}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Payment Method */}
@@ -454,10 +489,14 @@ export function CheckoutPage() {
                   )}
                   <div className="flex justify-between text-sm text-slate-600">
                     <span>Shipping</span>
-                    <span className={shipping === 0 ? 'text-emerald-600 font-semibold' : ''}>
-                      {shipping === 0 ? 'FREE' : formatPrice(shipping)}
-                    </span>
+                    <span className="text-emerald-600 font-semibold">FREE</span>
                   </div>
+                  {dispatchFee > 0 && (
+                    <div className="flex justify-between text-sm text-slate-600">
+                      <span>Dispatch Center Fee</span>
+                      <span className="font-semibold text-slate-800">+${dispatchFee}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-100">
                     <span>Total</span>
                     <span>{formatPrice(total)}</span>
