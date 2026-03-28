@@ -1,5 +1,3 @@
-import emailjs from '@emailjs/browser';
-
 const SERVICE_ID  = 'service_cj88d3i';
 const PUBLIC_KEY  = 'S8J9IGTnectA_Td-v';
 
@@ -8,7 +6,23 @@ const TEMPLATES = {
   orderShipped:   'template_q9uj58k',
 };
 
-emailjs.init(PUBLIC_KEY);
+async function sendEmail(templateId: string, params: Record<string, string>) {
+  try {
+    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id:  SERVICE_ID,
+        template_id: templateId,
+        user_id:     PUBLIC_KEY,
+        template_params: params,
+      }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+  } catch (err) {
+    console.error('EmailJS error:', err);
+  }
+}
 
 function getPaymentInstructions(method: string, total: number): string {
   switch (method.toLowerCase()) {
@@ -27,42 +41,31 @@ function getPaymentInstructions(method: string, total: number): string {
 
 export const emailService = {
   sendOrderConfirmation: async (order: any) => {
-    try {
-      const itemsList = order.items
-        .map((i: any) => `${i.productName} (${i.pillCount} pills x${i.quantity})`)
-        .join(', ');
+    const itemsList = order.items
+      .map((i: any) => `${i.productName} (${i.pillCount} pills x${i.quantity})`)
+      .join(', ');
 
-      const discountAmount = order.discount > 0 ? `$${order.discount.toFixed(2)}` : 'No discount';
-      const dispatchFee = order.shipping > 0 ? `$${order.shipping.toFixed(2)}` : 'No fee';
-
-      await emailjs.send(SERVICE_ID, TEMPLATES.orderConfirmed, {
-        to_email:             order.shippingAddress.email,
-        customer_name:        `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
-        order_id:             order.id,
-        order_items:          itemsList,
-        order_subtotal:       `$${order.subtotal.toFixed(2)}`,
-        order_discount:       discountAmount,
-        dispatch_fee:         dispatchFee,
-        order_total:          `$${order.total.toFixed(2)}`,
-        payment_method:       order.paymentMethod.charAt(0).toUpperCase() + order.paymentMethod.slice(1),
-        payment_instructions: getPaymentInstructions(order.paymentMethod, order.total),
-      });
-    } catch (err) {
-      console.error('Failed to send order confirmation email:', err);
-    }
+    await sendEmail(TEMPLATES.orderConfirmed, {
+      to_email:             order.shippingAddress.email,
+      customer_name:        `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+      order_id:             order.id,
+      order_items:          itemsList,
+      order_subtotal:       `$${order.subtotal.toFixed(2)}`,
+      order_discount:       order.discount > 0 ? `$${order.discount.toFixed(2)}` : 'No discount',
+      dispatch_fee:         order.shipping > 0 ? `$${order.shipping.toFixed(2)}` : 'No fee',
+      order_total:          `$${order.total.toFixed(2)}`,
+      payment_method:       order.paymentMethod.charAt(0).toUpperCase() + order.paymentMethod.slice(1),
+      payment_instructions: getPaymentInstructions(order.paymentMethod, order.total),
+    });
   },
 
   sendOrderShipped: async (order: any, trackingNumber?: string) => {
-    try {
-      await emailjs.send(SERVICE_ID, TEMPLATES.orderShipped, {
-        to_email:       order.shippingAddress.email,
-        customer_name:  `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
-        order_id:       order.id,
-        order_total:    `$${order.total.toFixed(2)}`,
-        tracking_number: trackingNumber || 'Will be updated shortly',
-      });
-    } catch (err) {
-      console.error('Failed to send shipped email:', err);
-    }
+    await sendEmail(TEMPLATES.orderShipped, {
+      to_email:        order.shippingAddress.email,
+      customer_name:   `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+      order_id:        order.id,
+      order_total:     `$${order.total.toFixed(2)}`,
+      tracking_number: trackingNumber || 'Will be updated shortly',
+    });
   },
 };
