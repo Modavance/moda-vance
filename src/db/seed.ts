@@ -379,12 +379,9 @@ export async function seedDatabase() {
     });
   }
 
-  // Seed FAQ items if not present
-  // Always reseed FAQ (version 5 cleared old items)
-  const faqCount = await db.faqItems.count();
-  if (faqCount === 0) {
-    await db.faqItems.bulkAdd(FAQ_ITEMS);
-  }
+  // Force clear and reseed FAQ
+  await db.faqItems.clear();
+  await db.faqItems.bulkAdd(FAQ_ITEMS);
 
   // Seed default settings if not present
   const settingsCount = await db.settings.count();
