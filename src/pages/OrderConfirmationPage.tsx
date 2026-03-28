@@ -11,8 +11,8 @@ const PAYMENT_INSTRUCTIONS: Record<string, { title: string; steps: string[] }> =
     steps: [
       'A confirmation email with the BTC wallet address has been sent to your email.',
       'Send the exact BTC amount shown in the email to the provided wallet address.',
-      'Payment must be received within 24 hours to hold your order.',
-      'Your order will be shipped within 24 hours of payment confirmation.',
+      'Payment must be received within 48 hours to hold your order.',
+      'Your order will be shipped within 48 hours of payment confirmation.',
     ],
   },
   ethereum: {
@@ -20,8 +20,8 @@ const PAYMENT_INSTRUCTIONS: Record<string, { title: string; steps: string[] }> =
     steps: [
       'A confirmation email with the ETH wallet address has been sent to your email.',
       'Send the exact ETH amount shown in the email to the provided wallet address.',
-      'Payment must be received within 24 hours to hold your order.',
-      'Your order will be shipped within 24 hours of payment confirmation.',
+      'Payment must be received within 48 hours to hold your order.',
+      'Your order will be shipped within 48 hours of payment confirmation.',
     ],
   },
   zelle: {
