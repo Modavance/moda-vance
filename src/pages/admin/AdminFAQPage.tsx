@@ -86,9 +86,15 @@ export function AdminFAQPage() {
     setReseeding(true);
     try {
       await db.faqItems.clear();
-      await db.faqItems.bulkAdd(FAQ_ITEMS);
+      for (const item of FAQ_ITEMS) {
+        await db.faqItems.put(item);
+      }
       qc.invalidateQueries({ queryKey: ['admin-faq'] });
       qc.invalidateQueries({ queryKey: ['faq'] });
+      alert('FAQ loaded successfully!');
+    } catch (err) {
+      console.error(err);
+      alert('Error: ' + err);
     } finally {
       setReseeding(false);
     }
