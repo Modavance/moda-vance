@@ -73,7 +73,7 @@ export function ShopPage() {
           <p className="text-slate-400">
             {searchQuery
               ? `${filtered.length} result${filtered.length !== 1 ? 's' : ''} found`
-              : 'Pharmaceutical-grade modafinil and armodafinil — the world\'s most trusted cognitive enhancers'}
+              : 'Pharmaceutical-grade Modafinil and Armodafinil — the world\'s most trusted cognitive enhancers'}
           </p>
         </div>
       </div>
