@@ -2,10 +2,32 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, X, Save, ChevronUp, ChevronDown, RefreshCw } from 'lucide-react';
 import { db } from '@/db/database';
-import { FAQ_ITEMS } from '@/db/seed';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import type { FAQItem } from '@/types';
+
+const DEFAULT_FAQ: Omit<FAQItem, 'createdAt'>[] = [
+  { id: 'f1',  section: 'About Our Products',  order: 1,  question: 'What is Modafinil and how does it work?', answer: 'Modafinil is a wakefulness-promoting agent originally developed to treat narcolepsy. It works by inhibiting dopamine reuptake, resulting in clean, focused wakefulness without jitteriness or crashes.' },
+  { id: 'f2',  section: 'About Our Products',  order: 2,  question: 'What is the difference between Modafinil and Armodafinil?', answer: 'Armodafinil contains only the R-enantiomer — more potent and longer-lasting (15+ hours vs 12 hours), with a more consistent effect throughout the day.' },
+  { id: 'f3',  section: 'About Our Products',  order: 3,  question: 'What is the difference between Modalert and Modvigil?', answer: 'Both contain 200mg Modafinil. Modalert (Sun Pharma) is slightly stronger with faster onset. Modvigil (HAB Pharma) is smoother and more budget-friendly.' },
+  { id: 'f4',  section: 'About Our Products',  order: 4,  question: 'Is Modafinil safe?', answer: 'Modafinil has over 30 years of clinical use and an excellent safety profile. Start with 100mg to assess your response. Consult a doctor if you have medical conditions.' },
+  { id: 'f5',  section: 'About Our Products',  order: 5,  question: 'Are your products genuine pharmaceutical grade?', answer: 'Yes. We source from licensed distributors of Sun Pharmaceuticals and HAB Pharmaceuticals. All facilities are WHO-GMP certified.' },
+  { id: 'f6',  section: 'Ordering & Payment', order: 1,  question: 'What payment methods do you accept?', answer: 'We accept Bitcoin (BTC) and Ethereum (ETH) with 15% automatic discount, plus PayPal and Credit/Debit Card at standard pricing.' },
+  { id: 'f7',  section: 'Ordering & Payment', order: 2,  question: 'Do I need a prescription?', answer: 'No prescription required. We sell for research and educational purposes. We are not a licensed pharmacy and do not provide medical advice.' },
+  { id: 'f8',  section: 'Ordering & Payment', order: 3,  question: 'Is my personal information secure?', answer: 'Yes. 256-bit SSL encryption, minimal data storage, never sold to third parties. For max privacy use Bitcoin or Ethereum.' },
+  { id: 'f9',  section: 'Ordering & Payment', order: 4,  question: 'Can I use a coupon code?', answer: 'Yes! Use WELCOME10 for 10% off your first order. Sign up for our newsletter for exclusive promo codes.' },
+  { id: 'f10', section: 'Shipping & Delivery', order: 1, question: 'How long does shipping take?', answer: 'Orders processed within 24h, shipped within 48h. Estimated delivery 4–12 business days depending on your region and dispatch center.' },
+  { id: 'f11', section: 'Shipping & Delivery', order: 2, question: 'Is packaging discreet?', answer: 'Yes, completely. Plain unmarked packaging, no company name or product reference on the outside.' },
+  { id: 'f12', section: 'Shipping & Delivery', order: 3, question: 'Do you ship internationally?', answer: 'Yes, worldwide. In case of customs seizure we reship free of charge — no questions asked.' },
+  { id: 'f13', section: 'Shipping & Delivery', order: 4, question: 'What is your reshipment policy?', answer: 'Contact us within 30 days of estimated delivery and we reship at no cost.' },
+  { id: 'f14', section: 'Shipping & Delivery', order: 5, question: 'How do I track my order?', answer: 'Tracking number sent by email once shipped. Also visible in your account page. Contact support@modavance.com if no tracking within 72h.' },
+  { id: 'f15', section: 'Usage & Dosing',     order: 1, question: 'What is the recommended dose?', answer: 'Modafinil: 100–200mg in the morning. Armodafinil: 75–150mg. Always start with the lower dose.' },
+  { id: 'f16', section: 'Usage & Dosing',     order: 2, question: 'How often should I take Modafinil?', answer: 'Maximum 3–4 days per week to maintain sensitivity and preserve natural sleep patterns.' },
+  { id: 'f17', section: 'Usage & Dosing',     order: 3, question: 'What should I avoid while taking Modafinil?', answer: 'Avoid taking after noon, combining with alcohol, and note that birth control pills may be less effective. Stay well hydrated.' },
+  { id: 'f18', section: 'Support',            order: 1, question: 'How can I contact support?', answer: 'Email support@modavance.com. We respond within 24 hours, 7 days a week. Include your order number for order questions.' },
+  { id: 'f19', section: 'Support',            order: 2, question: 'What is your refund policy?', answer: 'Contact us within 14 days of delivery. We offer reshipment, store credit, or refund depending on the case.' },
+  { id: 'f20', section: 'Support',            order: 3, question: "I haven't received my order confirmation email. What should I do?", answer: 'Check spam/junk folder. If not there, email support@modavance.com with your checkout email address.' },
+];
 
 const EMPTY_ITEM = { section: '', question: '', answer: '', order: 1 };
 
@@ -86,8 +108,8 @@ export function AdminFAQPage() {
     setReseeding(true);
     try {
       await db.faqItems.clear();
-      for (const item of FAQ_ITEMS) {
-        await db.faqItems.put(item);
+      for (const item of DEFAULT_FAQ) {
+        await db.faqItems.put({ ...item, createdAt: new Date() });
       }
       qc.invalidateQueries({ queryKey: ['admin-faq'] });
       qc.invalidateQueries({ queryKey: ['faq'] });
