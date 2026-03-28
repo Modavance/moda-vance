@@ -1,27 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Shield, Award, Globe, Users, ArrowRight } from 'lucide-react';
 
-const TEAM = [
-  {
-    name: 'Dr. Alexandra Chen',
-    role: 'Chief Science Officer',
-    bio: 'PharmD from UCSF. 15 years in pharmaceutical R&D. Former research scientist at Cephalon, the original developer of modafinil.',
-    initials: 'AC',
-  },
-  {
-    name: 'Marcus Webb',
-    role: 'Co-Founder & CEO',
-    bio: 'Serial entrepreneur and biohacker. Founded ModaVance after years of personal experience with cognitive enhancement and frustration with unreliable sources.',
-    initials: 'MW',
-  },
-  {
-    name: 'James Park',
-    role: 'Head of Operations',
-    bio: 'Former logistics director with 12 years in pharmaceutical supply chain management. Oversees our global sourcing and fulfillment network.',
-    initials: 'JP',
-  },
-];
-
 const VALUES = [
   {
     icon: Shield,
