@@ -1,16 +1,43 @@
-import { api } from './api';
+import { db } from '@/db/database';
+import type { Product } from '@/types';
 
-function parseProduct(p: any) {
-  if (p && typeof p.effects === 'string') p.effects = JSON.parse(p.effects);
-  if (p && typeof p.images === 'string') p.images = JSON.parse(p.images);
+function parseProduct(p: Product): Product {
   return p;
 }
 
 export const productService = {
-  getAll: async () => { const r = await api('/products?limit=100'); return (r || []).map(parseProduct); },
-  getById: async (id: string) => { const r = await api('/products?limit=100'); return (r || []).map(parseProduct).find((p: any) => p.id === id); },
-  getBySlug: async (slug: string) => parseProduct(await api(`/products/${slug}`)),
-  getFeatured: async () => { const r = await api('/products/featured'); return (r || []).map(parseProduct); },
-  getByCategory: async (category: string) => { const r = await api(`/products?category=${category}`); return (r || []).map(parseProduct); },
-  search: async (query: string) => { const r = await api(`/products?search=${encodeURIComponent(query)}`); return (r || []).map(parseProduct); },
+  getAll: async (): Promise<Product[]> => {
+    const products = await db.products.toArray();
+    return products.map(parseProduct);
+  },
+
+  getById: async (id: string): Promise<Product | undefined> => {
+    const p = await db.products.get(id);
+    return p ? parseProduct(p) : undefined;
+  },
+
+  getBySlug: async (slug: string): Promise<Product | undefined> => {
+    const p = await db.products.where('slug').equals(slug).first();
+    return p ? parseProduct(p) : undefined;
+  },
+
+  getFeatured: async (): Promise<Product[]> => {
+    const products = await db.products.where('featured').equals(1).toArray();
+    return products.map(parseProduct);
+  },
+
+  getByCategory: async (category: string): Promise<Product[]> => {
+    const products = await db.products.where('category').equals(category).toArray();
+    return products.map(parseProduct);
+  },
+
+  search: async (query: string): Promise<Product[]> => {
+    const all = await db.products.toArray();
+    const q = query.toLowerCase();
+    return all.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.brand.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q)
+    ).map(parseProduct);
+  },
 };
