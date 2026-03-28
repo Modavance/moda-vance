@@ -79,6 +79,8 @@ export function AdminFAQPage() {
 
   const [reseeding, setReseeding] = useState(false);
 
+  const isFormOpen = creating || !!editing;
+
   const handleReseed = async () => {
     if (!confirm('This will clear all FAQ items and reload the default questions. Continue?')) return;
     setReseeding(true);
