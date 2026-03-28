@@ -101,7 +101,7 @@ export function AdminLoginPage() {
             <div className="mt-5 p-3 bg-slate-50 rounded-xl text-xs text-slate-500 border border-slate-100">
               <strong>Demo credentials:</strong><br />
               Email: admin@modavance.com<br />
-              Password: admin123
+              Password: N8h4/lu(LPs3%qw|2pJ
             </div>
           </div>
         </div>
