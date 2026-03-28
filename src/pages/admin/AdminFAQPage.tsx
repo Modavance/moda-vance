@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, X, Save, ChevronUp, ChevronDown, RefreshCw } from 'lucide-react';
 import { db } from '@/db/database';
-import { seedDatabase } from '@/db/seed';
+import { FAQ_ITEMS } from '@/db/seed';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import type { FAQItem } from '@/types';
@@ -86,7 +86,7 @@ export function AdminFAQPage() {
     setReseeding(true);
     try {
       await db.faqItems.clear();
-      await seedDatabase();
+      await db.faqItems.bulkAdd(FAQ_ITEMS);
       qc.invalidateQueries({ queryKey: ['admin-faq'] });
       qc.invalidateQueries({ queryKey: ['faq'] });
     } finally {
