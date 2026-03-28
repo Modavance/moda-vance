@@ -18,7 +18,7 @@ export function Hero() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 text-blue-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
               <Star className="w-3.5 h-3.5 fill-blue-300" />
-              Trusted by 50,000+ customers across the US
+              Trusted by customers worldwide
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-6">
@@ -28,13 +28,13 @@ export function Hero() {
             </h1>
 
             <p className="text-lg text-slate-300 leading-relaxed mb-8 max-w-xl">
-              Pharmaceutical-grade modafinil and armodafinil — the cognitive enhancers trusted by Silicon Valley engineers, Wall Street analysts, and top-tier medical professionals. Delivered discreetly to your door.
+              Pharmaceutical-grade Modafinil and Armodafinil — the cognitive enhancers trusted by Silicon Valley engineers, Wall Street analysts, and top-tier medical professionals. Delivered discreetly to your door.
             </p>
 
             {/* Stats */}
             <div className="flex flex-wrap gap-6 mb-8">
               {[
-                { value: '50,000+', label: 'Happy Customers' },
+                { value: '10,000+', label: 'Happy Customers' },
                 { value: '4.8★', label: 'Average Rating' },
                 { value: '99%', label: 'Delivery Rate' },
               ].map((stat) => (
