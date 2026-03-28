@@ -34,7 +34,7 @@ export function Hero() {
             {/* Stats */}
             <div className="flex flex-wrap gap-6 mb-8">
               {[
-                { value: '10,000+', label: 'Happy Customers' },
+                { value: '2+ years', label: 'Happy Customers' },
                 { value: '4.8★', label: 'Average Rating' },
                 { value: '99%', label: 'Delivery Rate' },
               ].map((stat) => (
