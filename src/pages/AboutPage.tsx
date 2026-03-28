@@ -58,8 +58,8 @@ export function AboutPage() {
               </p>
               <div className="flex gap-8">
                 {[
-                  { value: '5+', label: 'Years in Business' },
-                  { value: '50K+', label: 'Customers Served' },
+                  { value: '2+', label: 'Years in Business' },
+                  { value: 'FREE', label: 'Guaranteed Delivery' },
                   { value: '99%', label: 'Delivery Success' },
                 ].map((stat) => (
                   <div key={stat.label}>
