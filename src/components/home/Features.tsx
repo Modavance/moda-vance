@@ -56,7 +56,7 @@ export function Features() {
             The Science of Peak Performance
           </h2>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Modafinil and armodafinil are the world's most studied and trusted cognitive enhancers — and ModaVance delivers them at the highest quality available.
+            Modafinil and Armodafinil are the world's most studied and trusted cognitive enhancers - and ModaVance delivers them at the highest quality available.
           </p>
         </div>
 
