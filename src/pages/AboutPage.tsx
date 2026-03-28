@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Shield, Award, Globe, Users, ArrowRight } from 'lucide-react';
 
+
 const VALUES = [
   {
     icon: Shield,
@@ -35,7 +36,7 @@ export function AboutPage() {
             We Started ModaVance Because We Needed It
           </h1>
           <p className="text-lg text-slate-300 leading-relaxed">
-            Founded in 2023 by a group of biohackers, pharmacists, and tech professionals, ModaVance was born from personal experience with the challenges of sourcing high-quality cognitive enhancers in the US market.
+            Founded in 2019 by a group of biohackers, pharmacists, and tech professionals, ModaVance was born from personal experience with the challenges of sourcing high-quality cognitive enhancers in the US market.
           </p>
         </div>
       </div>
@@ -101,27 +102,6 @@ export function AboutPage() {
         </div>
       </div>
 
-      {/* Team */}
-      <div className="py-20 bg-slate-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-slate-900">Meet the Team</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {TEAM.map((member) => (
-              <div key={member.name} className="bg-white rounded-2xl p-6 border border-slate-100 text-center">
-                <div className="w-16 h-16 rounded-full bg-blue-600 text-white text-xl font-bold flex items-center justify-center mx-auto mb-4">
-                  {member.initials}
-                </div>
-                <h3 className="font-bold text-slate-900">{member.name}</h3>
-                <p className="text-sm text-blue-600 font-medium mb-3">{member.role}</p>
-                <p className="text-sm text-slate-500 leading-relaxed">{member.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* CTA */}
       <div className="py-20 bg-blue-600">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
@@ -138,3 +118,4 @@ export function AboutPage() {
     </div>
   );
 }
+
