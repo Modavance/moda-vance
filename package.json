@@ -15,6 +15,7 @@
     "deploy:preview": "npm run build && wrangler pages deploy dist --branch preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-dialog": "^1.1.15",
