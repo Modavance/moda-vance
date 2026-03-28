@@ -66,7 +66,7 @@ export function Hero() {
             <div className="flex flex-wrap gap-4 mt-8">
               {[
                 { icon: Shield, text: 'Authentic & Lab Verified' },
-                { icon: Truck, text: 'Ships in 24h' },
+                { icon: Truck, text: 'Ships in 48h*' },
                 { icon: CheckCircle, text: 'Money-Back Guarantee' },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-2 text-sm text-slate-400">
