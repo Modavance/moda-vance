@@ -15,21 +15,6 @@ import { db } from '@/db/database';
 import { useQuery } from '@tanstack/react-query';
 import type { Address, PaymentMethod } from '@/types';
 
-function ZelleHint() {
-  const { data = [] } = useQuery({
-    queryKey: ['settings'],
-    queryFn: () => db.settings.toArray(),
-    staleTime: 60_000,
-  });
-  const s = Object.fromEntries(data.map(x => [x.key, x.value]));
-  const recipient = s['payment.zelle.recipient'] ?? 'payments@modavance.com';
-  return (
-    <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200 text-sm text-blue-800">
-      Send your Zelle payment to <strong>{recipient}</strong>. Include your order number in the memo. Your order will be processed within 2 hours.
-    </div>
-  );
-}
-
 /* ── Country / state data ─────────────────────────────────────────── */
 
 const COUNTRIES = [
@@ -84,7 +69,7 @@ const checkoutSchema = z.object({
   state:         z.string().min(1, 'Required'),
   zip:           z.string().min(2, 'Valid postal code required'),
   country:       z.string().min(2, 'Required'),
-  paymentMethod: z.enum(['bitcoin', 'ethereum', 'zelle', 'bill']),
+  paymentMethod: z.enum(['bitcoin', 'ethereum', 'paypal', 'card']),
   couponCode:    z.string().optional(),
   agreeTerms:    z.boolean().refine((v) => v === true, { message: 'You must agree to the terms' }),
 });
@@ -105,8 +90,8 @@ type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
 const PAYMENT_METHODS = [
   { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
-  { id: 'zelle'    as const, label: 'Zelle',           icon: 'Z', desc: 'Get 10% discount', discount: 0.10, highlight: false },
-  { id: 'bill'     as const, label: 'Cash by Mail',   icon: '$', desc: 'Standard pricing',  discount: 0,    highlight: false },
+  { id: 'paypal'   as const, label: 'PayPal',          icon: 'P', desc: 'Standard pricing',  discount: 0,    highlight: false },
+  { id: 'card'     as const, label: 'Credit / Debit Card', icon: '💳', desc: 'Standard pricing', discount: 0, highlight: false },
 ];
 
 /* ── Component ───────────────────────────────────────────────────── */
@@ -212,7 +197,6 @@ export function CheckoutPage() {
   const onSubmit = async (data: CheckoutForm) => {
     if (items.length === 0) return;
     setIsSubmitting(true);
-    console.log('Order submit started, email:', data.email);
 
     try {
       const address: Address = {
@@ -228,12 +212,10 @@ export function CheckoutPage() {
         country:   data.country,
       };
 
-      // Save address to user profile
       if (user) {
         updateUser({ savedAddress: address });
       }
 
-      console.log('Calling orderService.create...');
       const order = await orderService.create({
         userId: user?.id ?? 'guest',
         items,
@@ -243,7 +225,6 @@ export function CheckoutPage() {
         discount: totalDiscount,
         shipping: dispatchFee,
       });
-      console.log('Order created:', order.id);
 
       orderPlaced.current = true;
       clearCart();
@@ -406,12 +387,14 @@ export function CheckoutPage() {
                     <strong>Payment instructions</strong> will be sent to your email after order confirmation, along with the wallet address and exact amount.
                   </div>
                 )}
-                {selectedPayment === 'zelle' && (
-                  <ZelleHint />
+                {selectedPayment === 'paypal' && (
+                  <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200 text-sm text-blue-800">
+                    You will be redirected to PayPal to complete your payment after placing the order.
+                  </div>
                 )}
-                {selectedPayment === 'bill' && (
+                {selectedPayment === 'card' && (
                   <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm text-slate-600">
-                    Send <strong>cash only</strong> (no checks) in an envelope to our P.O. Box. Instructions will be included in your order confirmation email.
+                    You will be redirected to our secure payment page to complete your card payment after placing the order.
                   </div>
                 )}
               </div>
