@@ -8,8 +8,8 @@ export function CartPage() {
   const { items, removeItem, updateQuantity, getSubtotal } = useCartStore();
   const navigate = useNavigate();
   const subtotal = getSubtotal();
-  const shipping = subtotal >= 150 ? 0 : 9.99;
-  const total = subtotal + shipping;
+  const shipping = 0; // Free shipping on all orders
+  const total = subtotal;
 
   if (items.length === 0) {
     return (
@@ -36,26 +36,9 @@ export function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Items */}
           <div className="lg:col-span-2 flex flex-col gap-4">
-            {/* Free shipping bar */}
-            {shipping > 0 && (
-              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4">
-                <div className="flex justify-between text-sm font-medium text-blue-700 mb-2">
-                  <span>Add {formatPrice(150 - subtotal)} more for FREE shipping</span>
-                  <span>{Math.round((subtotal / 150) * 100)}%</span>
-                </div>
-                <div className="h-2 bg-blue-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-blue-600 rounded-full transition-all"
-                    style={{ width: `${(subtotal / 150) * 100}%` }}
-                  />
-                </div>
+            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-blue-700 font-semibold flex items-center gap-2">
+                <Package className="w-5 h-5" /> Worldwide delivery · Dispatch center fee applied at checkout
               </div>
-            )}
-            {shipping === 0 && (
-              <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-700 font-semibold flex items-center gap-2">
-                <Package className="w-5 h-5" /> You qualify for FREE shipping!
-              </div>
-            )}
 
             {items.map((item) => (
               <div key={item.id} className="bg-white rounded-2xl p-5 flex gap-5 border border-slate-100">
