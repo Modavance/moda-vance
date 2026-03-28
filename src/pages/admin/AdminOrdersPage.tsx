@@ -432,14 +432,23 @@ export function AdminOrdersPage() {
                     <p className="text-xs text-slate-400">{order.shippingAddress.email}</p>
                   </td>
                   <td className="px-5 py-4">
-                    <div className="flex -space-x-2">
+                    <div className="flex flex-col gap-1">
                       {order.items.slice(0, 2).map((item, i) => (
-                        item.image
-                          ? <img key={i} src={item.image} className="w-8 h-8 rounded-lg object-cover border-2 border-white" alt="" />
-                          : <div key={i} className="w-8 h-8 rounded-lg bg-slate-200 border-2 border-white" />
+                        <div key={i} className="flex items-center gap-2">
+                          {item.image
+                            ? <img src={item.image} className="w-8 h-8 rounded-lg object-cover shrink-0" alt="" />
+                            : <div className="w-8 h-8 rounded-lg bg-slate-200 shrink-0" />
+                          }
+                          <div>
+                            <p className="text-xs font-medium text-slate-800 leading-tight">{item.productName}</p>
+                            <p className="text-[11px] text-slate-400">{item.pillCount} pills · qty {item.quantity}</p>
+                          </div>
+                        </div>
                       ))}
+                      {order.items.length > 2 && (
+                        <p className="text-xs text-slate-400">+{order.items.length - 2} more</p>
+                      )}
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">{order.items.length} item{order.items.length !== 1 ? 's' : ''}</p>
                   </td>
                   <td className="px-5 py-4 font-bold text-slate-900">{formatPrice(order.total)}</td>
                   <td className="px-5 py-4 text-xs text-slate-500 capitalize">{order.paymentMethod}</td>
