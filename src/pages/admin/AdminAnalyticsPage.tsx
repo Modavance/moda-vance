@@ -91,6 +91,39 @@ export function AdminAnalyticsPage() {
         </div>
       )}
 
+      {/* Top Products */}
+      {orders.length > 0 && (() => {
+        const productMap: Record<string, { name: string; count: number; revenue: number }> = {};
+        orders.forEach(o => {
+          o.items.forEach(item => {
+            if (!productMap[item.productId]) {
+              productMap[item.productId] = { name: item.productName, count: 0, revenue: 0 };
+            }
+            productMap[item.productId].count += item.quantity;
+            productMap[item.productId].revenue += item.price;
+          });
+        });
+        const topProducts = Object.values(productMap)
+          .sort((a, b) => b.revenue - a.revenue)
+          .slice(0, 5);
+
+        return (
+          <div className="bg-white rounded-2xl border border-slate-100 p-6">
+            <h2 className="font-bold text-slate-900 mb-4">Top Products</h2>
+            <div className="space-y-3">
+              {topProducts.map((p, i) => (
+                <div key={p.name} className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                  <span className="flex-1 text-sm font-medium text-slate-800 truncate">{p.name}</span>
+                  <span className="text-xs text-slate-400">{p.count} units</span>
+                  <span className="text-sm font-bold text-slate-900">{formatPrice(p.revenue)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Payment methods */}
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <h2 className="font-bold text-slate-900 mb-4">Payment Methods</h2>
