@@ -116,7 +116,7 @@ export function CheckoutPage() {
   const savedAddr = user?.savedAddress;
 
   const subtotal = getSubtotal();
-  const shipping  = subtotal >= 150 ? 0 : 9.99;
+  const shipping  = 0; // Free shipping on all orders
 
   const {
     register,
