@@ -79,7 +79,7 @@ function buildPaymentInstructions(s: Record<string, string>, total: number) {
       color: 'bg-amber-50 border-amber-200',
       steps: [
         `Send exactly the BTC equivalent of $${total.toFixed(2)} USD to: ${btcWallet}`,
-        'Send payment from your Bitcoin wallet within 24 hours of placing your order.',
+        'Send payment from your Bitcoin wallet within 48 hours of placing your order.',
         'Once confirmed on-chain (1 confirmation), your order ships automatically.',
         'You\'ll receive a shipping notification with tracking number.',
       ],
@@ -89,7 +89,7 @@ function buildPaymentInstructions(s: Record<string, string>, total: number) {
       color: 'bg-purple-50 border-purple-200',
       steps: [
         `Send exactly the ETH equivalent of $${total.toFixed(2)} USD to: ${ethWallet}`,
-        'Send payment from your Ethereum wallet within 24 hours of placing your order.',
+        'Send payment from your Ethereum wallet within 48 hours of placing your order.',
         'Once confirmed (1 confirmation), your order ships automatically.',
         'You\'ll receive a shipping notification with tracking number.',
       ],
@@ -111,7 +111,7 @@ function buildPaymentInstructions(s: Record<string, string>, total: number) {
         `Send $${total.toFixed(2)} cash to: ${billAddress}`,
         billInstructions,
         'Include a slip of paper with your order number inside the envelope.',
-        'Orders are processed within 24 hours of receiving payment.',
+        'Orders are processed within 48 hours of receiving payment.',
       ],
     },
   };
