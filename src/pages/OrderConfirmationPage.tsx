@@ -24,22 +24,22 @@ const PAYMENT_INSTRUCTIONS: Record<string, { title: string; steps: string[] }> =
       'Your order will be shipped within 48 hours of payment confirmation.',
     ],
   },
-  zelle: {
-    title: 'Zelle Payment Instructions',
+  paypal: {
+    title: 'PayPal Payment Instructions',
     steps: [
-      'Send payment to: payments@modavance.com via Zelle.',
-      `Include your order number in the memo field.`,
+      'You will receive a PayPal payment request to your email address.',
+      'Complete the PayPal payment within 48 hours to hold your order.',
       'Your order will be processed within 2 hours of receiving payment.',
       'A shipping confirmation email will be sent once your order ships.',
     ],
   },
-  bill: {
-    title: 'Cash by Mail Instructions',
+  card: {
+    title: 'Card Payment Instructions',
     steps: [
-      'Detailed instructions have been sent to your email address.',
-      'Send cash only (no checks or money orders) in a plain envelope.',
-      'Write your order number on a slip of paper and include it with the cash.',
-      'Processing begins upon receipt of payment (allow 3–5 days for mail).',
+      'You will receive a secure payment link to your email address.',
+      'Complete the card payment within 48 hours to hold your order.',
+      'Your order will be processed once payment is confirmed.',
+      'A shipping confirmation email will be sent once your order ships.',
     ],
   },
 };
