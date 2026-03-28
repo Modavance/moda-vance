@@ -56,7 +56,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Logo variant="light" size="md" />
             <p className="mt-4 text-sm text-slate-400 leading-relaxed max-w-xs">
-              ModaVance is the United States' premier online source for pharmaceutical-grade modafinil and armodafinil. Quality you can trust, delivered discreetly to your door.
+              ModaVance is the Worldwides' premier online source for pharmaceutical-grade Modafinil and Armodafinil. Quality you can trust, delivered discreetly to your door.
             </p>
             <div className="mt-6 flex flex-col gap-2 text-sm">
               <div className="flex items-center gap-2 text-slate-400">
