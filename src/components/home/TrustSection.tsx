@@ -9,7 +9,7 @@ const TRUST_ITEMS = [
   {
     icon: Truck,
     title: 'Fast & Discreet',
-    description: 'Ships within 24 hours in plain, unmarked packaging. No reference to product contents on the label.',
+    description: 'Ships within 48* hours in plain, unmarked packaging. No reference to product contents on the label.',
   },
   {
     icon: RotateCcw,
