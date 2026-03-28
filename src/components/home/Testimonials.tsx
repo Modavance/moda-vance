@@ -52,7 +52,7 @@ export function Testimonials() {
         <div className="text-center mb-16">
           <span className="text-sm font-semibold text-blue-600 uppercase tracking-widest">Customer Reviews</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mt-3 mb-4">
-            Trusted by 50,000+ High Performers
+            Trusted by High Performers Worldwide
           </h2>
           <div className="flex items-center justify-center gap-2">
             <div className="flex">
@@ -91,3 +91,4 @@ export function Testimonials() {
     </section>
   );
 }
+
