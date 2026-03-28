@@ -36,7 +36,7 @@ export function AboutPage() {
             We Started ModaVance Because We Needed It
           </h1>
           <p className="text-lg text-slate-300 leading-relaxed">
-            Founded in 2019 by a group of biohackers, pharmacists, and tech professionals, ModaVance was born from personal experience with the challenges of sourcing high-quality cognitive enhancers in the US market.
+            Founded in 2023 by a group of biohackers, pharmacists, and tech professionals, ModaVance was born from personal experience with the challenges of sourcing high-quality cognitive enhancers in the US market.
           </p>
         </div>
       </div>
