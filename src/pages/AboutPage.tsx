@@ -51,7 +51,7 @@ export function AboutPage() {
                 Making Cognitive Excellence Accessible to Everyone
               </h2>
               <p className="text-slate-600 leading-relaxed mb-4">
-                When Marcus Webb was working 80-hour weeks at his first startup, a friend recommended modafinil. The problem? Sourcing quality product was a minefield — sketchy vendors, inconsistent quality, zero customer service.
+                When Marcus Webb was working 80-hour weeks at his first startup, a friend recommended modafinil. The problem? Sourcing quality product was a minefield - sketchy vendors, inconsistent quality, zero customer service.
               </p>
               <p className="text-slate-600 leading-relaxed mb-6">
                 We built ModaVance to be the source we wished existed: rigorous quality standards, transparent supply chain, expert guidance, and customer service that actually responds.
