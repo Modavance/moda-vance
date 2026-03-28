@@ -5,6 +5,7 @@ import {
   XCircle, Clock, RefreshCw, AlertTriangle, History,
 } from 'lucide-react';
 import { db } from '@/db/database';
+import { emailService } from '@/services/emailService';
 import { formatPrice, formatDate } from '@/utils/formatters';
 import type { Order, OrderStatus, OrderStatusLog } from '@/types';
 
@@ -342,6 +343,14 @@ export function AdminOrdersPage() {
       changedAt: new Date(),
       note: note.trim() || undefined,
     });
+
+    // Send shipped email when status changes to shipped
+    if (toStatus === 'shipped') {
+      const order = await db.orders.get(orderId);
+      if (order) {
+        emailService.sendOrderShipped(order, note.trim() || undefined);
+      }
+    }
 
     queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
     queryClient.invalidateQueries({ queryKey: ['status-logs', orderId] });
