@@ -60,7 +60,7 @@ export function AboutPage() {
                 {[
                   { value: '2+', label: 'Years in Business' },
                   { value: 'FREE', label: 'Guaranteed Delivery' },
-                  { value: '99%', label: 'Delivery Success' },
+                  { value: '100%', label: 'Authentic Products' },
                 ].map((stat) => (
                   <div key={stat.label}>
                     <p className="text-2xl font-bold text-blue-600">{stat.value}</p>
