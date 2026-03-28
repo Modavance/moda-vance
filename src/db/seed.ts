@@ -285,7 +285,7 @@ const COUPONS: Coupon[] = [
   { code: 'SAVE30', discount: 30, type: 'fixed', minOrder: 100, expiresAt: new Date('2026-12-31') },
 ];
 
-const FAQ_ITEMS: FAQItem[] = [
+export const FAQ_ITEMS: FAQItem[] = [
   // About Our Products
   { id: 'f1', section: 'About Our Products', order: 1, createdAt: new Date(),
     question: 'What is Modafinil and how does it work?',
