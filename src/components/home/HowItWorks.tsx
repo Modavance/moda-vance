@@ -11,13 +11,13 @@ const STEPS = [
     icon: Package,
     number: '02',
     title: 'Secure Checkout',
-    description: 'Complete your order using Bitcoin, Ethereum, Zelle, or bank transfer. Your data is protected with 256-bit SSL encryption. No prescription required.',
+    description: 'Complete your order using Bitcoin, Ethereum, Card, or Paypal transfer. Your data is protected with 256-bit SSL encryption. No prescription required.',
   },
   {
     icon: Zap,
     number: '03',
     title: 'Unlock Your Potential',
-    description: 'Receive your discreet package within 7–14 days. Start with a half dose (100mg) to calibrate your response, then enjoy sustained cognitive enhancement.',
+    description: 'Receive your discreet package super fast. Start with a half dose (100mg) to calibrate your response, then enjoy sustained cognitive enhancement.',
   },
 ];
 
