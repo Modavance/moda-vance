@@ -14,7 +14,7 @@ const TRUST_ITEMS = [
   {
     icon: RotateCcw,
     title: 'Money-Back Guarantee',
-    description: 'Not satisfied? We\'ll reship or refund, no questions asked. Your satisfaction is our priority.',
+    description: 'Not satisfied? We\'ll free reship once or refund, no questions asked. Your satisfaction is our priority.',
   },
   {
     icon: Lock,
