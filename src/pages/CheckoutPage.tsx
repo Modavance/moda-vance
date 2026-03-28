@@ -212,6 +212,7 @@ export function CheckoutPage() {
   const onSubmit = async (data: CheckoutForm) => {
     if (items.length === 0) return;
     setIsSubmitting(true);
+    console.log('Order submit started, email:', data.email);
 
     try {
       const address: Address = {
@@ -232,6 +233,7 @@ export function CheckoutPage() {
         updateUser({ savedAddress: address });
       }
 
+      console.log('Calling orderService.create...');
       const order = await orderService.create({
         userId: user?.id ?? 'guest',
         items,
@@ -241,6 +243,7 @@ export function CheckoutPage() {
         discount: totalDiscount,
         shipping: dispatchFee,
       });
+      console.log('Order created:', order.id);
 
       orderPlaced.current = true;
       clearCart();
