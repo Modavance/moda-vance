@@ -101,6 +101,8 @@ const SHIPPING_REGIONS = [
 ] as const;
 
 type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
+
+const PAYMENT_METHODS = [
   { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'zelle'    as const, label: 'Zelle',           icon: 'Z', desc: 'Get 10% discount', discount: 0.10, highlight: false },
