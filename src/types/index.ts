@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   slug: string;
   brand: 'Sun Pharma' | 'HAB Pharma';
-  category: 'modafinil' | 'armodafinil';
+  category: 'modafinil' | 'armodafinil' | 'mix';
   strength: string;
   pillsPerStrip: number;
   description: string;
@@ -94,7 +94,7 @@ export interface Address {
   country: string;
 }
 
-export type PaymentMethod = 'bitcoin' | 'ethereum' | 'zelle' | 'bill';
+export type PaymentMethod = 'bitcoin' | 'ethereum' | 'paypal' | 'card';
 
 export interface User {
   id: string;
