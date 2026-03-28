@@ -53,7 +53,7 @@ export function Header() {
     <>
       {/* Top announcement bar */}
       <div className="bg-blue-600 text-white text-center py-2 px-4 text-sm font-medium">
-        🚀 Free shipping on orders over $150 · Use code <strong>WELCOME10</strong> for 10% off your first order
+        🚀 Free shipping on all orders. Use code <strong>WELCOME10</strong> for 10% off your first order
       </div>
 
       <header
