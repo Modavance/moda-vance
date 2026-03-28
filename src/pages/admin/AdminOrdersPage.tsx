@@ -4,58 +4,20 @@ import {
   Search, Eye, ChevronDown, Package, Truck, CheckCircle,
   XCircle, Clock, RefreshCw, AlertTriangle, History,
 } from 'lucide-react';
-import { api } from '@/services/api';
+import { db } from '@/db/database';
 import { formatPrice, formatDate } from '@/utils/formatters';
 import type { Order, OrderStatus, OrderStatusLog } from '@/types';
 
 const STATUS_OPTIONS: OrderStatus[] = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
 
 const STATUS_STYLES: Record<OrderStatus, { bg: string; text: string; icon: React.ReactNode }> = {
-  pending:    { bg: 'bg-amber-100',  text: 'text-amber-700',  icon: <Clock className="w-3.5 h-3.5" /> },
-  confirmed:  { bg: 'bg-blue-100',   text: 'text-blue-700',   icon: <CheckCircle className="w-3.5 h-3.5" /> },
-  processing: { bg: 'bg-purple-100', text: 'text-purple-700', icon: <RefreshCw className="w-3.5 h-3.5" /> },
-  shipped:    { bg: 'bg-cyan-100',   text: 'text-cyan-700',   icon: <Truck className="w-3.5 h-3.5" /> },
-  delivered:  { bg: 'bg-emerald-100',text: 'text-emerald-700',icon: <Package className="w-3.5 h-3.5" /> },
-  cancelled:  { bg: 'bg-red-100',    text: 'text-red-700',    icon: <XCircle className="w-3.5 h-3.5" /> },
+  pending:    { bg: 'bg-amber-100',   text: 'text-amber-700',   icon: <Clock className="w-3.5 h-3.5" /> },
+  confirmed:  { bg: 'bg-blue-100',    text: 'text-blue-700',    icon: <CheckCircle className="w-3.5 h-3.5" /> },
+  processing: { bg: 'bg-purple-100',  text: 'text-purple-700',  icon: <RefreshCw className="w-3.5 h-3.5" /> },
+  shipped:    { bg: 'bg-cyan-100',    text: 'text-cyan-700',    icon: <Truck className="w-3.5 h-3.5" /> },
+  delivered:  { bg: 'bg-emerald-100', text: 'text-emerald-700', icon: <Package className="w-3.5 h-3.5" /> },
+  cancelled:  { bg: 'bg-red-100',     text: 'text-red-700',     icon: <XCircle className="w-3.5 h-3.5" /> },
 };
-
-const MOCK_ORDERS: Order[] = [
-  {
-    id: 'ORD-2024-001', userId: 'u1', status: 'delivered',
-    items: [{ productId: 'modalert-200', productName: 'Modalert 200mg', variantId: 'v1', quantity: 1, pillCount: 100, price: 139, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=100&q=60' }],
-    subtotal: 139, shipping: 0, discount: 0, total: 139,
-    shippingAddress: { firstName: 'Alex', lastName: 'Thompson', email: 'alex@example.com', phone: '555-1234', street: '123 Main St', city: 'New York', state: 'New York', zip: '10001', country: 'United States' },
-    paymentMethod: 'bitcoin', createdAt: new Date('2024-11-15'), updatedAt: new Date('2024-11-22'), estimatedDelivery: new Date('2024-11-22'),
-  },
-  {
-    id: 'ORD-2024-002', userId: 'u2', status: 'shipped',
-    items: [{ productId: 'waklert-150', productName: 'Waklert 150mg', variantId: 'v2', quantity: 1, pillCount: 50, price: 89, image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?w=100&q=60' }],
-    subtotal: 89, shipping: 9.99, discount: 0, total: 98.99,
-    shippingAddress: { firstName: 'Sarah', lastName: 'Martinez', email: 'sarah@example.com', phone: '555-5678', street: '456 Oak Ave', city: 'Los Angeles', state: 'California', zip: '90001', country: 'United States' },
-    paymentMethod: 'ethereum', createdAt: new Date('2024-12-01'), updatedAt: new Date('2024-12-03'), estimatedDelivery: new Date('2024-12-10'),
-  },
-  {
-    id: 'ORD-2024-003', userId: 'u3', status: 'processing',
-    items: [{ productId: 'modalert-200', productName: 'Modalert 200mg', variantId: 'v3', quantity: 2, pillCount: 200, price: 249, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=100&q=60' }],
-    subtotal: 249, shipping: 0, discount: 37.35, total: 211.65,
-    shippingAddress: { firstName: 'David', lastName: 'Lee', email: 'david@example.com', phone: '555-9012', street: '789 Pine Rd', city: 'Chicago', state: 'Illinois', zip: '60601', country: 'United States' },
-    paymentMethod: 'bitcoin', createdAt: new Date('2024-12-10'), updatedAt: new Date('2024-12-10'), estimatedDelivery: new Date('2024-12-20'),
-  },
-  {
-    id: 'ORD-2024-004', userId: 'u4', status: 'confirmed',
-    items: [{ productId: 'artvigil-150', productName: 'Artvigil 150mg', variantId: 'v4', quantity: 1, pillCount: 30, price: 49, image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=100&q=60' }],
-    subtotal: 49, shipping: 9.99, discount: 0, total: 58.99,
-    shippingAddress: { firstName: 'Emma', lastName: 'Rodriguez', email: 'emma@example.com', phone: '555-3456', street: '321 Elm St', city: 'Houston', state: 'Texas', zip: '77001', country: 'United States' },
-    paymentMethod: 'zelle', createdAt: new Date('2024-12-15'), updatedAt: new Date('2024-12-15'), estimatedDelivery: new Date('2024-12-25'),
-  },
-  {
-    id: 'ORD-2024-005', userId: 'u5', status: 'pending',
-    items: [{ productId: 'starter-pack', productName: 'Nootropic Starter Pack', variantId: 'v5', quantity: 1, pillCount: 40, price: 59, image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=100&q=60' }],
-    subtotal: 59, shipping: 9.99, discount: 0, total: 68.99,
-    shippingAddress: { firstName: 'Chris', lastName: 'Brown', email: 'chris@example.com', phone: '555-7890', street: '654 Maple Dr', city: 'Phoenix', state: 'Arizona', zip: '85001', country: 'United States' },
-    paymentMethod: 'bill', createdAt: new Date('2024-12-20'), updatedAt: new Date('2024-12-20'), estimatedDelivery: new Date('2025-01-05'),
-  },
-];
 
 function StatusBadge({ status }: { status: OrderStatus }) {
   const s = STATUS_STYLES[status];
@@ -97,7 +59,6 @@ function ConfirmStatusDialog({
         </div>
 
         <div className="p-6 space-y-4">
-          {/* From → To visual */}
           <div className="flex items-center gap-3 justify-center">
             <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full capitalize ${from.bg} ${from.text}`}>
               {from.icon} {fromStatus}
@@ -114,7 +75,6 @@ function ConfirmStatusDialog({
             </div>
           )}
 
-          {/* Optional note */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-slate-500 uppercase">
               Note <span className="font-normal text-slate-400 normal-case">(optional — saved to change log)</span>
@@ -156,7 +116,10 @@ function ConfirmStatusDialog({
 
 /* ─── Status Log Timeline ─────────────────────────────────────────── */
 function StatusLogTimeline({ orderId, orderCreatedAt }: { orderId: string; orderCreatedAt: Date }) {
-queryFn: () => api('/admin/orders');
+  const { data: logs } = useQuery<OrderStatusLog[]>({
+    queryKey: ['status-logs', orderId],
+    queryFn: () => db.orderStatusLogs.where('orderId').equals(orderId).sortBy('changedAt'),
+  });
 
   const fmtTime = (d: Date | string) =>
     new Date(d).toLocaleString(undefined, {
@@ -184,9 +147,7 @@ queryFn: () => api('/admin/orders');
       </div>
 
       <div className="relative">
-        {/* vertical connector line */}
         <div className="absolute left-3 top-4 bottom-4 w-px bg-slate-200" />
-
         <div className="space-y-3">
           {entries.map((entry, idx) => {
             if (entry.kind === 'created') {
@@ -290,7 +251,9 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
             <div className="space-y-2">
               {order.items.map((item) => (
                 <div key={item.productId} className="flex gap-3 p-3 bg-slate-50 rounded-xl">
-                  <img src={item.image} className="w-12 h-12 rounded-lg object-cover" alt={item.productName} />
+                  {item.image && (
+                    <img src={item.image} className="w-12 h-12 rounded-lg object-cover" alt={item.productName} />
+                  )}
                   <div className="flex-1">
                     <p className="font-semibold text-slate-900 text-sm">{item.productName}</p>
                     <p className="text-xs text-slate-500">{item.pillCount} pills · qty {item.quantity}</p>
@@ -309,6 +272,7 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               <p className="text-xs text-slate-500">{order.shippingAddress.street}</p>
               <p className="text-xs text-slate-500">{order.shippingAddress.city}, {order.shippingAddress.state}</p>
               <p className="text-xs text-slate-500">{order.shippingAddress.email}</p>
+              <p className="text-xs text-slate-500">{order.shippingAddress.country}</p>
             </div>
             <div className="p-4 bg-slate-50 rounded-xl">
               <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Payment</p>
@@ -316,7 +280,7 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               <div className="mt-2 space-y-1 text-xs text-slate-500">
                 <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
                 {order.discount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount</span><span>−{formatPrice(order.discount)}</span></div>}
-                <div className="flex justify-between"><span>Shipping</span><span>{order.shipping === 0 ? 'FREE' : formatPrice(order.shipping)}</span></div>
+                <div className="flex justify-between"><span>Shipping</span><span className="text-emerald-600 font-semibold">FREE</span></div>
                 <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1"><span>Total</span><span>{formatPrice(order.total)}</span></div>
               </div>
             </div>
@@ -346,24 +310,20 @@ export function AdminOrdersPage() {
     note: string;
   } | null>(null);
 
-  const { data: dbOrders } = useQuery({
+  const { data: orders = [] } = useQuery<Order[]>({
     queryKey: ['admin-orders'],
-    queryFn: () => db.orders.toArray(),
+    queryFn: () => db.orders.orderBy('createdAt').reverse().toArray(),
   });
 
-  const allOrders = [...MOCK_ORDERS, ...(dbOrders ?? [])];
-
-  const filtered = allOrders
-    .filter((o) => {
-      const matchSearch =
-        search === '' ||
-        o.id.toLowerCase().includes(search.toLowerCase()) ||
-        o.shippingAddress.email.toLowerCase().includes(search.toLowerCase()) ||
-        `${o.shippingAddress.firstName} ${o.shippingAddress.lastName}`.toLowerCase().includes(search.toLowerCase());
-      const matchStatus = statusFilter === 'all' || o.status === statusFilter;
-      return matchSearch && matchStatus;
-    })
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const filtered = orders.filter((o) => {
+    const matchSearch =
+      search === '' ||
+      o.id.toLowerCase().includes(search.toLowerCase()) ||
+      o.shippingAddress.email.toLowerCase().includes(search.toLowerCase()) ||
+      `${o.shippingAddress.firstName} ${o.shippingAddress.lastName}`.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter === 'all' || o.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
 
   const handleRequestStatusChange = (orderId: string, fromStatus: OrderStatus, toStatus: OrderStatus) => {
     setPending({ orderId, fromStatus, toStatus, note: '' });
@@ -392,7 +352,7 @@ export function AdminOrdersPage() {
     setPending(null);
   };
 
-  const statusCounts = allOrders.reduce((acc, o) => {
+  const statusCounts = orders.reduce((acc, o) => {
     acc[o.status] = (acc[o.status] ?? 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -401,7 +361,7 @@ export function AdminOrdersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
-        <p className="text-slate-500 text-sm mt-1">{allOrders.length} total orders</p>
+        <p className="text-slate-500 text-sm mt-1">{orders.length} total orders</p>
       </div>
 
       {/* Status pills */}
@@ -410,7 +370,7 @@ export function AdminOrdersPage() {
           onClick={() => setStatusFilter('all')}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${statusFilter === 'all' ? 'bg-slate-900 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300'}`}
         >
-          All ({allOrders.length})
+          All ({orders.length})
         </button>
         {STATUS_OPTIONS.map((s) => (
           <button key={s} onClick={() => setStatusFilter(s)}
@@ -457,10 +417,16 @@ export function AdminOrdersPage() {
             </thead>
             <tbody className="divide-y divide-slate-50">
               {filtered.length === 0 ? (
-                <tr><td colSpan={8} className="px-5 py-12 text-center text-slate-400">No orders found</td></tr>
+                <tr>
+                  <td colSpan={8} className="px-5 py-16 text-center">
+                    <Package className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                    <p className="text-slate-400 font-medium">No orders yet</p>
+                    <p className="text-slate-300 text-xs mt-1">Orders will appear here after customers checkout</p>
+                  </td>
+                </tr>
               ) : filtered.map((order) => (
                 <tr key={order.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-5 py-4 font-mono text-xs text-slate-500">{order.id}</td>
+                  <td className="px-5 py-4 font-mono text-xs font-semibold text-slate-700">{order.id}</td>
                   <td className="px-5 py-4">
                     <p className="font-semibold text-slate-900 text-sm">{order.shippingAddress.firstName} {order.shippingAddress.lastName}</p>
                     <p className="text-xs text-slate-400">{order.shippingAddress.email}</p>
@@ -468,7 +434,9 @@ export function AdminOrdersPage() {
                   <td className="px-5 py-4">
                     <div className="flex -space-x-2">
                       {order.items.slice(0, 2).map((item, i) => (
-                        <img key={i} src={item.image} className="w-8 h-8 rounded-lg object-cover border-2 border-white" alt="" />
+                        item.image
+                          ? <img key={i} src={item.image} className="w-8 h-8 rounded-lg object-cover border-2 border-white" alt="" />
+                          : <div key={i} className="w-8 h-8 rounded-lg bg-slate-200 border-2 border-white" />
                       ))}
                     </div>
                     <p className="text-xs text-slate-400 mt-1">{order.items.length} item{order.items.length !== 1 ? 's' : ''}</p>
