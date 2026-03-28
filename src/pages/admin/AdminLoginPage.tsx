@@ -12,8 +12,9 @@ export function AdminLoginPage() {
   const login = useAdminStore((s) => s.login);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
+  setError('');
   try {
     const res = await fetch('https://api.modavance.co/admin/auth/login', {
       method: 'POST',
@@ -21,15 +22,15 @@ export function AdminLoginPage() {
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
-    if (data.data?.token) {
+    if (data?.data?.token) {
       localStorage.setItem('adminToken', data.data.token);
       login(password);
       navigate('/admin');
     } else {
-      setError('Invalid credentials');
+      setError('Invalid email or password');
     }
   } catch {
-    setError('Connection error');
+    setError('Connection error. Please try again.');
   }
 };
 
