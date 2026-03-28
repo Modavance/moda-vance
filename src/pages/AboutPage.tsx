@@ -147,7 +147,7 @@ export function AboutPage() {
       <div className="py-20 bg-blue-600">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Ready to Experience the Difference?</h2>
-          <p className="text-blue-100 mb-8">Join 50,000+ customers who've made ModaVance their trusted cognitive enhancement source.</p>
+          <p className="text-blue-100 mb-8">Join thousands of customers who've made ModaVance their trusted cognitive enhancement source.</p>
           <Link
             to="/shop"
             className="inline-flex items-center gap-2 bg-amber-500 text-white px-8 py-4 text-lg font-semibold rounded-xl hover:bg-amber-600 active:scale-95 transition-all shadow-lg"
