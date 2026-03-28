@@ -5,7 +5,7 @@ const STEPS = [
     icon: MousePointerClick,
     number: '01',
     title: 'Choose Your Product',
-    description: 'Browse our catalog and select the modafinil or armodafinil product that fits your needs and budget. Not sure? Start with our Starter Pack.',
+    description: 'Browse our catalog and select the Modafinil or Armodafinil product that fits your needs and budget. Not sure? Start with our Sample Pack.',
   },
   {
     icon: Package,
