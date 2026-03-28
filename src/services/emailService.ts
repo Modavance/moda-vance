@@ -8,7 +8,6 @@ const TEMPLATES = {
 
 async function sendEmail(templateId: string, params: Record<string, string>) {
   try {
-    console.log('Sending email:', templateId, params);
     const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -21,10 +20,8 @@ async function sendEmail(templateId: string, params: Record<string, string>) {
     });
     if (!res.ok) {
       const text = await res.text();
-      console.error('EmailJS error response:', res.status, text);
       throw new Error(text);
     }
-    console.log('Email sent successfully!');
   } catch (err) {
     console.error('EmailJS error:', err);
   }
@@ -36,10 +33,10 @@ function getPaymentInstructions(method: string, total: number): string {
       return `Send the BTC equivalent of $${total.toFixed(2)} USD to the wallet address provided in your account. Payment must be received within 48 hours to hold your order.`;
     case 'ethereum':
       return `Send the ETH equivalent of $${total.toFixed(2)} USD to the wallet address provided in your account. Payment must be received within 48 hours to hold your order.`;
-    case 'zelle':
-      return `Send $${total.toFixed(2)} to payments@modavance.com via Zelle. Include your order number in the memo field. Your order will be processed within 2 hours of receiving payment.`;
-    case 'bill':
-      return `Send $${total.toFixed(2)} cash (no checks) in a plain sealed envelope to our P.O. Box. Include a slip of paper with your order number inside. Processing begins upon receipt.`;
+    case 'paypal':
+      return `You will receive a PayPal payment request to complete your order of $${total.toFixed(2)}. Please complete the payment within 48 hours.`;
+    case 'card':
+      return `You will receive a secure payment link to complete your card payment of $${total.toFixed(2)}. Please complete the payment within 48 hours.`;
     default:
       return `Please complete your payment of $${total.toFixed(2)} as instructed.`;
   }
