@@ -1,4 +1,5 @@
 import { db } from '@/db/database';
+import { emailService } from './emailService';
 import type { Order, OrderStatus } from '@/types';
 
 // Generate next MV-XXX order ID using counter stored in settings
@@ -26,7 +27,7 @@ export const orderService = {
     }));
 
     const subtotal = params.subtotal;
-    const shipping = 0; // Free shipping on all orders
+    const shipping = params.shipping ?? 0;
     const discount = params.discount || 0;
     const total = subtotal - discount + shipping;
 
@@ -68,6 +69,9 @@ export const orderService = {
       changedAt: new Date(),
       note: 'Order placed',
     });
+
+    // Send confirmation email
+    emailService.sendOrderConfirmation(order);
 
     return order;
   },
