@@ -380,6 +380,7 @@ export async function seedDatabase() {
   }
 
   // Seed FAQ items if not present
+  // Always reseed FAQ (version 5 cleared old items)
   const faqCount = await db.faqItems.count();
   if (faqCount === 0) {
     await db.faqItems.bulkAdd(FAQ_ITEMS);
