@@ -282,12 +282,12 @@ export function ProductPage() {
           {activeTab === 'shipping' && (
             <div className="max-w-2xl space-y-4">
               {[
-                { title: 'Processing Time', desc: 'Orders are processed within 24 hours of payment confirmation.' },
-                { title: 'Standard Shipping (US)', desc: '7–14 business days. Ships via USPS or FedEx in plain, unmarked packaging.' },
-                { title: 'Express Shipping (US)', desc: '3–7 business days. Available for an additional $19.99.' },
-                { title: 'International Shipping', desc: '10–21 business days to most countries. Shipping costs calculated at checkout.' },
+                { title: 'Processing Time', desc: 'Orders are processed within 24h hours of payment confirmation. Shipping is free on all orders.' },
+                { title: 'Standard Shipping (US)', desc: '5–9 business days. Ships via USPS or FedEx in plain, unmarked packaging.' },
+                { title: 'Standard Shipping (EU UK AU)', desc: '4–7 business days.' },
+                { title: 'International Shipping', desc: '9–12 business days to most countries.' },
                 { title: 'Tracking', desc: 'A tracking number is emailed within 48 hours of shipment.' },
-                { title: 'Reshipment Policy', desc: 'If your package is seized by customs or lost in transit, we will reship free of charge — no questions asked.' },
+                { title: 'Reshipment Policy', desc: 'If your package is seized by customs or lost in transit, we will reship once free of charge — no questions asked.' },
               ].map((item) => (
                 <div key={item.title} className="flex gap-4 p-4 rounded-xl bg-slate-50">
                   <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
