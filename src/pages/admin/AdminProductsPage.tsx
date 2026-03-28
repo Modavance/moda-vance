@@ -172,6 +172,7 @@ function ProductFormModal({ product, onClose, onSave }: {
                 className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="modafinil">Modafinil</option>
                 <option value="armodafinil">Armodafinil</option>
+                <option value="mix">Mix</option>
               </select>
             </div>
             <div className="flex flex-col gap-1.5">
