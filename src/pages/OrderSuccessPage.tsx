@@ -67,11 +67,8 @@ const STATUS_WEIGHT: Record<OrderStatus, number> = {
 };
 
 function buildPaymentInstructions(s: Record<string, string>, total: number) {
-  const zelleRecipient  = s['payment.zelle.recipient']  ?? 'payments@modavance.com';
-  const billAddress     = s['payment.bill.address']     ?? 'P.O. Box (see your email)';
-  const billInstructions = s['payment.bill.instructions'] ?? 'Send cash only (no checks) in a plain sealed envelope.';
-  const btcWallet       = s['payment.bitcoin.wallet']   ?? '(wallet address will be in your confirmation email)';
-  const ethWallet       = s['payment.ethereum.wallet']  ?? '(wallet address will be in your confirmation email)';
+  const btcWallet = s['payment.bitcoin.wallet']  ?? '(wallet address will be in your confirmation email)';
+  const ethWallet = s['payment.ethereum.wallet'] ?? '(wallet address will be in your confirmation email)';
 
   return {
     bitcoin: {
@@ -94,24 +91,24 @@ function buildPaymentInstructions(s: Record<string, string>, total: number) {
         'You\'ll receive a shipping notification with tracking number.',
       ],
     },
-    zelle: {
-      title: 'Send Your Zelle Payment',
+    paypal: {
+      title: 'Complete Your PayPal Payment',
       color: 'bg-blue-50 border-blue-200',
       steps: [
-        `Send $${total.toFixed(2)} to ${zelleRecipient} via Zelle.`,
-        'Include your order number in the memo field.',
+        `You will receive a PayPal payment request for $${total.toFixed(2)}.`,
+        'Please complete the payment within 48 hours to hold your order.',
         'Your order will be processed within 2 hours of receiving payment.',
         'You\'ll receive a shipping confirmation email once it ships.',
       ],
     },
-    bill: {
-      title: 'Mail Your Cash Payment',
+    card: {
+      title: 'Complete Your Card Payment',
       color: 'bg-slate-50 border-slate-200',
       steps: [
-        `Send $${total.toFixed(2)} cash to: ${billAddress}`,
-        billInstructions,
-        'Include a slip of paper with your order number inside the envelope.',
-        'Orders are processed within 48 hours of receiving payment.',
+        `You will receive a secure payment link for $${total.toFixed(2)}.`,
+        'Please complete the payment within 48 hours to hold your order.',
+        'Your order will be processed once payment is confirmed.',
+        'You\'ll receive a shipping confirmation email once it ships.',
       ],
     },
   };
