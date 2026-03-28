@@ -40,7 +40,7 @@ export function TrustSection() {
         <div className="text-center mb-16">
           <span className="text-sm font-semibold text-blue-600 uppercase tracking-widest">Our Promise</span>
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mt-3">
-            Why 50,000 Customers Choose ModaVance
+            Why Customers Worldwide Choose ModaVance
           </h2>
         </div>
 
