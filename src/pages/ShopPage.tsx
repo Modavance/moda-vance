@@ -11,6 +11,7 @@ const CATEGORIES = [
   { value: 'all', label: 'All Products' },
   { value: 'modafinil', label: 'Modafinil' },
   { value: 'armodafinil', label: 'Armodafinil' },
+  { value: 'mix', label: '🔀 Mix' },
 ];
 
 const BRANDS = [
@@ -73,7 +74,7 @@ export function ShopPage() {
           <p className="text-slate-400">
             {searchQuery
               ? `${filtered.length} result${filtered.length !== 1 ? 's' : ''} found`
-              : 'Pharmaceutical-grade Modafinil and Armodafinil — the world\'s most trusted cognitive enhancers'}
+              : 'Pharmaceutical-grade Modafinil, Armodafinil and Mix packs — the world\'s most trusted cognitive enhancers'}
           </p>
         </div>
       </div>
