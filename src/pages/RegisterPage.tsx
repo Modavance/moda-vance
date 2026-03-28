@@ -63,7 +63,7 @@ export function RegisterPage() {
             <Logo size="lg" className="justify-center mb-6" />
           </Link>
           <h1 className="text-2xl font-bold text-slate-900">Create your account</h1>
-          <p className="text-slate-500 mt-2">Join 50,000+ high performers</p>
+          <p className="text-slate-500 mt-2">Join thousands of high performers</p>
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
