@@ -16,7 +16,7 @@ export const useAdminStore = create<AdminStore>()(
     (set, get) => ({
       isAuthenticated: false,
       email: 'admin@modavance.com',
-      password: 'admin123',
+      password: 'ModeAdmin2024',
       login: (password: string) => {
         if (password === get().password) {
           set({ isAuthenticated: true });
