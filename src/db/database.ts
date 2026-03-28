@@ -100,6 +100,20 @@ export class ModavanceDB extends Dexie {
       settings:            'key',
       orderStatusLogs:     'id, orderId, changedAt',
     }).upgrade(tx => tx.table('faqItems').clear());
+
+    // v6 — force FAQ reseed
+    this.version(6).stores({
+      products:            'id, slug, category, brand, featured, inStock',
+      orders:              'id, userId, status, createdAt',
+      users:               'id, email',
+      reviews:             'id, productId, userId, rating',
+      blogPosts:           'id, slug, category',
+      coupons:             'code',
+      faqItems:            'id, section',
+      contactSubmissions:  'id, createdAt',
+      settings:            'key',
+      orderStatusLogs:     'id, orderId, changedAt',
+    }).upgrade(tx => tx.table('faqItems').clear());
   }
 }
 
