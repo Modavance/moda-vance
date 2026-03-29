@@ -364,23 +364,18 @@ const DEFAULT_SETTINGS: Setting[] = [
 ];
 
 export async function seedDatabase() {
-  const productCount = await db.products.count();
-
-  if (productCount === 0) {
-    await db.transaction('rw', [db.products, db.reviews, db.blogPosts, db.coupons], async () => {
-      await db.products.bulkAdd(PRODUCTS);
-      await db.reviews.bulkAdd(REVIEWS);
-      await db.blogPosts.bulkAdd(BLOG_POSTS);
-      await db.coupons.bulkAdd(COUPONS);
-    });
-  } else {
-    // Always update products with latest data (prices, images, etc)
-    await db.transaction('rw', [db.products], async () => {
-      for (const p of PRODUCTS) {
-        await db.products.put(p);
-      }
-    });
-  }
+  // Always update products with latest data
+  await db.transaction('rw', [db.products, db.reviews, db.blogPosts, db.coupons], async () => {
+    for (const p of PRODUCTS) {
+      await db.products.put(p);
+    }
+    const reviewCount = await db.reviews.count();
+    if (reviewCount === 0) await db.reviews.bulkAdd(REVIEWS);
+    const blogCount = await db.blogPosts.count();
+    if (blogCount === 0) await db.blogPosts.bulkAdd(BLOG_POSTS);
+    const couponCount = await db.coupons.count();
+    if (couponCount === 0) await db.coupons.bulkAdd(COUPONS);
+  });
 
   // Force clear and reseed FAQ
   await db.faqItems.clear();
