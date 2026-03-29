@@ -190,11 +190,9 @@ We recommend a systematic approach: try each product on separate days (or weeks)
 
 **The Result**
 After trying best sellers, you'll have firsthand knowledge of which product and which dose works best for your unique neurochemistry and lifestyle — saving you money on larger orders.`,
-    image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=800&fit=crop&q=85',
+    image: 'https://i.imgur.com/bdrmUxR.png',
     images: [
-      'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=800&fit=crop&q=85',
-      'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&h=800&fit=crop&q=85',
-      'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&h=800&fit=crop&q=85',
+      'https://i.imgur.com/bdrmUxR.png',
     ],
     variants: [
       { id: 'starter-20', quantity: 20, price: 59, originalPrice: 79, label: '20 Pills (10 of each)' },
