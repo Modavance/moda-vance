@@ -354,17 +354,13 @@ export const FAQ_ITEMS: FAQItem[] = [
 ];
 
 const DEFAULT_SETTINGS: Setting[] = [
-  { key: 'contact.email',          value: 'support@modavance.com' },
-  { key: 'contact.response_time',  value: 'Within 2 hours, 7 days a week' },
-  { key: 'contact.phone',          value: '' },
-  { key: 'payment.bitcoin.wallet', value: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh' },
+  { key: 'contact.email',            value: 'support@modavance.com' },
+  { key: 'contact.response_time',    value: 'Within 24 hours, 7 days a week' },
+  { key: 'contact.phone',            value: '' },
+  { key: 'payment.bitcoin.wallet',   value: '' },
   { key: 'payment.bitcoin.discount', value: '15' },
-  { key: 'payment.ethereum.wallet', value: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F' },
+  { key: 'payment.ethereum.wallet',  value: '' },
   { key: 'payment.ethereum.discount', value: '15' },
-  { key: 'payment.zelle.recipient', value: 'payments@modavance.com' },
-  { key: 'payment.zelle.discount', value: '10' },
-  { key: 'payment.bill.address',   value: 'ModaVance LLC, P.O. Box 12345, New York, NY 10001' },
-  { key: 'payment.bill.instructions', value: 'Send cash only (no checks or money orders) in a plain sealed envelope.' },
 ];
 
 export async function seedDatabase() {
@@ -381,7 +377,9 @@ export async function seedDatabase() {
 
   // Force clear and reseed FAQ
   await db.faqItems.clear();
-  await db.faqItems.bulkAdd(FAQ_ITEMS);
+  for (const item of FAQ_ITEMS) {
+    await db.faqItems.put(item);
+  }
 
   // Seed default settings if not present
   const settingsCount = await db.settings.count();
