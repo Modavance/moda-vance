@@ -6,19 +6,30 @@ on:
 jobs:
   publish:
     if: "contains(github.event.head_commit.message, '[build]')"
-    name: 🚀 Deploy Website Every Commit
+    name: 🚀 Build & Deploy Website
     runs-on: ubuntu-latest
     steps:
+      - name: 🚚 Get Latest Code
+        uses: actions/checkout@v3
 
-    - name: 🚚 Get Latest Code
-      uses: actions/checkout@v3
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-    - name: 📂 Sync Files
-      uses: SamKirkland/web-deploy@v1
-      with:
-        target-server: ${{ secrets.host }}
-        remote-user: ${{ secrets.username }}
-        private-ssh-key: ${{ secrets.ssh_key }}
-        source-path: dist/
-        destination-path: /home/admin/web/modavance.co/public/
-        rsync-options: --archive --verbose --compress --human-readable --progress --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore 
+      - name: 📥 Install Dependencies
+        run: npm ci
+
+      - name: 🔨 Build
+        run: npm run build
+
+      - name: 📂 Sync Files
+        uses: SamKirkland/web-deploy@v1
+        with:
+          target-server: ${{ secrets.host }}
+          remote-user: ${{ secrets.username }}
+          private-ssh-key: ${{ secrets.ssh_key }}
+          source-path: dist/
+          destination-path: /home/admin/web/modavance.co/public/
+          rsync-options: --archive --verbose --compress --human-readable --progress --exclude=.git* --exclude=.git/ --exclude=README.md --exclude=readme.md --exclude=.gitignore
