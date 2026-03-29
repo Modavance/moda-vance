@@ -21,7 +21,7 @@ Modafinil works primarily by inhibiting dopamine reuptake, increasing extracellu
 
 **Quality Assurance**
 Every batch of Modalert is manufactured in Sun Pharma's FDA-inspected facilities in India, meeting the same rigorous standards as US-manufactured pharmaceuticals. We source directly from licensed distributors with certificates of authenticity available upon request.`,
-    image: 'https://imgur.com/a/FydwDMV',
+    image: 'https://i.imgur.com/9g5ftDZ.png',
     images: [
       'https://imgur.com/a/FydwDMV',
     ],
