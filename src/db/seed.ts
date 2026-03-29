@@ -373,6 +373,13 @@ export async function seedDatabase() {
       await db.blogPosts.bulkAdd(BLOG_POSTS);
       await db.coupons.bulkAdd(COUPONS);
     });
+  } else {
+    // Always update products with latest data (prices, images, etc)
+    await db.transaction('rw', [db.products], async () => {
+      for (const p of PRODUCTS) {
+        await db.products.put(p);
+      }
+    });
   }
 
   // Force clear and reseed FAQ
