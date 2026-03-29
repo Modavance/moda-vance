@@ -148,9 +148,9 @@ If you're new to armodafinil, Artvigil is an excellent starting point. Its sligh
 
 **Long-Term Use Profile**
 Unlike stimulants that cause receptor downregulation over time, armodafinil maintains its effectiveness with responsible use. Most users take it 3–4 days per week to preserve sensitivity and maintain sleep quality.`,
-    image: 'https://imgur.com/gGB9wIC',
+    image: 'https://i.imgur.com/gGB9wIC.png',
     images: [
-      'https://imgur.com/gGB9wIC',
+      'https://i.imgur.com/gGB9wIC.png',
     ],
     variants: [
       { id: 'artvigil-30', quantity: 30, price: 79, originalPrice: 99 },
