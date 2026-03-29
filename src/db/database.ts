@@ -132,6 +132,20 @@ export class ModavanceDB extends Dexie {
       await tx.table('settings').clear();
       await tx.table('faqItems').clear();
     });
+
+    // v8 — version bump only, seed handles reloading
+    this.version(8).stores({
+      products:            'id, slug, category, brand, featured, inStock',
+      orders:              'id, userId, status, createdAt',
+      users:               'id, email',
+      reviews:             'id, productId, userId, rating',
+      blogPosts:           'id, slug, category',
+      coupons:             'code',
+      faqItems:            'id, section',
+      contactSubmissions:  'id, createdAt',
+      settings:            'key',
+      orderStatusLogs:     'id, orderId, changedAt',
+    });
   }
 }
 
