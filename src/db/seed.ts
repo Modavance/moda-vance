@@ -30,7 +30,7 @@ Every batch of Modalert is manufactured in Sun Pharma's FDA-inspected facilities
     variants: [
       { id: 'modalert-30', quantity: 30, price: 89, originalPrice: 100 },
       { id: 'modalert-50', quantity: 50, price: 119, originalPrice: 159 },
-      { id: 'modalert-100', quantity: 100, price: 179, originalPrice: 239, label: },
+      { id: 'modalert-100', quantity: 100, price: 179, originalPrice: 239, },
       { id: 'modalert-200', quantity: 200, price: 279, originalPrice: 349, label: 'Bulk Deal', savings: 71 },
       { id: 'modalert-300', quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 71 },
     ],
