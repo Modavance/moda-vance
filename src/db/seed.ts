@@ -106,11 +106,9 @@ Waklert is the choice of high-performance individuals who demand peak cognitive 
 
 **Clinical Background**
 Armodafinil (brand name Nuvigil) was approved by the FDA in 2007 and is prescribed for narcolepsy, shift work sleep disorder, and obstructive sleep apnea. Sun Pharma's Waklert contains the identical active ingredient at a fraction of the prescription cost.`,
-    image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?w=800&h=800&fit=crop&q=85',
+    image: 'https://i.imgur.com/OpITGJ8.png',
     images: [
-      'https://images.unsplash.com/photo-1576671081837-49000212a370?w=800&h=800&fit=crop&q=85',
-      'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&h=800&fit=crop&q=85',
-      'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&h=800&fit=crop&q=85',
+      'https://i.imgur.com/OpITGJ8.png',
     ],
     variants: [
       { id: 'waklert-30', quantity: 30, price: 89, originalPrice: 100 },
