@@ -24,21 +24,21 @@ const PAYMENT_INSTRUCTIONS: Record<string, { title: string; steps: string[] }> =
       'Your order will be shipped within 48 hours of payment confirmation.',
     ],
   },
-  paypal: {
-    title: 'PayPal Payment Instructions',
+  zelle: {
+    title: 'Zelle Payment Instructions',
     steps: [
-      'You will receive a PayPal payment request to your email address.',
-      'Complete the PayPal payment within 48 hours to hold your order.',
+      'You will receive Zelle payment details to your email address.',
+      'Complete the Zelle payment within 48 hours to hold your order.',
       'Your order will be processed within 2 hours of receiving payment.',
       'A shipping confirmation email will be sent once your order ships.',
     ],
   },
-  card: {
-    title: 'Card Payment Instructions',
+  bill: {
+    title: 'Cash by Mail Instructions',
     steps: [
-      'You will receive a secure payment link to your email address.',
-      'Complete the card payment within 48 hours to hold your order.',
-      'Your order will be processed once payment is confirmed.',
+      'You will receive mailing instructions to your email address.',
+      'Send cash or a money order within 48 hours to hold your order.',
+      'Your order will be processed once payment is received.',
       'A shipping confirmation email will be sent once your order ships.',
     ],
   },

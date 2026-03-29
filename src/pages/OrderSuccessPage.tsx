@@ -91,23 +91,23 @@ function buildPaymentInstructions(s: Record<string, string>, total: number) {
         'You\'ll receive a shipping notification with tracking number.',
       ],
     },
-    paypal: {
-      title: 'Complete Your PayPal Payment',
+    zelle: {
+      title: 'Complete Your Zelle Payment',
       color: 'bg-blue-50 border-blue-200',
       steps: [
-        `You will receive a PayPal payment request for $${total.toFixed(2)}.`,
+        `Send $${total.toFixed(2)} via Zelle to the address in your confirmation email.`,
         'Please complete the payment within 48 hours to hold your order.',
         'Your order will be processed within 2 hours of receiving payment.',
         'You\'ll receive a shipping confirmation email once it ships.',
       ],
     },
-    card: {
-      title: 'Complete Your Card Payment',
+    bill: {
+      title: 'Complete Your Cash by Mail Payment',
       color: 'bg-slate-50 border-slate-200',
       steps: [
-        `You will receive a secure payment link for $${total.toFixed(2)}.`,
-        'Please complete the payment within 48 hours to hold your order.',
-        'Your order will be processed once payment is confirmed.',
+        `Mail cash or a money order for $${total.toFixed(2)} to the address in your confirmation email.`,
+        'Please send payment within 48 hours to hold your order.',
+        'Your order will be processed once payment is received.',
         'You\'ll receive a shipping confirmation email once it ships.',
       ],
     },

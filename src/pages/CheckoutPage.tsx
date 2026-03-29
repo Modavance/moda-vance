@@ -69,7 +69,7 @@ const checkoutSchema = z.object({
   state:         z.string().min(1, 'Required'),
   zip:           z.string().min(2, 'Valid postal code required'),
   country:       z.string().min(2, 'Required'),
-  paymentMethod: z.enum(['bitcoin', 'ethereum', 'paypal', 'card']),
+  paymentMethod: z.enum(['bitcoin', 'ethereum', 'zelle', 'bill']),
   couponCode:    z.string().optional(),
   agreeTerms:    z.boolean().refine((v) => v === true, { message: 'You must agree to the terms' }),
 });
@@ -90,8 +90,8 @@ type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
 const PAYMENT_METHODS = [
   { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
-  { id: 'paypal'   as const, label: 'PayPal',          icon: 'P', desc: 'Standard pricing',  discount: 0,    highlight: false },
-  { id: 'card'     as const, label: 'Credit / Debit Card', icon: '💳', desc: 'Standard pricing', discount: 0, highlight: false },
+  { id: 'zelle'    as const, label: 'Zelle',            icon: 'Z', desc: 'Get 10% discount',  discount: 0.10, highlight: true  },
+  { id: 'bill'     as const, label: 'Cash by Mail',     icon: '$', desc: 'Standard pricing',  discount: 0,    highlight: false },
 ];
 
 /* ── Component ───────────────────────────────────────────────────── */
@@ -387,14 +387,14 @@ export function CheckoutPage() {
                     <strong>Payment instructions</strong> will be sent to your email after order confirmation, along with the wallet address and exact amount.
                   </div>
                 )}
-                {selectedPayment === 'paypal' && (
+                {selectedPayment === 'zelle' && (
                   <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200 text-sm text-blue-800">
-                    You will be redirected to PayPal to complete your payment after placing the order.
+                    Zelle payment instructions will be sent to your email after placing the order.
                   </div>
                 )}
-                {selectedPayment === 'card' && (
+                {selectedPayment === 'bill' && (
                   <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm text-slate-600">
-                    You will be redirected to our secure payment page to complete your card payment after placing the order.
+                    Cash by mail instructions will be sent to your email after placing the order.
                   </div>
                 )}
               </div>

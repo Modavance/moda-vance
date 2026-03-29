@@ -33,10 +33,10 @@ function getPaymentInstructions(method: string, total: number): string {
       return `Send the BTC equivalent of $${total.toFixed(2)} USD to the wallet address provided in your account. Payment must be received within 48 hours to hold your order.`;
     case 'ethereum':
       return `Send the ETH equivalent of $${total.toFixed(2)} USD to the wallet address provided in your account. Payment must be received within 48 hours to hold your order.`;
-    case 'paypal':
-      return `You will receive a PayPal payment request to complete your order of $${total.toFixed(2)}. Please complete the payment within 48 hours.`;
-    case 'card':
-      return `You will receive a secure payment link to complete your card payment of $${total.toFixed(2)}. Please complete the payment within 48 hours.`;
+    case 'zelle':
+      return `You will receive Zelle payment details to complete your order of $${total.toFixed(2)}. Please complete the payment within 48 hours.`;
+    case 'bill':
+      return `Please mail cash or a money order for $${total.toFixed(2)} as instructed in your confirmation email. Payment must be received within 48 hours.`;
     default:
       return `Please complete your payment of $${total.toFixed(2)} as instructed.`;
   }
