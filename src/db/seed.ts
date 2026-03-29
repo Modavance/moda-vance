@@ -180,7 +180,7 @@ Unlike stimulants that cause receptor downregulation over time, armodafinil main
     name: 'Nootropic Starter Pack',
     slug: 'nootropic-starter-pack',
     brand: 'Sun Pharma',
-    category: 'modafinil',
+    category: 'mix',
     strength: 'Mixed',
     pillsPerStrip: 10,
     shortDescription: 'Try all best seller products. 10 pills of each — total od 20 Pills to find your perfect match.',
