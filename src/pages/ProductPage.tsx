@@ -192,7 +192,7 @@ export function ProductPage() {
             <div className="grid grid-cols-3 gap-3 py-6 border-t border-b border-slate-100 mb-6">
               {[
                 { icon: Shield, text: 'Authentic' },
-                { icon: Truck, text: 'Ships in 24h' },
+                { icon: Truck, text: 'Ships in 48h*' },
                 { icon: RotateCcw, text: 'Money-Back' },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex flex-col items-center gap-1.5 text-center">
