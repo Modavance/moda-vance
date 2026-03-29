@@ -24,7 +24,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem);
   const notify = useNotificationStore();
 
-  const defaultVariant = product.variants.find((v) => v.label === 'Best Value') ?? product.variants[Math.floor(product.variants.length / 2)];
+  const defaultVariant = product.variants.reduce((min, v) => v.price < min.price ? v : min, product.variants[0]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
