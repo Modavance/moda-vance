@@ -63,7 +63,7 @@ Users consistently report 10–12 hours of focused wakefulness, significantly im
 HAB Pharmaceuticals operates ISO 9001:2015 certified facilities and exports to over 50 countries. Their manufacturing processes comply with WHO-GMP guidelines, ensuring consistent pharmaceutical quality.`,
     image: 'https://i.imgur.com/3LL6LVL.png',
     images: [
-      'https://i.imgur.com/3LL6LVL.png
+      'https://i.imgur.com/3LL6LVL.png'
     ],
     variants: [
       { id: 'modvigil-30', quantity: 30, price: 79, originalPrice: 99 },
