@@ -20,7 +20,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            cd /home/admin/web/modavance.co/app/backend
+            cd /home/admin/web/modavance.co/app/modavance/backend
 
             echo "==> Pulling latest code..."
             git pull origin main
