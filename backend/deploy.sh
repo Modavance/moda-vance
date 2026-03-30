@@ -1,6 +1,6 @@
 #!/bin/bash
 # Run this on the DigitalOcean droplet after cloning the repo
-# Usage: cd /var/www/modavance/backend && bash deploy.sh
+# Usage: cd /home/admin/web/modavance.co/app/backend && bash deploy.sh
 
 set -e
 

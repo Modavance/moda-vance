@@ -1,0 +1,40 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to DigitalOcean via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd /home/admin/web/modavance.co/app/backend
+
+            echo "==> Pulling latest code..."
+            git pull origin main
+
+            echo "==> Installing dependencies..."
+            npm install --ignore-scripts --omit=dev
+
+            echo "==> Generating Prisma client..."
+            npx prisma generate
+
+            echo "==> Building..."
+            npm run build
+
+            echo "==> Reloading PM2..."
+            pm2 reload modavance-api --update-env
+
+            echo "Deploy complete!"
