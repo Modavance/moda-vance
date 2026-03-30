@@ -1,27 +1,38 @@
 import { useState } from 'react';
 import { Lock, Mail, CheckCircle, AlertCircle } from 'lucide-react';
 import { useAdminStore } from '@/store/adminStore';
+import { adminAuthService } from '@/services/authService';
 
 export function AdminProfilePage() {
-  const { email, changePassword, changeEmail } = useAdminStore();
+  const { email, token, login } = useAdminStore();
 
   const [emailForm, setEmailForm] = useState({ email });
   const [emailMsg, setEmailMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [emailSaving, setEmailSaving] = useState(false);
 
   const [passForm, setPassForm] = useState({ current: '', next: '', confirm: '' });
   const [passMsg, setPassMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [passSaving, setPassSaving] = useState(false);
 
-  const handleEmailSave = () => {
+  const handleEmailSave = async () => {
     if (!emailForm.email.includes('@')) {
       setEmailMsg({ type: 'error', text: 'Enter a valid email address.' });
       return;
     }
-    changeEmail(emailForm.email);
-    setEmailMsg({ type: 'success', text: 'Email updated successfully.' });
-    setTimeout(() => setEmailMsg(null), 3000);
+    setEmailSaving(true);
+    try {
+      await adminAuthService.changeEmail(emailForm.email);
+      login(emailForm.email, token!);
+      setEmailMsg({ type: 'success', text: 'Email updated successfully.' });
+      setTimeout(() => setEmailMsg(null), 3000);
+    } catch {
+      setEmailMsg({ type: 'error', text: 'Failed to update email. Please try again.' });
+    } finally {
+      setEmailSaving(false);
+    }
   };
 
-  const handlePasswordSave = () => {
+  const handlePasswordSave = async () => {
     if (!passForm.current) {
       setPassMsg({ type: 'error', text: 'Enter your current password.' });
       return;
@@ -34,14 +45,17 @@ export function AdminProfilePage() {
       setPassMsg({ type: 'error', text: 'New passwords do not match.' });
       return;
     }
-    const ok = changePassword(passForm.current, passForm.next);
-    if (!ok) {
+    setPassSaving(true);
+    try {
+      await adminAuthService.changePassword(passForm.current, passForm.next);
+      setPassMsg({ type: 'success', text: 'Password changed successfully.' });
+      setPassForm({ current: '', next: '', confirm: '' });
+      setTimeout(() => setPassMsg(null), 3000);
+    } catch {
       setPassMsg({ type: 'error', text: 'Current password is incorrect.' });
-      return;
+    } finally {
+      setPassSaving(false);
     }
-    setPassMsg({ type: 'success', text: 'Password changed successfully.' });
-    setPassForm({ current: '', next: '', confirm: '' });
-    setTimeout(() => setPassMsg(null), 3000);
   };
 
   return (
@@ -95,9 +109,10 @@ export function AdminProfilePage() {
 
         <button
           onClick={handleEmailSave}
-          className="bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors"
+          disabled={emailSaving}
+          className="bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
-          Save Email
+          {emailSaving ? 'Saving...' : 'Save Email'}
         </button>
       </div>
 
@@ -154,9 +169,10 @@ export function AdminProfilePage() {
 
         <button
           onClick={handlePasswordSave}
-          className="bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors"
+          disabled={passSaving}
+          className="bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
-          Change Password
+          {passSaving ? 'Saving...' : 'Change Password'}
         </button>
       </div>
     </div>
