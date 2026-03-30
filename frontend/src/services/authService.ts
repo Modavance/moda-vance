@@ -45,10 +45,10 @@ export const adminAuthService = {
   },
 
   changePassword: async (currentPassword: string, newPassword: string): Promise<void> => {
-    await adminApi.post('/admin/auth/change-password', { currentPassword, newPassword });
+    await adminApi.put('/admin/auth/password', { currentPassword, newPassword });
   },
 
   changeEmail: async (email: string): Promise<void> => {
-    await adminApi.post('/admin/auth/change-email', { email });
+    await adminApi.put('/admin/auth/profile', { email });
   },
 };

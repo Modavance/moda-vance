@@ -18,7 +18,7 @@ export const productService = {
 
   getBySlug: async (slug: string): Promise<Product | undefined> => {
     try {
-      const res = await api.get(`/products/slug/${slug}`);
+      const res = await api.get(`/products/${slug}`);
       return unwrap<Product>(res);
     } catch {
       return undefined;
@@ -26,7 +26,7 @@ export const productService = {
   },
 
   getFeatured: async (): Promise<Product[]> => {
-    const res = await api.get('/products?featured=true');
+    const res = await api.get('/products/featured');
     return unwrap<Product[]>(res);
   },
 

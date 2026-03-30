@@ -177,7 +177,7 @@ export function CheckoutPage() {
 
   const handleApplyCoupon = async () => {
     try {
-      const res = await api.get(`/coupons/${couponInput.toUpperCase()}`);
+      const res = await api.post('/coupons/validate', { code: couponInput.toUpperCase(), subtotal });
       const coupon = unwrap<Coupon>(res);
       if (new Date(coupon.expiresAt) < new Date()) {
         notify.error('This coupon has expired');

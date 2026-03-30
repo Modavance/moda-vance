@@ -303,7 +303,7 @@ export function BlogPostPage() {
   const { data: post, isLoading } = useQuery({
     queryKey: ['blog', slug],
     queryFn: async () => {
-      const res = await api.get(`/blog/slug/${slug}`);
+      const res = await api.get(`/blog/${slug}`);
       return unwrap<BlogPost>(res);
     },
     enabled: !!slug,

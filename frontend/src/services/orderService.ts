@@ -70,7 +70,7 @@ export const orderService = {
   },
 
   getByUser: async (): Promise<Order[]> => {
-    const res = await api.get('/orders/my');
+    const res = await api.get('/orders/mine');
     return unwrap<Order[]>(res);
   },
 

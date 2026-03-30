@@ -22,7 +22,7 @@ export function AdminCustomersPage() {
   const { data: customers = [] } = useQuery({
     queryKey: ['admin-customers'],
     queryFn: async () => {
-      const res = await adminApi.get('/customers');
+      const res = await adminApi.get('/admin/customers');
       return unwrap<CustomerSummary[]>(res);
     },
   });
