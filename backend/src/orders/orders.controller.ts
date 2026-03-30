@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -12,21 +12,17 @@ export class OrdersController {
 
   @Public()
   @Post()
-  create(
-    @Body() dto: CreateOrderDto,
-    @GetUser() user?: { userId: string },
-  ) {
-    return this.ordersService.create(dto, user?.userId);
-  }
+  @HttpCode(201)
+  create(@Body() dto: CreateOrderDto) { return this.ordersService.create(dto); }
 
   @Get('mine')
-  getMyOrders(@GetUser() user: { userId: string }) {
-    return this.ordersService.findByUser(user.userId);
-  }
+  findMine(@GetUser() user: { userId: string }) { return this.ordersService.findMine(user.userId); }
 
   @Public()
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.ordersService.findById(id);
-  }
+  findById(@Param('id') id: string) { return this.ordersService.findById(id); }
+
+  @Public()
+  @Get(':id/logs')
+  findLogs(@Param('id') id: string) { return this.ordersService.findLogs(id); }
 }

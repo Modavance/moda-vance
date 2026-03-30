@@ -1,15 +1,7 @@
-import { IsString, IsEmail } from 'class-validator';
-
+import { IsEmail, IsString, MaxLength } from 'class-validator';
 export class CreateContactDto {
-  @IsString()
-  name!: string;
-
-  @IsEmail()
-  email!: string;
-
-  @IsString()
-  subject!: string;
-
-  @IsString()
-  message!: string;
+  @IsString() @MaxLength(100) name!: string;
+  @IsEmail() email!: string;
+  @IsString() @MaxLength(200) subject!: string;
+  @IsString() @MaxLength(2000) message!: string;
 }

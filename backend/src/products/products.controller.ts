@@ -11,17 +11,11 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll(@Query() query: ProductFilterDto) {
-    return this.productsService.findAll(query);
-  }
+  findAll(@Query() query: ProductFilterDto) { return this.productsService.findAll(query); }
 
   @Get('featured')
-  findFeatured() {
-    return this.productsService.findFeatured();
-  }
+  findFeatured() { return this.productsService.findFeatured(); }
 
   @Get(':slug')
-  findBySlug(@Param('slug') slug: string) {
-    return this.productsService.findBySlug(slug);
-  }
+  findBySlug(@Param('slug') slug: string) { return this.productsService.findBySlug(slug); }
 }

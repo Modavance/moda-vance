@@ -6,26 +6,38 @@ import { UpdateFaqDto } from './dto/update-faq.dto';
 @Injectable()
 export class FaqService {
   private readonly logger = new Logger(FaqService.name);
-
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.faqItem.findMany({ orderBy: [{ section: 'asc' }, { order: 'asc' }] });
+  async findAll() { return this.prisma.faqItem.findMany({ orderBy: [{ section: 'asc' }, { order: 'asc' }] }); }
+
+  async findAllGrouped() {
+    const items = await this.findAll();
+    return items.reduce<Record<string, typeof items>>((acc, item) => {
+      if (!acc[item.section]) acc[item.section] = [];
+      acc[item.section].push(item);
+      return acc;
+    }, {});
   }
 
   async create(dto: CreateFaqDto) {
-    return this.prisma.faqItem.create({ data: dto });
+    const item = await this.prisma.faqItem.create({ data: dto });
+    this.logger.log(`FAQ item created: ${item.id}`);
+    return item;
   }
 
   async update(id: string, dto: UpdateFaqDto) {
-    const item = await this.prisma.faqItem.findUnique({ where: { id } });
-    if (!item) throw new NotFoundException(`FAQ item ${id} not found`);
+    await this.findById(id);
     return this.prisma.faqItem.update({ where: { id }, data: dto });
   }
 
-  async remove(id: string) {
-    const item = await this.prisma.faqItem.findUnique({ where: { id } });
-    if (!item) throw new NotFoundException(`FAQ item ${id} not found`);
+  async delete(id: string) {
+    await this.findById(id);
     await this.prisma.faqItem.delete({ where: { id } });
+  }
+
+  private async findById(id: string) {
+    const item = await this.prisma.faqItem.findUnique({ where: { id } });
+    if (!item) throw new NotFoundException(`FAQ item not found: ${id}`);
+    return item;
   }
 }

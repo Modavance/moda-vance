@@ -1,16 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -26,23 +14,16 @@ export class ProductsAdminController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll(@Query() query: ProductFilterDto) {
-    return this.productsService.findAll(query);
-  }
+  findAll(@Query() query: ProductFilterDto) { return this.productsService.findAll(query); }
 
   @Post()
-  create(@Body() dto: CreateProductDto) {
-    return this.productsService.create(dto);
-  }
+  @HttpCode(201)
+  create(@Body() dto: CreateProductDto) { return this.productsService.create(dto); }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
-    return this.productsService.update(id, dto);
-  }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateProductDto) { return this.productsService.update(id, dto); }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(id);
-  }
+  @HttpCode(204)
+  delete(@Param('id') id: string) { return this.productsService.delete(id); }
 }

@@ -1,13 +1,7 @@
-import { IsOptional, IsEnum, IsString } from 'class-validator';
-import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { IsEnum, IsOptional } from 'class-validator';
 import { OrderStatus } from '@prisma/client';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 
 export class OrderFilterDto extends PaginationQueryDto {
-  @IsOptional()
-  @IsEnum(OrderStatus)
-  status?: OrderStatus;
-
-  @IsOptional()
-  @IsString()
-  userId?: string;
+  @IsOptional() @IsEnum(OrderStatus) status?: OrderStatus;
 }

@@ -10,7 +10,5 @@ export class FaqController {
   constructor(private readonly faqService: FaqService) {}
 
   @Get()
-  findAll() {
-    return this.faqService.findAll();
-  }
+  findAll() { return this.faqService.findAllGrouped(); }
 }

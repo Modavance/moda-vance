@@ -13,17 +13,14 @@ export class OrdersAdminController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get()
-  findAll(@Query() query: OrderFilterDto) {
-    return this.ordersService.findAll(query);
-  }
+  findAll(@Query() query: OrderFilterDto) { return this.ordersService.findAll(query); }
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.ordersService.findById(id);
-  }
+  findById(@Param('id') id: string) { return this.ordersService.findById(id); }
 
   @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Body() dto: UpdateOrderStatusDto) {
-    return this.ordersService.updateStatus(id, dto);
-  }
+  updateStatus(@Param('id') id: string, @Body() dto: UpdateOrderStatusDto) { return this.ordersService.updateStatus(id, dto); }
+
+  @Get(':id/logs')
+  findLogs(@Param('id') id: string) { return this.ordersService.findLogs(id); }
 }

@@ -10,7 +10,8 @@ export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
   @Get()
-  findAll() {
-    return this.settingsService.findAll();
-  }
+  findAll() { return this.settingsService.findAll(); }
+
+  @Get('payment')
+  findPayment() { return this.settingsService.findPayment(); }
 }

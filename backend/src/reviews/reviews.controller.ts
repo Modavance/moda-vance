@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -11,16 +11,12 @@ export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Public()
-  @Get('product/:productId')
-  findByProduct(@Param('productId') productId: string) {
-    return this.reviewsService.findByProduct(productId);
-  }
+  @Get()
+  findByProduct(@Query('productId') productId: string) { return this.reviewsService.findByProduct(productId); }
 
   @Post()
-  create(
-    @Body() dto: CreateReviewDto,
-    @GetUser() user?: { userId: string },
-  ) {
-    return this.reviewsService.create(dto, user?.userId);
+  @HttpCode(201)
+  create(@Body() dto: CreateReviewDto, @GetUser() user: { userId: string; email: string }) {
+    return this.reviewsService.create(dto, user.userId, user.email);
   }
 }

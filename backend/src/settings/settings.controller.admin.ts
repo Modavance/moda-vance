@@ -12,12 +12,8 @@ export class SettingsAdminController {
   constructor(private readonly settingsService: SettingsService) {}
 
   @Get()
-  findAll() {
-    return this.settingsService.findAll();
-  }
+  findAll() { return this.settingsService.findAll(); }
 
   @Put()
-  updateMany(@Body() dto: UpdateSettingsDto) {
-    return this.settingsService.updateMany(dto);
-  }
+  bulkUpdate(@Body() dto: UpdateSettingsDto) { return this.settingsService.bulkUpdate(dto); }
 }

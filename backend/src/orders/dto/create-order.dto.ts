@@ -1,56 +1,27 @@
-import { IsEnum, IsString, IsArray, ValidateNested, IsInt, IsPositive, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsArray, IsEnum, IsOptional, IsString, ValidateNested, ArrayMinSize } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 import { PaymentMethod } from '@prisma/client';
-
-export class OrderItemDto {
-  @IsString()
-  variantId!: string;
-
-  @IsInt()
-  @IsPositive()
-  quantity!: number;
-}
-
-export class ShippingAddressDto {
-  @IsString()
-  firstName!: string;
-
-  @IsString()
-  lastName!: string;
-
-  @IsString()
-  email!: string;
-
-  @IsString()
-  address!: string;
-
-  @IsString()
-  city!: string;
-
-  @IsString()
-  state!: string;
-
-  @IsString()
-  zipCode!: string;
-
-  @IsString()
-  country!: string;
-}
+import { CreateOrderItemDto } from './create-order-item.dto';
+import { AddressDto } from '../../auth/dto/update-profile.dto';
 
 export class CreateOrderDto {
+  @IsOptional() @IsString() userId?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => OrderItemDto)
-  items!: OrderItemDto[];
+  @ArrayMinSize(1)
+  @Type(() => CreateOrderItemDto)
+  items!: CreateOrderItemDto[];
+
+  @ValidateNested()
+  @Type(() => AddressDto)
+  shippingAddress!: AddressDto;
 
   @IsEnum(PaymentMethod)
   paymentMethod!: PaymentMethod;
 
-  @ValidateNested()
-  @Type(() => ShippingAddressDto)
-  shippingAddress!: ShippingAddressDto;
-
   @IsOptional()
   @IsString()
+  @Transform(({ value }: { value: string }) => value?.toUpperCase())
   couponCode?: string;
 }

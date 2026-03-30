@@ -1,7 +1,13 @@
-import { IsOptional, IsString, IsBoolean, IsEnum } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { Category } from '@prisma/client';
 import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
-import { Brand, Category } from '@prisma/client';
+
+export enum ProductSort {
+  PRICE_ASC = 'price_asc',
+  PRICE_DESC = 'price_desc',
+  NAME_ASC = 'name_asc',
+  NEWEST = 'newest',
+}
 
 export class ProductFilterDto extends PaginationQueryDto {
   @IsOptional()
@@ -9,20 +15,6 @@ export class ProductFilterDto extends PaginationQueryDto {
   category?: Category;
 
   @IsOptional()
-  @IsEnum(Brand)
-  brand?: Brand;
-
-  @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
-  @IsBoolean()
-  featured?: boolean;
-
-  @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
-  @IsBoolean()
-  inStock?: boolean;
-
-  @IsOptional()
   @IsString()
-  sortBy?: 'price_asc' | 'price_desc' | 'rating' | 'newest';
+  sort?: ProductSort;
 }
