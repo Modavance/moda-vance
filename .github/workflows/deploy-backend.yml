@@ -41,6 +41,6 @@ jobs:
             npx prisma db seed
 
             echo "==> Reloading PM2..."
-            pm2 reload modavance-api --update-env
+            pm2 reload modavance-api --update-env || pm2 restart modavance-api --update-env
 
             echo "Deploy complete!"
