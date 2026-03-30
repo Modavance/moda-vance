@@ -25,6 +25,7 @@ jobs:
             cd /home/admin/web/modavance.co/app/modavance/backend
 
             echo "==> Pulling latest code..."
+            git reset --hard HEAD
             git pull origin main
 
             echo "==> Installing dependencies..."
