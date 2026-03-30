@@ -15,9 +15,9 @@ jobs:
       - name: Deploy to DigitalOcean via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.host }}
+          username: ${{ secrets.username }}
+          key: ${{ secrets.ssh_key }}
           script: |
             set -e
             cd /home/admin/web/modavance.co/app/modavance/backend
