@@ -14,7 +14,7 @@ export function AdminContactPage() {
   const { data: submissions = [] } = useQuery({
     queryKey: ['admin-contact'],
     queryFn: async () => {
-      const res = await adminApi.get('/contact');
+      const res = await adminApi.get('/admin/contact');
       return unwrap<ContactSubmission[]>(res);
     },
   });
@@ -30,13 +30,13 @@ export function AdminContactPage() {
   const handleOpen = async (sub: ContactSubmission) => {
     setSelected(sub);
     if (!sub.read) {
-      await adminApi.patch(`/contact/${sub.id}/read`);
+      await adminApi.patch(`/admin/contact/${sub.id}/read`);
       qc.invalidateQueries({ queryKey: ['admin-contact'] });
     }
   };
 
   const handleDelete = async (id: string) => {
-    await adminApi.delete(`/contact/${id}`);
+    await adminApi.delete(`/admin/contact/${id}`);
     qc.invalidateQueries({ queryKey: ['admin-contact'] });
     if (selected?.id === id) setSelected(null);
     setDeleteId(null);

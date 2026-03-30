@@ -53,8 +53,8 @@ function NotificationBell() {
     const seenAt = Number(localStorage.getItem(LS_KEY) ?? 0);
     try {
       const [submissionsRes, ordersRes] = await Promise.all([
-        adminApi.get('/contact?limit=15'),
-        adminApi.get('/orders?limit=15'),
+        adminApi.get('/admin/contact?limit=15'),
+        adminApi.get('/admin/orders?limit=15'),
       ]);
       const submissions = unwrap<ContactSubmission[]>(submissionsRes);
       const orders = unwrap<Order[]>(ordersRes);
@@ -78,14 +78,14 @@ function NotificationBell() {
 
   const markAllRead = async () => {
     const unread = items.filter(i => i.kind === 'message' && !(i.data as ContactSubmission).read);
-    await Promise.all(unread.map(i => adminApi.patch(`/contact/${i.data.id}/read`)));
+    await Promise.all(unread.map(i => adminApi.patch(`/admin/contact/${i.data.id}/read`)));
     localStorage.setItem(LS_KEY, Date.now().toString());
     load();
   };
 
   const handleClickItem = async (item: NotifItem) => {
     if (item.kind === 'message') {
-      if (!(item.data as ContactSubmission).read) await adminApi.patch(`/contact/${item.data.id}/read`);
+      if (!(item.data as ContactSubmission).read) await adminApi.patch(`/admin/contact/${item.data.id}/read`);
       setOpen(false); navigate('/admin/contact');
     } else {
       localStorage.setItem(LS_KEY, Date.now().toString());

@@ -38,7 +38,7 @@ export function AdminDashboard() {
   const { data: orders = [] } = useQuery({
     queryKey: ['admin-orders'],
     queryFn: async () => {
-      const res = await adminApi.get('/orders');
+      const res = await adminApi.get('/admin/orders');
       return unwrap<Order[]>(res);
     },
   });

@@ -16,9 +16,8 @@ export function AdminSettingsPage() {
   const { data } = useQuery({
     queryKey: ['admin-settings'],
     queryFn: async () => {
-      const res = await adminApi.get('/settings');
-      const list = unwrap<{ key: string; value: string }[]>(res);
-      return Object.fromEntries(list.map(s => [s.key, s.value]));
+      const res = await adminApi.get('/admin/settings');
+      return unwrap<Record<string, string>>(res);
     },
   });
 
@@ -29,8 +28,7 @@ export function AdminSettingsPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const entries = Object.entries(values).map(([key, value]) => ({ key, value }));
-      await adminApi.put('/settings', { settings: entries });
+      await adminApi.put('/admin/settings', { settings: values });
       qc.invalidateQueries({ queryKey: ['admin-settings'] });
       qc.invalidateQueries({ queryKey: ['settings'] });
       setSaved(true);

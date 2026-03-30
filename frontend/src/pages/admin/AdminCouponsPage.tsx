@@ -76,19 +76,19 @@ export function AdminCouponsPage() {
   const { data: coupons = [] } = useQuery({
     queryKey: ['coupons'],
     queryFn: async () => {
-      const res = await adminApi.get('/coupons');
+      const res = await adminApi.get('/admin/coupons');
       return unwrap<Coupon[]>(res);
     },
   });
 
   const handleAdd = async (coupon: Omit<Coupon, 'expiresAt'> & { expiresAt: string }) => {
-    await adminApi.post('/coupons', coupon);
+    await adminApi.post('/admin/coupons', coupon);
     queryClient.invalidateQueries({ queryKey: ['coupons'] });
   };
 
   const handleDelete = async (code: string) => {
     if (confirm(`Delete coupon ${code}?`)) {
-      await adminApi.delete(`/coupons/${code}`);
+      await adminApi.delete(`/admin/coupons/${code}`);
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
     }
   };

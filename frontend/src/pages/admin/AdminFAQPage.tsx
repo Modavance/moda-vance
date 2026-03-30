@@ -20,7 +20,7 @@ export function AdminFAQPage() {
   const { data: items = [] } = useQuery({
     queryKey: ['admin-faq'],
     queryFn: async () => {
-      const res = await adminApi.get('/faq');
+      const res = await adminApi.get('/admin/faq');
       return unwrap<FAQItem[]>(res);
     },
   });
@@ -47,9 +47,9 @@ export function AdminFAQPage() {
     setSaving(true);
     try {
       if (creating) {
-        await adminApi.post('/faq', form);
+        await adminApi.post('/admin/faq', form);
       } else if (editing) {
-        await adminApi.put(`/faq/${editing.id}`, form);
+        await adminApi.patch(`/admin/faq/${editing.id}`, form);
       }
       qc.invalidateQueries({ queryKey: ['admin-faq'] });
       qc.invalidateQueries({ queryKey: ['faq'] });
@@ -58,7 +58,7 @@ export function AdminFAQPage() {
   };
 
   const handleDelete = async (id: string) => {
-    await adminApi.delete(`/faq/${id}`);
+    await adminApi.delete(`/admin/faq/${id}`);
     qc.invalidateQueries({ queryKey: ['admin-faq'] });
     qc.invalidateQueries({ queryKey: ['faq'] });
     setDeleteId(null);

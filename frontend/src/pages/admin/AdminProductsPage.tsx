@@ -255,7 +255,7 @@ export function AdminProductsPage() {
 
   const { data: products } = useQuery({
     queryKey: ['products'],
-    queryFn: () => adminApi.get('/products').then(r => unwrap<Product[]>(r)),
+    queryFn: () => adminApi.get('/admin/products').then(r => unwrap<Product[]>(r)),
   });
 
   const filtered = (products ?? []).filter((p) =>
@@ -265,7 +265,7 @@ export function AdminProductsPage() {
 
   const handleSave = async (data: Partial<Product>) => {
     if (editProduct?.id) {
-      await adminApi.put(`/products/${editProduct.id}`, data);
+      await adminApi.patch(`/admin/products/${editProduct.id}`, data);
     } else {
       const images = (data.images ?? []).filter(Boolean);
       const newProduct = {
@@ -280,7 +280,7 @@ export function AdminProductsPage() {
         manufacturer: data.brand ?? 'Sun Pharma',
         ...data,
       };
-      await adminApi.post('/products', newProduct);
+      await adminApi.post('/admin/products', newProduct);
     }
     queryClient.invalidateQueries({ queryKey: ['products'] });
     queryClient.invalidateQueries({ queryKey: ['featured-products'] });
@@ -288,7 +288,7 @@ export function AdminProductsPage() {
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this product?')) {
-      await adminApi.delete(`/products/${id}`);
+      await adminApi.delete(`/admin/products/${id}`);
       queryClient.invalidateQueries({ queryKey: ['products'] });
     }
   };

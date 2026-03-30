@@ -70,7 +70,7 @@ function StatusLogTimeline({ orderId, orderCreatedAt }: { orderId: string; order
   const { data: logs } = useQuery<OrderStatusLog[]>({
     queryKey: ['status-logs', orderId],
     queryFn: async () => {
-      const res = await adminApi.get(`/orders/${orderId}/logs`);
+      const res = await adminApi.get(`/admin/orders/${orderId}/logs`);
       return unwrap<OrderStatusLog[]>(res);
     },
   });
@@ -198,7 +198,7 @@ export function AdminOrdersPage() {
   const { data: orders = [] } = useQuery<Order[]>({
     queryKey: ['admin-orders'],
     queryFn: async () => {
-      const res = await adminApi.get('/orders');
+      const res = await adminApi.get('/admin/orders');
       return unwrap<Order[]>(res);
     },
   });
@@ -218,7 +218,7 @@ export function AdminOrdersPage() {
   const handleConfirmStatusChange = async () => {
     if (!pending) return;
     const { orderId, fromStatus, toStatus, note } = pending;
-    await adminApi.patch(`/orders/${orderId}/status`, { status: toStatus, note: note.trim() || undefined });
+    await adminApi.patch(`/admin/orders/${orderId}/status`, { status: toStatus, note: note.trim() || undefined });
     queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
     queryClient.invalidateQueries({ queryKey: ['status-logs', orderId] });
     if (selectedOrder?.id === orderId) setSelectedOrder(prev => prev ? { ...prev, status: toStatus, updatedAt: new Date() } : null);

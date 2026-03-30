@@ -27,7 +27,7 @@ export function AdminBlogPage() {
   const { data: posts = [] } = useQuery({
     queryKey: ['admin-blog'],
     queryFn: async () => {
-      const res = await adminApi.get('/blog');
+      const res = await adminApi.get('/admin/blog');
       return unwrap<BlogPost[]>(res);
     },
   });
@@ -45,9 +45,9 @@ export function AdminBlogPage() {
     setSaving(true);
     try {
       if (creating) {
-        await adminApi.post('/blog', form);
+        await adminApi.post('/admin/blog', form);
       } else if (editing) {
-        await adminApi.put(`/blog/${editing.id}`, form);
+        await adminApi.patch(`/admin/blog/${editing.id}`, form);
       }
       qc.invalidateQueries({ queryKey: ['admin-blog'] });
       qc.invalidateQueries({ queryKey: ['blogs'] });
@@ -56,7 +56,7 @@ export function AdminBlogPage() {
   };
 
   const handleDelete = async (id: string) => {
-    await adminApi.delete(`/blog/${id}`);
+    await adminApi.delete(`/admin/blog/${id}`);
     qc.invalidateQueries({ queryKey: ['admin-blog'] });
     qc.invalidateQueries({ queryKey: ['blogs'] });
     setDeleteId(null);
