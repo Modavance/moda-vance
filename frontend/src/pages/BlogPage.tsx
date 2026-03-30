@@ -1,15 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Clock, ArrowRight } from 'lucide-react';
-import { db } from '@/db/database';
+import { api, unwrap } from '@/services/api';
 import { PageLoader } from '@/components/ui/Spinner';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateShort } from '@/utils/formatters';
+import type { BlogPost } from '@/types';
 
 export function BlogPage() {
   const { data: posts, isLoading } = useQuery({
     queryKey: ['blog'],
-    queryFn: () => db.blogPosts.toArray(),
+    queryFn: async () => {
+      const res = await api.get('/blog');
+      return unwrap<BlogPost[]>(res);
+    },
   });
 
   return (

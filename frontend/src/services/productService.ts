@@ -1,43 +1,42 @@
-import { db } from '@/db/database';
+import { api, unwrap } from './api';
 import type { Product } from '@/types';
-
-function parseProduct(p: Product): Product {
-  return p;
-}
 
 export const productService = {
   getAll: async (): Promise<Product[]> => {
-    const products = await db.products.toArray();
-    return products.map(parseProduct);
+    const res = await api.get('/products');
+    return unwrap<Product[]>(res);
   },
 
   getById: async (id: string): Promise<Product | undefined> => {
-    const p = await db.products.get(id);
-    return p ? parseProduct(p) : undefined;
+    try {
+      const res = await api.get(`/products/${id}`);
+      return unwrap<Product>(res);
+    } catch {
+      return undefined;
+    }
   },
 
   getBySlug: async (slug: string): Promise<Product | undefined> => {
-    const p = await db.products.where('slug').equals(slug).first();
-    return p ? parseProduct(p) : undefined;
+    try {
+      const res = await api.get(`/products/slug/${slug}`);
+      return unwrap<Product>(res);
+    } catch {
+      return undefined;
+    }
   },
 
   getFeatured: async (): Promise<Product[]> => {
-    const products = await db.products.where('featured').equals(1).toArray();
-    return products.map(parseProduct);
+    const res = await api.get('/products?featured=true');
+    return unwrap<Product[]>(res);
   },
 
   getByCategory: async (category: string): Promise<Product[]> => {
-    const products = await db.products.where('category').equals(category).toArray();
-    return products.map(parseProduct);
+    const res = await api.get(`/products?category=${encodeURIComponent(category)}`);
+    return unwrap<Product[]>(res);
   },
 
   search: async (query: string): Promise<Product[]> => {
-    const all = await db.products.toArray();
-    const q = query.toLowerCase();
-    return all.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.brand.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
-    ).map(parseProduct);
+    const res = await api.get(`/products?search=${encodeURIComponent(query)}`);
+    return unwrap<Product[]>(res);
   },
 };

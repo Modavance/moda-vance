@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAdminStore, ADMIN_EMAIL } from '@/store/adminStore';
+import { adminAuthService } from '@/services/authService';
 import { Logo } from '@/components/ui/Logo';
 
 export function AdminLoginPage() {
@@ -9,43 +10,34 @@ export function AdminLoginPage() {
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const login = useAdminStore((s) => s.login);
   const navigate = useNavigate();
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError('');
-  try {
-    const res = await fetch('https://api.modavance.co/admin/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    if (data?.data?.token) {
-      localStorage.setItem('adminToken', data.data.token);
-      login(password);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const { token, email: adminEmail } = await adminAuthService.login(email, password);
+      login(adminEmail, token);
       navigate('/admin');
-    } else {
+    } catch {
       setError('Invalid email or password');
+    } finally {
+      setLoading(false);
     }
-  } catch {
-    setError('Connection error. Please try again.');
-  }
-};
+  };
 
   return (
     <div className="min-h-screen gradient-hero flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Card */}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Header */}
           <div className="bg-slate-900 px-8 py-8 text-center">
             <Logo variant="light" size="md" className="justify-center mb-4" />
             <p className="text-slate-400 text-sm font-medium uppercase tracking-widest">Admin Panel</p>
           </div>
 
-          {/* Form */}
           <div className="px-8 py-8">
             <h1 className="text-2xl font-bold text-slate-900 mb-1">Welcome back</h1>
             <p className="text-slate-500 text-sm mb-6">Sign in to access the admin dashboard</p>
@@ -91,10 +83,11 @@ export function AdminLoginPage() {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center gap-2 mt-2"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
               >
                 <Lock className="w-4 h-4" />
-                Sign In to Admin
+                {loading ? 'Signing in...' : 'Sign In to Admin'}
               </button>
             </form>
 

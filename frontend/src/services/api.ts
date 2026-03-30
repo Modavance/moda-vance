@@ -1,20 +1,48 @@
-const API_URL = 'https://api.modavance.co';
+import axios from 'axios';
 
-export async function api(path: string, options: RequestInit = {}) {
-  const token = localStorage.getItem('token');
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(options.headers as Record<string, string>),
-  };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://modavance.co/api';
 
-  const res = await fetch(`${API_URL}${path}`, { ...options, headers });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ message: 'Network error' }));
-    throw new Error(err.message || 'Request failed');
+// ── User API instance ────────────────────────────────────────────────────────
+export const api = axios.create({
+  baseURL: BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+api.interceptors.request.use((config) => {
+  try {
+    const raw = localStorage.getItem('modavance-auth');
+    if (raw) {
+      const token: string | undefined = JSON.parse(raw)?.state?.token;
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {
+    // ignore parse errors
   }
-  const json = await res.json();
-  return json.data !== undefined ? json.data : json;
+  return config;
+});
+
+// ── Admin API instance ───────────────────────────────────────────────────────
+export const adminApi = axios.create({
+  baseURL: BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+adminApi.interceptors.request.use((config) => {
+  try {
+    const raw = localStorage.getItem('modavance-admin');
+    if (raw) {
+      const token: string | undefined = JSON.parse(raw)?.state?.token;
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return config;
+});
+
+// ── Helper: unwrap backend envelope { data: T } ──────────────────────────────
+export function unwrap<T>(response: { data: { data: T } }): T {
+  return response.data.data;
 }
 
-export const apiUrl = API_URL;
+export const apiUrl = BASE_URL;

@@ -11,8 +11,8 @@ import { orderService } from '@/services/orderService';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
 import { formatPrice } from '@/utils/formatters';
-import { db } from '@/db/database';
-import { useQuery } from '@tanstack/react-query';
+import { api, unwrap } from '@/services/api';
+import type { Coupon } from '@/types';
 import type { Address, PaymentMethod } from '@/types';
 
 /* ── Country / state data ─────────────────────────────────────────── */
@@ -176,22 +176,26 @@ export function CheckoutPage() {
   };
 
   const handleApplyCoupon = async () => {
-    const coupon = await db.coupons.get(couponInput.toUpperCase());
-    if (!coupon) { notify.error('Invalid coupon code'); return; }
-    if (new Date(coupon.expiresAt) < new Date()) {
-      notify.error('This coupon has expired');
-      return;
+    try {
+      const res = await api.get(`/coupons/${couponInput.toUpperCase()}`);
+      const coupon = unwrap<Coupon>(res);
+      if (new Date(coupon.expiresAt) < new Date()) {
+        notify.error('This coupon has expired');
+        return;
+      }
+      if (subtotal < coupon.minOrder) {
+        notify.error(`Minimum order of ${formatPrice(coupon.minOrder)} required`);
+        return;
+      }
+      const discount = coupon.type === 'percent'
+        ? subtotal * (coupon.discount / 100)
+        : coupon.discount;
+      setCouponDiscount(discount);
+      setCouponApplied(couponInput.toUpperCase());
+      notify.success(`Coupon applied! You save ${formatPrice(discount)}`);
+    } catch {
+      notify.error('Invalid coupon code');
     }
-    if (subtotal < coupon.minOrder) {
-      notify.error(`Minimum order of ${formatPrice(coupon.minOrder)} required`);
-      return;
-    }
-    const discount = coupon.type === 'percent'
-      ? subtotal * (coupon.discount / 100)
-      : coupon.discount;
-    setCouponDiscount(discount);
-    setCouponApplied(couponInput.toUpperCase());
-    notify.success(`Coupon applied! You save ${formatPrice(discount)}`);
   };
 
   const onSubmit = async (data: CheckoutForm) => {

@@ -1,17 +1,54 @@
-import { api } from './api';
+import { api, adminApi, unwrap } from './api';
+import type { User } from '@/types';
+
+interface AuthResponse {
+  user: User;
+  token: string;
+}
+
+interface AdminAuthResponse {
+  token: string;
+  email: string;
+}
 
 export const authService = {
-  register: async (data: { email: string; password: string; firstName: string; lastName: string }) => {
-    const res = await api('/auth/register', { method: 'POST', body: JSON.stringify(data) });
-    if (res.token) localStorage.setItem('token', res.token);
-    return res;
+  register: async (data: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }): Promise<AuthResponse> => {
+    const res = await api.post('/auth/register', data);
+    return unwrap<AuthResponse>(res);
   },
-  login: async (email: string, password: string) => {
-    const res = await api('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
-    if (res.token) localStorage.setItem('token', res.token);
-    return res;
+
+  login: async (email: string, password: string): Promise<AuthResponse> => {
+    const res = await api.post('/auth/login', { email, password });
+    return unwrap<AuthResponse>(res);
   },
-  logout: () => localStorage.removeItem('token'),
-  getMe: () => api('/auth/me'),
-  updateProfile: (data: any) => api('/auth/me', { method: 'PUT', body: JSON.stringify(data) }),
+
+  getMe: async (): Promise<User> => {
+    const res = await api.get('/auth/me');
+    return unwrap<User>(res);
+  },
+
+  updateProfile: async (data: Partial<User>): Promise<User> => {
+    const res = await api.put('/auth/me', data);
+    return unwrap<User>(res);
+  },
+};
+
+export const adminAuthService = {
+  login: async (email: string, password: string): Promise<AdminAuthResponse> => {
+    const res = await adminApi.post('/admin/auth/login', { email, password });
+    return unwrap<AdminAuthResponse>(res);
+  },
+
+  changePassword: async (currentPassword: string, newPassword: string): Promise<void> => {
+    await adminApi.post('/admin/auth/change-password', { currentPassword, newPassword });
+  },
+
+  changeEmail: async (email: string): Promise<void> => {
+    await adminApi.post('/admin/auth/change-email', { email });
+  },
 };

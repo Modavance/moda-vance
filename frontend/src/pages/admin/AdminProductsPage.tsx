@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Edit, Trash2, Search, Star, X, ImagePlus } from 'lucide-react';
-import { db } from '@/db/database';
+import { adminApi, unwrap } from '@/services/api';
 import { formatPrice } from '@/utils/formatters';
 import type { Product, ProductVariant } from '@/types';
 
@@ -255,7 +255,7 @@ export function AdminProductsPage() {
 
   const { data: products } = useQuery({
     queryKey: ['products'],
-    queryFn: () => db.products.toArray(),
+    queryFn: () => adminApi.get('/products').then(r => unwrap<Product[]>(r)),
   });
 
   const filtered = (products ?? []).filter((p) =>
@@ -265,11 +265,10 @@ export function AdminProductsPage() {
 
   const handleSave = async (data: Partial<Product>) => {
     if (editProduct?.id) {
-      await db.products.update(editProduct.id, data);
+      await adminApi.put(`/products/${editProduct.id}`, data);
     } else {
       const images = (data.images ?? []).filter(Boolean);
-      const newProduct: Product = {
-        id: `prod-${Date.now()}`,
+      const newProduct = {
         slug: data.name?.toLowerCase().replace(/\s+/g, '-') ?? 'new-product',
         pillsPerStrip: 10,
         description: data.description ?? data.shortDescription ?? '',
@@ -279,10 +278,9 @@ export function AdminProductsPage() {
         effects: [],
         ingredients: '',
         manufacturer: data.brand ?? 'Sun Pharma',
-        createdAt: new Date(),
         ...data,
-      } as Product;
-      await db.products.add(newProduct);
+      };
+      await adminApi.post('/products', newProduct);
     }
     queryClient.invalidateQueries({ queryKey: ['products'] });
     queryClient.invalidateQueries({ queryKey: ['featured-products'] });
@@ -290,7 +288,7 @@ export function AdminProductsPage() {
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this product?')) {
-      await db.products.delete(id);
+      await adminApi.delete(`/products/${id}`);
       queryClient.invalidateQueries({ queryKey: ['products'] });
     }
   };

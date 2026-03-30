@@ -1,36 +1,39 @@
-import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer,
-} from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Users, ShoppingBag, DollarSign } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { db } from '@/db/database';
+import { adminApi, unwrap } from '@/services/api';
 import { formatPrice } from '@/utils/formatters';
+import type { Order } from '@/types';
 
 const PAYMENT_DATA = [
   { name: 'Bitcoin',  value: 45, color: '#f59e0b' },
   { name: 'Ethereum', value: 30, color: '#6366f1' },
-  { name: 'PayPal',   value: 15, color: '#3b82f6' },
-  { name: 'Card',     value: 10, color: '#64748b' },
+  { name: 'Zelle',    value: 15, color: '#3b82f6' },
+  { name: 'Bill',     value: 10, color: '#64748b' },
 ];
 
 export function AdminAnalyticsPage() {
   const { data: orders = [] } = useQuery({
     queryKey: ['admin-orders'],
-    queryFn: () => db.orders.toArray(),
+    queryFn: async () => {
+      const res = await adminApi.get('/orders');
+      return unwrap<Order[]>(res);
+    },
   });
-  const { data: users = [] } = useQuery({
-    queryKey: ['admin-users'],
-    queryFn: () => db.users.toArray(),
+  const { data: customers = [] } = useQuery({
+    queryKey: ['admin-customers'],
+    queryFn: async () => {
+      const res = await adminApi.get('/customers');
+      return unwrap<{ id: string }[]>(res);
+    },
   });
 
   const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
   const totalOrders = orders.length;
-  const totalCustomers = users.length;
+  const totalCustomers = customers.length;
 
-  // Build monthly data from real orders
-  const monthlyMap: Record<string, { revenue: number; orders: number }> = {};
   const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthlyMap: Record<string, { revenue: number; orders: number }> = {};
   orders.forEach(o => {
     const d = new Date(o.createdAt);
     const key = monthNames[d.getMonth()];
@@ -38,37 +41,25 @@ export function AdminAnalyticsPage() {
     monthlyMap[key].revenue += o.total;
     monthlyMap[key].orders += 1;
   });
-  const monthlyData = monthNames
-    .filter(m => monthlyMap[m])
-    .map(m => ({ month: m, revenue: monthlyMap[m].revenue, orders: monthlyMap[m].orders }));
+  const monthlyData = monthNames.filter(m => monthlyMap[m]).map(m => ({ month: m, ...monthlyMap[m] }));
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
-        <p className="text-slate-500 text-sm mt-1">Real-time store performance</p>
-      </div>
+      <div><h1 className="text-2xl font-bold text-slate-900">Analytics</h1><p className="text-slate-500 text-sm mt-1">Real-time store performance</p></div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: 'Total Revenue', value: formatPrice(totalRevenue), icon: DollarSign, color: 'bg-blue-50 text-blue-600' },
-          { label: 'Total Orders',  value: totalOrders.toLocaleString(), icon: ShoppingBag, color: 'bg-purple-50 text-purple-600' },
-          { label: 'Total Customers', value: totalCustomers.toLocaleString(), icon: Users, color: 'bg-emerald-50 text-emerald-600' },
-        ].map((s) => (
+          { label: 'Total Revenue',   value: formatPrice(totalRevenue),      icon: DollarSign,  color: 'bg-blue-50 text-blue-600' },
+          { label: 'Total Orders',    value: totalOrders.toLocaleString(),   icon: ShoppingBag, color: 'bg-purple-50 text-purple-600' },
+          { label: 'Total Customers', value: totalCustomers.toLocaleString(),icon: Users,       color: 'bg-emerald-50 text-emerald-600' },
+        ].map(s => (
           <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-5 flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${s.color}`}>
-              <s.icon className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-slate-900">{s.value}</p>
-              <p className="text-xs text-slate-500">{s.label}</p>
-            </div>
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${s.color}`}><s.icon className="w-6 h-6" /></div>
+            <div><p className="text-2xl font-bold text-slate-900">{s.value}</p><p className="text-xs text-slate-500">{s.label}</p></div>
           </div>
         ))}
       </div>
 
-      {/* Revenue chart */}
       {monthlyData.length > 0 ? (
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
           <h2 className="font-bold text-slate-900 mb-6">Monthly Revenue & Orders</h2>
@@ -87,26 +78,17 @@ export function AdminAnalyticsPage() {
         <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center text-slate-400">
           <ShoppingBag className="w-10 h-10 mx-auto mb-3 text-slate-200" />
           <p className="font-medium">No order data yet</p>
-          <p className="text-sm mt-1">Charts will appear once you receive orders</p>
         </div>
       )}
 
-      {/* Top Products */}
       {orders.length > 0 && (() => {
         const productMap: Record<string, { name: string; count: number; revenue: number }> = {};
-        orders.forEach(o => {
-          o.items.forEach(item => {
-            if (!productMap[item.productId]) {
-              productMap[item.productId] = { name: item.productName, count: 0, revenue: 0 };
-            }
-            productMap[item.productId].count += item.quantity;
-            productMap[item.productId].revenue += item.price;
-          });
-        });
-        const topProducts = Object.values(productMap)
-          .sort((a, b) => b.revenue - a.revenue)
-          .slice(0, 5);
-
+        orders.forEach(o => o.items.forEach(item => {
+          if (!productMap[item.productId]) productMap[item.productId] = { name: item.productName, count: 0, revenue: 0 };
+          productMap[item.productId].count += item.quantity;
+          productMap[item.productId].revenue += item.price;
+        }));
+        const topProducts = Object.values(productMap).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
         return (
           <div className="bg-white rounded-2xl border border-slate-100 p-6">
             <h2 className="font-bold text-slate-900 mb-4">Top Products</h2>
@@ -124,11 +106,10 @@ export function AdminAnalyticsPage() {
         );
       })()}
 
-      {/* Payment methods */}
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <h2 className="font-bold text-slate-900 mb-4">Payment Methods</h2>
         <div className="space-y-3">
-          {PAYMENT_DATA.map((p) => (
+          {PAYMENT_DATA.map(p => (
             <div key={p.name} className="flex items-center gap-3">
               <span className="text-sm text-slate-600 w-20">{p.name}</span>
               <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">

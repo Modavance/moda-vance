@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { orderService } from '@/services/orderService';
 import { productService } from '@/services/productService';
-import { db } from '@/db/database';
+import { api, unwrap } from '@/services/api';
 import { useCartStore } from '@/store/cartStore';
 import { useNotificationStore } from '@/store/notificationStore';
 import { PageLoader } from '@/components/ui/Spinner';
@@ -169,11 +169,14 @@ export function OrderSuccessPage() {
     queryFn: () => productService.getAll(),
   });
 
-  const { data: settingsList = [] } = useQuery({
+  const { data: settings = {} } = useQuery({
     queryKey: ['settings'],
-    queryFn: () => db.settings.toArray(),
+    queryFn: async () => {
+      const res = await api.get('/settings');
+      const list = unwrap<{ key: string; value: string }[]>(res);
+      return Object.fromEntries(list.map(s => [s.key, s.value]));
+    },
   });
-  const settings = Object.fromEntries(settingsList.map(s => [s.key, s.value]));
 
   useEffect(() => {
     const t = setTimeout(() => setShowConfetti(false), 4000);

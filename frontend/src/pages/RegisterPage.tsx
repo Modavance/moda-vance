@@ -39,13 +39,13 @@ export function RegisterPage() {
   const onSubmit = async (data: RegisterForm) => {
     setIsLoading(true);
     try {
-      const user = await authService.register({
+      const { user, token } = await authService.register({
         email: data.email,
         password: data.password,
         firstName: data.firstName,
         lastName: data.lastName,
       });
-      login(user);
+      login(user, token);
       notify.success('Account created!', `Welcome to ModaVance, ${user.firstName}!`);
       navigate('/account');
     } catch (err) {

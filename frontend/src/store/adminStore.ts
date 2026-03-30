@@ -4,33 +4,20 @@ import { persist } from 'zustand/middleware';
 interface AdminStore {
   isAuthenticated: boolean;
   email: string;
-  password: string;
-  login: (password: string) => boolean;
+  token: string | null;
+  login: (email: string, token: string) => void;
   logout: () => void;
-  changePassword: (current: string, next: string) => boolean;
-  changeEmail: (email: string) => void;
 }
 
 export const useAdminStore = create<AdminStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       isAuthenticated: false,
       email: 'admin@modavance.com',
-      password: 'ModeAdmin2024',
-      login: (password: string) => {
-        if (password === get().password) {
-          set({ isAuthenticated: true });
-          return true;
-        }
-        return false;
-      },
-      logout: () => set({ isAuthenticated: false }),
-      changePassword: (current: string, next: string) => {
-        if (current !== get().password) return false;
-        set({ password: next });
-        return true;
-      },
-      changeEmail: (email: string) => set({ email }),
+      token: null,
+
+      login: (email, token) => set({ isAuthenticated: true, email, token }),
+      logout: () => set({ isAuthenticated: false, token: null }),
     }),
     { name: 'modavance-admin' }
   )

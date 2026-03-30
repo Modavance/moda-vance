@@ -11,7 +11,8 @@ import { ProductCard } from '@/components/shop/ProductCard';
 import { PageLoader } from '@/components/ui/Spinner';
 import { productService } from '@/services/productService';
 import { getRecentlyViewedIds } from '@/hooks/useRecentlyViewed';
-import { db } from '@/db/database';
+import { api, unwrap } from '@/services/api';
+import type { Product } from '@/types';
 
 function RecentlyViewedSection() {
   const ids = getRecentlyViewedIds();
@@ -20,9 +21,10 @@ function RecentlyViewedSection() {
     queryKey: ['recently-viewed', ids.join(',')],
     queryFn: async () => {
       if (ids.length === 0) return [];
-      const results = await Promise.all(ids.map(id => db.products.get(id)));
-      // Preserve order and filter out any that no longer exist
-      return results.filter((p): p is NonNullable<typeof p> => p != null);
+      const results = await Promise.all(
+        ids.map(id => api.get(`/products/${id}`).then(r => unwrap<Product>(r)).catch(() => null))
+      );
+      return results.filter((p): p is Product => p != null);
     },
     enabled: ids.length > 0,
   });

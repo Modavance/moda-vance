@@ -35,8 +35,8 @@ export function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      const user = await authService.login(data.email, data.password);
-      login(user);
+      const { user, token } = await authService.login(data.email, data.password);
+      login(user, token);
       notify.success('Welcome back!', `Good to see you, ${user.firstName}.`);
       navigate(from, { replace: true });
     } catch (err) {

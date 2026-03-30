@@ -4,8 +4,9 @@ import type { User } from '@/types';
 
 interface AuthStore {
   user: User | null;
+  token: string | null;
   isLoading: boolean;
-  login: (user: User) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
   updateUser: (data: Partial<User>) => void;
 }
@@ -14,10 +15,11 @@ export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
       user: null,
+      token: null,
       isLoading: false,
 
-      login: (user) => set({ user }),
-      logout: () => set({ user: null }),
+      login: (user, token) => set({ user, token }),
+      logout: () => set({ user: null, token: null }),
       updateUser: (data) => {
         const current = get().user;
         if (current) set({ user: { ...current, ...data } });

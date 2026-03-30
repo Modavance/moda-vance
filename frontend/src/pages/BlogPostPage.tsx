@@ -1,9 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRight, Clock, User, ArrowLeft } from 'lucide-react';
-import { db } from '@/db/database';
+import { api, unwrap } from '@/services/api';
 import { PageLoader } from '@/components/ui/Spinner';
 import { formatDate } from '@/utils/formatters';
+import type { BlogPost } from '@/types';
 
 const ARTICLE_BODIES: Record<string, string> = {
   'modafinil-vs-armodafinil-complete-guide': `
@@ -301,7 +302,10 @@ export function BlogPostPage() {
 
   const { data: post, isLoading } = useQuery({
     queryKey: ['blog', slug],
-    queryFn: () => db.blogPosts.where('slug').equals(slug!).first(),
+    queryFn: async () => {
+      const res = await api.get(`/blog/slug/${slug}`);
+      return unwrap<BlogPost>(res);
+    },
     enabled: !!slug,
   });
 

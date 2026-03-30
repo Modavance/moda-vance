@@ -1,90 +1,85 @@
-import { db } from '@/db/database';
-import { emailService } from './emailService';
-import type { Order, OrderStatus } from '@/types';
+import { api, unwrap } from './api';
+import type { Order } from '@/types';
 
-// Generate next MV-XXX order ID using counter stored in settings
-async function generateOrderId(): Promise<string> {
-  const counterSetting = await db.settings.get('order.counter');
-  const current = counterSetting ? parseInt(counterSetting.value, 10) : 499;
-  const next = current + 1;
-  await db.settings.put({ key: 'order.counter', value: String(next) });
-  return `MV-${next}`;
+interface CreateOrderParams {
+  items: Array<{
+    product?: { id: string; name: string; image?: string };
+    productId?: string;
+    productName?: string;
+    variant?: { id: string; quantity: number; price: number };
+    variantId?: string;
+    pillCount?: number;
+    price?: number;
+    quantity: number;
+    image?: string;
+  }>;
+  subtotal: number;
+  shipping?: number;
+  discount?: number;
+  address: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string;
+    street?: string;
+    address1?: string;
+    apt?: string;
+    city: string;
+    state?: string;
+    zip?: string;
+    postalCode?: string;
+    country: string;
+  };
+  paymentMethod: string;
+  couponCode?: string;
 }
 
 export const orderService = {
-  create: async (params: any): Promise<Order> => {
-    const orderId = await generateOrderId();
-
-    // Build order items from cart items
-    const items = params.items.map((i: any) => ({
-      productId: i.product?.id ?? i.productId,
-      productName: i.product?.name ?? i.productName,
-      variantId: i.variant?.id ?? i.variantId,
-      quantity: i.quantity,
-      pillCount: i.variant?.quantity ?? i.pillCount ?? 0,
-      price: (i.variant?.price ?? i.price ?? 0) * i.quantity,
-      image: i.product?.image ?? i.image ?? '',
-    }));
-
-    const subtotal = params.subtotal;
-    const shipping = params.shipping ?? 0;
-    const discount = params.discount || 0;
-    const total = subtotal - discount + shipping;
-
-    const order: Order = {
-      id: orderId,
-      userId: (params.userId && params.userId !== 'guest') ? params.userId : 'guest',
-      items,
-      status: 'pending' as OrderStatus,
-      subtotal,
-      shipping,
-      discount,
-      total,
+  create: async (params: CreateOrderParams): Promise<Order> => {
+    const body = {
+      items: params.items.map((i) => ({
+        productId: i.product?.id ?? i.productId,
+        productName: i.product?.name ?? i.productName,
+        variantId: i.variant?.id ?? i.variantId,
+        quantity: i.quantity,
+        pillCount: i.variant?.quantity ?? i.pillCount ?? 0,
+        price: (i.variant?.price ?? i.price ?? 0) * i.quantity,
+        image: i.product?.image ?? i.image ?? '',
+      })),
+      subtotal: params.subtotal,
+      shipping: params.shipping ?? 0,
+      discount: params.discount ?? 0,
       shippingAddress: {
-        firstName: params.address.firstName || '',
-        lastName:  params.address.lastName  || '',
-        email:     params.address.email     || '',
-        phone:     params.address.phone     || '',
-        street:    params.address.street    || params.address.address1 || '',
-        apt:       params.address.apt       || '',
-        city:      params.address.city      || '',
-        state:     params.address.state     || '',
-        zip:       params.address.zip       || params.address.postalCode || '',
-        country:   params.address.country   || '',
+        firstName: params.address.firstName,
+        lastName: params.address.lastName,
+        email: params.address.email,
+        phone: params.address.phone ?? '',
+        street: params.address.street ?? params.address.address1 ?? '',
+        apt: params.address.apt ?? '',
+        city: params.address.city,
+        state: params.address.state ?? '',
+        zip: params.address.zip ?? params.address.postalCode ?? '',
+        country: params.address.country,
       },
       paymentMethod: params.paymentMethod,
-      estimatedDelivery: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      couponCode: params.couponCode,
     };
 
-    await db.orders.add(order);
-
-    // Log initial status
-    await db.orderStatusLogs.add({
-      id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      orderId: order.id,
-      fromStatus: null,
-      toStatus: 'pending',
-      changedAt: new Date(),
-      note: 'Order placed',
-    });
-
-    // Send confirmation email
-    emailService.sendOrderConfirmation(order);
-
-    return order;
+    const res = await api.post('/orders', body);
+    return unwrap<Order>(res);
   },
 
-  getByUser: async (userId?: string): Promise<Order[]> => {
-    if (!userId || userId === 'guest') return [];
-    const all = await db.orders.toArray();
-    return all
-      .filter(o => o.userId === userId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  getByUser: async (): Promise<Order[]> => {
+    const res = await api.get('/orders/my');
+    return unwrap<Order[]>(res);
   },
 
   getById: async (id: string): Promise<Order | undefined> => {
-    return db.orders.get(id);
+    try {
+      const res = await api.get(`/orders/${id}`);
+      return unwrap<Order>(res);
+    } catch {
+      return undefined;
+    }
   },
 };

@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Mail, MessageCircle, Clock, CheckCircle, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { db } from '@/db/database';
+import { api, unwrap } from '@/services/api';
 
 const contactSchema = z.object({
   name:    z.string().min(2, 'Required'),
@@ -25,12 +25,14 @@ export function ContactPage() {
     resolver: zodResolver(contactSchema),
   });
 
-  const { data: settings = [] } = useQuery({
+  const { data: settingsMap = {} } = useQuery({
     queryKey: ['settings'],
-    queryFn: () => db.settings.toArray(),
+    queryFn: async () => {
+      const res = await api.get('/settings');
+      const list = unwrap<{ key: string; value: string }[]>(res);
+      return Object.fromEntries(list.map(s => [s.key, s.value]));
+    },
   });
-
-  const settingsMap = Object.fromEntries(settings.map(s => [s.key, s.value]));
   const supportEmail   = settingsMap['contact.email']         ?? 'support@modavance.com';
   const responseTime   = settingsMap['contact.response_time'] ?? 'Within 2 hours, 7 days a week';
   const supportPhone   = settingsMap['contact.phone']         ?? '';
@@ -45,14 +47,9 @@ export function ContactPage() {
   const onSubmit = async (data: ContactForm) => {
     setSubmitting(true);
     try {
-      await db.contactSubmissions.add({
-        id: `cs-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        name:    data.name,
-        email:   data.email,
-        subject: data.subject,
-        message: data.message,
-        read:    false,
-        createdAt: new Date(),
+      await api.post('/contact', {
+        name: data.name, email: data.email,
+        subject: data.subject, message: data.message,
       });
       setSubmitted(true);
     } finally {
