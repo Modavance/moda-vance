@@ -13,6 +13,7 @@
     "jsx": "react-jsx",
     "strict": false,
     "noEmitOnError": false,
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/*"]
     }

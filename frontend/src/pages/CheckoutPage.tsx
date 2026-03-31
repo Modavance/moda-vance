@@ -221,7 +221,6 @@ export function CheckoutPage() {
       }
 
       const order = await orderService.create({
-        userId: user?.id ?? 'guest',
         items,
         address,
         paymentMethod: data.paymentMethod as PaymentMethod,

@@ -12,7 +12,7 @@ export function formatPricePerPill(price: number, quantity: number): string {
   return `$${perPill.toFixed(2)}/pill`;
 }
 
-export function formatDate(date: Date): string {
+export function formatDate(date: Date | string): string {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'long',
@@ -20,7 +20,7 @@ export function formatDate(date: Date): string {
   }).format(new Date(date));
 }
 
-export function formatDateShort(date: Date): string {
+export function formatDateShort(date: Date | string): string {
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
