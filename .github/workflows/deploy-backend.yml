@@ -46,7 +46,14 @@ jobs:
             echo "==> Waiting for app to stabilize..."
             sleep 3
             pm2 show modavance-api
-            echo "==> Last 30 lines of app logs:"
-            pm2 logs modavance-api --lines 30 --nostream
+
+            echo "==> Nginx config:"
+            cat /etc/nginx/sites-available/modavance.co || cat /etc/nginx/sites-available/default || echo "No nginx config found"
+
+            echo "==> SSL certificates:"
+            sudo certbot certificates 2>/dev/null || echo "certbot not available"
+
+            echo "==> Test backend directly on port:"
+            curl -s http://localhost:3000/api/health || curl -s http://localhost:5000/api/health || curl -s http://localhost:8080/api/health || echo "No response on common ports"
 
             echo "Deploy complete!"
