@@ -47,13 +47,19 @@ jobs:
             sleep 3
             pm2 show modavance-api
 
-            echo "==> Nginx config:"
-            cat /etc/nginx/sites-available/modavance.co || cat /etc/nginx/sites-available/default || echo "No nginx config found"
+            echo "==> Find nginx config:"
+            find /etc/nginx /usr/local/hestia /home/admin/conf -name "*.conf" 2>/dev/null | grep -i "modavance\|nginx\|proxy" | head -20 || echo "No nginx config found"
 
-            echo "==> SSL certificates:"
-            sudo certbot certificates 2>/dev/null || echo "certbot not available"
+            echo "==> .env file:"
+            cat .env | grep -v PASSWORD | grep -v SECRET | grep -v KEY || echo "No .env"
 
-            echo "==> Test backend directly on port:"
-            curl -s http://localhost:3000/api/health || curl -s http://localhost:5000/api/health || curl -s http://localhost:8080/api/health || echo "No response on common ports"
+            echo "==> Test all ports:"
+            for port in 3000 4000 5000 8000 8080 8443; do
+              result=$(curl -s --max-time 2 http://localhost:$port/api/health 2>/dev/null)
+              if [ -n "$result" ]; then echo "PORT $port: $result"; fi
+            done || true
+
+            echo "==> PM2 error log:"
+            tail -20 ~/.pm2/logs/modavance-api-error-0.log 2>/dev/null || echo "No error log"
 
             echo "Deploy complete!"
