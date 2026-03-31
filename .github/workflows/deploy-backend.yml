@@ -40,26 +40,17 @@ jobs:
             echo "==> Seeding database..."
             npx prisma db seed
 
+            echo "==> Fixing CORS - updating FRONTEND_URL in .env..."
+            sed -i 's|FRONTEND_URL=.*|FRONTEND_URL="https://modavance.co"|' .env
+            grep "FRONTEND_URL" .env
+
             echo "==> Reloading PM2..."
             pm2 reload modavance-api --update-env || pm2 restart modavance-api --update-env
 
             echo "==> Waiting for app to stabilize..."
             sleep 3
-            pm2 show modavance-api
 
-            echo "==> Nginx proxy_pass config:"
-            grep -i "proxy_pass\|listen\|server_name" /home/admin/conf/web/modavance.co.nginx.conf 2>/dev/null || echo "Could not read nginx conf"
-
-            echo "==> APP PORT from .env:"
-            grep "^PORT" .env || echo "No PORT in .env"
-
-            echo "==> Test port 3001 (app port):"
-            curl -sv --max-time 5 http://localhost:3001/api/health 2>&1 | tail -20 || echo "Port 3001 no response"
-
-            echo "==> PM2 error log:"
-            tail -30 ~/.pm2/logs/modavance-api-error-0.log 2>/dev/null || echo "No error log"
-
-            echo "==> PM2 out log:"
-            tail -20 ~/.pm2/logs/modavance-api-out-0.log 2>/dev/null || echo "No out log"
+            echo "==> Health check on port 3001:"
+            curl -s http://localhost:3001/api/health || echo "Health check failed"
 
             echo "Deploy complete!"
