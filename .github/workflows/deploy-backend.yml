@@ -43,4 +43,10 @@ jobs:
             echo "==> Reloading PM2..."
             pm2 reload modavance-api --update-env || pm2 restart modavance-api --update-env
 
+            echo "==> Waiting for app to stabilize..."
+            sleep 3
+            pm2 show modavance-api
+            echo "==> Last 30 lines of app logs:"
+            pm2 logs modavance-api --lines 30 --nostream
+
             echo "Deploy complete!"
