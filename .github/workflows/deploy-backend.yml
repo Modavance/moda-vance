@@ -47,19 +47,19 @@ jobs:
             sleep 3
             pm2 show modavance-api
 
-            echo "==> Find nginx config:"
-            find /etc/nginx /usr/local/hestia /home/admin/conf -name "*.conf" 2>/dev/null | grep -i "modavance\|nginx\|proxy" | head -20 || echo "No nginx config found"
+            echo "==> Nginx proxy_pass config:"
+            grep -i "proxy_pass\|listen\|server_name" /home/admin/conf/web/modavance.co.nginx.conf 2>/dev/null || echo "Could not read nginx conf"
 
-            echo "==> .env file:"
-            cat .env | grep -v PASSWORD | grep -v SECRET | grep -v KEY || echo "No .env"
+            echo "==> APP PORT from .env:"
+            grep "^PORT" .env || echo "No PORT in .env"
 
-            echo "==> Test all ports:"
-            for port in 3000 4000 5000 8000 8080 8443; do
-              result=$(curl -s --max-time 2 http://localhost:$port/api/health 2>/dev/null)
-              if [ -n "$result" ]; then echo "PORT $port: $result"; fi
-            done || true
+            echo "==> Test port 3001 (app port):"
+            curl -sv --max-time 5 http://localhost:3001/api/health 2>&1 | tail -20 || echo "Port 3001 no response"
 
             echo "==> PM2 error log:"
-            tail -20 ~/.pm2/logs/modavance-api-error-0.log 2>/dev/null || echo "No error log"
+            tail -30 ~/.pm2/logs/modavance-api-error-0.log 2>/dev/null || echo "No error log"
+
+            echo "==> PM2 out log:"
+            tail -20 ~/.pm2/logs/modavance-api-out-0.log 2>/dev/null || echo "No out log"
 
             echo "Deploy complete!"
