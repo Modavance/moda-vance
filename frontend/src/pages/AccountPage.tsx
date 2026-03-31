@@ -24,7 +24,7 @@ export function AccountPage() {
 
   const { data: orders, isLoading } = useQuery({
     queryKey: ['orders', user?.id],
-    queryFn: () => orderService.getByUser(user!.id),
+    queryFn: () => orderService.getByUser(),
     enabled: !!user,
   });
 
