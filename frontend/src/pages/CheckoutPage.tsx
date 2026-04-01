@@ -223,7 +223,7 @@ export function CheckoutPage() {
       const order = await orderService.create({
         items,
         address,
-        paymentMethod: data.paymentMethod as PaymentMethod,
+        paymentMethod: data.paymentMethod.toUpperCase() as PaymentMethod,
         subtotal,
         discount: totalDiscount,
         shipping: dispatchFee,
