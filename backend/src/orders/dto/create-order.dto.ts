@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsOptional, IsString, ValidateNested, ArrayMinSize } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString, IsNumber, ValidateNested, ArrayMinSize } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { PaymentMethod } from '@prisma/client';
 import { CreateOrderItemDto } from './create-order-item.dto';
@@ -19,6 +19,10 @@ export class CreateOrderDto {
 
   @IsEnum(PaymentMethod)
   paymentMethod!: PaymentMethod;
+
+  @IsOptional() @IsNumber() subtotal?: number;
+  @IsOptional() @IsNumber() shipping?: number;
+  @IsOptional() @IsNumber() discount?: number;
 
   @IsOptional()
   @IsString()
