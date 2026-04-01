@@ -26,7 +26,7 @@ jobs:
         run: npm run build
         working-directory: frontend
         env:
-          VITE_API_URL: https://api.modavance.co
+          VITE_API_URL: https://modavance.co/api
 
       - name: 📂 Sync Files
         uses: SamKirkland/web-deploy@v1
