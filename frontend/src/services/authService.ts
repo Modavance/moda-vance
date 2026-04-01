@@ -41,7 +41,8 @@ export const authService = {
 export const adminAuthService = {
   login: async (email: string, password: string): Promise<AdminAuthResponse> => {
     const res = await adminApi.post('/admin/auth/login', { email, password });
-    return unwrap<AdminAuthResponse>(res);
+    const raw = unwrap<{ token: string; email?: string; admin?: { email: string } }>(res);
+    return { token: raw.token, email: raw.email ?? raw.admin?.email ?? email };
   },
 
   changePassword: async (currentPassword: string, newPassword: string): Promise<void> => {

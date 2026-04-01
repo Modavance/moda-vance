@@ -40,6 +40,17 @@ adminApi.interceptors.request.use((config) => {
   return config;
 });
 
+adminApi.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('modavance-admin');
+      window.location.href = '/admin/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
 // ── Helper: unwrap backend envelope { data: T } ──────────────────────────────
 export function unwrap<T>(response: { data: { data: T } }): T {
   return response.data.data;
