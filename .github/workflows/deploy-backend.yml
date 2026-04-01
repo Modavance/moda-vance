@@ -44,6 +44,10 @@ jobs:
             sed -i 's|FRONTEND_URL=.*|FRONTEND_URL="https://modavance.co"|' .env
             grep "FRONTEND_URL" .env
 
+            echo "==> Ensuring production env vars..."
+            sed -i 's|NODE_ENV=.*|NODE_ENV="production"|' .env
+            sed -i 's|ADMIN_PASSWORD=.*|ADMIN_PASSWORD="ModaAdmin2024!"|' .env
+
             echo "==> Reloading PM2..."
             pm2 reload modavance-api --update-env || pm2 restart modavance-api --update-env
 

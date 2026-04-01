@@ -92,9 +92,9 @@ export function AdminLoginPage() {
             </form>
 
             <div className="mt-5 p-3 bg-slate-50 rounded-xl text-xs text-slate-500 border border-slate-100">
-              <strong>Demo credentials:</strong><br />
+              <strong>Admin credentials:</strong><br />
               Email: admin@modavance.com<br />
-              Password: ModaAdmin2024
+              Password: ModaAdmin2024!
             </div>
           </div>
         </div>

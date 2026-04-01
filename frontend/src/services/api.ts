@@ -43,7 +43,8 @@ adminApi.interceptors.request.use((config) => {
 adminApi.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401) {
+    const isLoginEndpoint = error.config?.url?.includes('/admin/auth/login');
+    if (error.response?.status === 401 && !isLoginEndpoint) {
       localStorage.removeItem('modavance-admin');
       window.location.href = '/admin/login';
     }
