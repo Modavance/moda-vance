@@ -37,16 +37,14 @@ jobs:
             echo "==> Building..."
             npm run build
 
-            echo "==> Seeding database..."
-            npx prisma db seed
-
-            echo "==> Fixing CORS - updating FRONTEND_URL in .env..."
+            echo "==> Patching .env for production..."
             sed -i 's|FRONTEND_URL=.*|FRONTEND_URL="https://modavance.co"|' .env
-            grep "FRONTEND_URL" .env
-
-            echo "==> Ensuring production env vars..."
             sed -i 's|NODE_ENV=.*|NODE_ENV="production"|' .env
             sed -i 's|ADMIN_PASSWORD=.*|ADMIN_PASSWORD="ModaAdmin2024!"|' .env
+            grep "FRONTEND_URL\|NODE_ENV\|ADMIN_PASSWORD" .env
+
+            echo "==> Seeding database..."
+            npx prisma db seed
 
             echo "==> Reloading PM2..."
             pm2 reload modavance-api --update-env || pm2 restart modavance-api --update-env
