@@ -391,14 +391,14 @@ export function CheckoutPage() {
                     <strong>Payment instructions</strong> will be sent to your email after order confirmation, along with the wallet address and exact amount.
                   </div>
                 )}
-                {selectedPayment === 'zelle' && (
+                {selectedPayment === 'card' && (
                   <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-200 text-sm text-blue-800">
-                    Zelle payment instructions will be sent to your email after placing the order.
+                    Card payment instructions will be sent to your email after placing the order.
                   </div>
                 )}
-                {selectedPayment === 'bill' && (
+                {selectedPayment === 'paypal' && (
                   <div className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm text-slate-600">
-                    Cash by mail instructions will be sent to your email after placing the order.
+                    PayPal payment instructions will be sent to your email after placing the order.
                   </div>
                 )}
               </div>
