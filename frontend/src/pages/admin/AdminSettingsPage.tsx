@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Save, Mail, MapPin } from 'lucide-react';
+import { Save, Mail, CreditCard } from 'lucide-react';
 import { adminApi, unwrap } from '@/services/api';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -85,30 +85,33 @@ export function AdminSettingsPage() {
         </div>
       </div>
 
-      {/* Zelle */}
+      {/* Card Payment */}
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center"><span className="text-blue-600 font-bold text-sm">Z</span></div>
-          <div><h2 className="font-bold text-slate-900">Zelle</h2><p className="text-xs text-slate-400">Recipient shown in checkout and confirmation emails</p></div>
+          <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center"><CreditCard className="w-4 h-4 text-blue-600" /></div>
+          <div><h2 className="font-bold text-slate-900">Card Payment</h2><p className="text-xs text-slate-400">Instructions shown in order confirmation emails</p></div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2"><Input label="Zelle Recipient (email or phone)" value={values['payment.zelle.recipient'] ?? ''} onChange={e => set('payment.zelle.recipient', e.target.value)} placeholder="payments@modavance.com" /></div>
-          <Input label="Discount (%)" type="number" value={values['payment.zelle.discount'] ?? '10'} onChange={e => set('payment.zelle.discount', e.target.value)} />
+        <div className="grid grid-cols-1 gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-700">Payment Instructions</label>
+            <textarea rows={3} className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              value={values['payment.card.instructions'] ?? ''} onChange={e => set('payment.card.instructions', e.target.value)} placeholder="Card payment instructions..." />
+          </div>
         </div>
       </div>
 
-      {/* Cash by Mail */}
+      {/* PayPal */}
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 bg-slate-100 rounded-xl flex items-center justify-center"><MapPin className="w-4 h-4 text-slate-600" /></div>
-          <div><h2 className="font-bold text-slate-900">Cash by Mail</h2><p className="text-xs text-slate-400">Mailing address shown in order confirmation emails</p></div>
+          <div className="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center"><span className="text-blue-700 font-bold text-sm">P</span></div>
+          <div><h2 className="font-bold text-slate-900">PayPal</h2><p className="text-xs text-slate-400">PayPal email or link shown in order confirmation emails</p></div>
         </div>
         <div className="grid grid-cols-1 gap-4">
-          <Input label="Mailing Address" value={values['payment.bill.address'] ?? ''} onChange={e => set('payment.bill.address', e.target.value)} placeholder="P.O. Box 12345, New York, NY 10001" />
+          <Input label="PayPal Email or Link" value={values['payment.paypal.recipient'] ?? ''} onChange={e => set('payment.paypal.recipient', e.target.value)} placeholder="payments@modavance.com" />
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-slate-700">Additional Instructions</label>
-            <textarea rows={3} className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              value={values['payment.bill.instructions'] ?? ''} onChange={e => set('payment.bill.instructions', e.target.value)} placeholder="Send cash only..." />
+            <textarea rows={2} className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              value={values['payment.paypal.instructions'] ?? ''} onChange={e => set('payment.paypal.instructions', e.target.value)} placeholder="Send as Friends & Family..." />
           </div>
         </div>
       </div>

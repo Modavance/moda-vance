@@ -312,25 +312,22 @@ Try each product on separate days and note how each affects your focus, mood, an
   console.log('✓ FAQ seeded');
 
   // ─── Settings ────────────────────────────────────────────────────────────
-  const settingsCount = await prisma.setting.count();
-  if (settingsCount === 0) {
-    await prisma.setting.createMany({
-      data: [
-        { key: 'contact.email', value: 'support@modavance.com' },
-        { key: 'contact.response_time', value: 'Within 24 hours, 7 days a week' },
-        { key: 'contact.phone', value: '' },
-        { key: 'payment.bitcoin.wallet', value: '' },
-        { key: 'payment.bitcoin.discount', value: '15' },
-        { key: 'payment.ethereum.wallet', value: '' },
-        { key: 'payment.ethereum.discount', value: '15' },
-        { key: 'payment.zelle.recipient', value: '' },
-        { key: 'payment.zelle.discount', value: '10' },
-        { key: 'payment.bill.address', value: '' },
-        { key: 'payment.bill.instructions', value: 'Send a physical bill to the provided address. Order processing begins upon receipt.' },
-      ],
-    });
-    console.log('✓ Settings seeded');
+  const defaultSettings = [
+    { key: 'contact.email', value: 'support@modavance.com' },
+    { key: 'contact.response_time', value: 'Within 24 hours, 7 days a week' },
+    { key: 'contact.phone', value: '' },
+    { key: 'payment.bitcoin.wallet', value: '' },
+    { key: 'payment.bitcoin.discount', value: '15' },
+    { key: 'payment.ethereum.wallet', value: '' },
+    { key: 'payment.ethereum.discount', value: '15' },
+    { key: 'payment.card.instructions', value: '' },
+    { key: 'payment.paypal.recipient', value: '' },
+    { key: 'payment.paypal.instructions', value: '' },
+  ];
+  for (const s of defaultSettings) {
+    await prisma.setting.upsert({ where: { key: s.key }, update: {}, create: s });
   }
+  console.log('✓ Settings seeded');
 
   console.log('Seeding complete!');
 }
