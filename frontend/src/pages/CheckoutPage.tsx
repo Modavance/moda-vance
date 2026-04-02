@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
 import { formatPrice } from '@/utils/formatters';
 import { api, unwrap } from '@/services/api';
+import { normalizeCoupon } from '@/utils/normalizers';
 import type { Coupon } from '@/types';
 import type { Address, PaymentMethod } from '@/types';
 
@@ -178,7 +179,7 @@ export function CheckoutPage() {
   const handleApplyCoupon = async () => {
     try {
       const res = await api.post('/coupons/validate', { code: couponInput.toUpperCase(), subtotal });
-      const coupon = unwrap<Coupon>(res);
+      const coupon = normalizeCoupon(unwrap<Coupon>(res));
       if (new Date(coupon.expiresAt) < new Date()) {
         notify.error('This coupon has expired');
         return;

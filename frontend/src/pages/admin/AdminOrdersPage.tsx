@@ -5,15 +5,12 @@ import {
   XCircle, Clock, RefreshCw, AlertTriangle, History,
 } from 'lucide-react';
 import { adminApi, unwrap } from '@/services/api';
+import { normalizeOrder } from '@/utils/normalizers';
 import { formatPrice, formatDate } from '@/utils/formatters';
 import type { Order, OrderStatus, OrderStatusLog } from '@/types';
 
 const STATUS_OPTIONS: OrderStatus[] = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
 
-// Backend returns uppercase statuses (PENDING), frontend uses lowercase (pending)
-function normalizeOrder(o: Record<string, unknown>): Order {
-  return { ...o, status: String(o.status ?? '').toLowerCase() } as Order;
-}
 
 const STATUS_STYLES: Record<OrderStatus, { bg: string; text: string; icon: React.ReactNode }> = {
   pending:    { bg: 'bg-amber-100',   text: 'text-amber-700',   icon: <Clock className="w-3.5 h-3.5" /> },
@@ -204,8 +201,7 @@ export function AdminOrdersPage() {
     queryKey: ['admin-orders'],
     queryFn: async () => {
       const res = await adminApi.get('/admin/orders');
-      const raw = unwrap<Record<string, unknown>[]>(res);
-      return raw.map(normalizeOrder);
+      return unwrap<Order[]>(res).map(normalizeOrder);
     },
   });
 

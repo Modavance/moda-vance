@@ -17,6 +17,7 @@ export class CreateOrderDto {
   @Type(() => AddressDto)
   shippingAddress!: AddressDto;
 
+  @Transform(({ value }: { value: string }) => value?.toUpperCase())
   @IsEnum(PaymentMethod)
   paymentMethod!: PaymentMethod;
 

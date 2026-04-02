@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { DollarSign, ShoppingBag, Users, TrendingUp, Package, Clock } from 'lucide-react';
 import { adminApi, unwrap } from '@/services/api';
+import { normalizeOrder } from '@/utils/normalizers';
 import { formatPrice, formatDate } from '@/utils/formatters';
 import type { Order, OrderStatus } from '@/types';
 
@@ -39,8 +40,7 @@ export function AdminDashboard() {
     queryKey: ['admin-orders'],
     queryFn: async () => {
       const res = await adminApi.get('/admin/orders');
-      const raw = unwrap<Record<string, unknown>[]>(res);
-      return raw.map(o => ({ ...o, status: String(o.status ?? '').toLowerCase() })) as Order[];
+      return unwrap<Order[]>(res).map(normalizeOrder);
     },
   });
   const { data: customers = [] } = useQuery({

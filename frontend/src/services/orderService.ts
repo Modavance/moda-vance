@@ -1,4 +1,5 @@
 import { api, unwrap } from './api';
+import { normalizeOrder } from '@/utils/normalizers';
 import type { Order } from '@/types';
 
 interface CreateOrderParams {
@@ -66,18 +67,18 @@ export const orderService = {
     };
 
     const res = await api.post('/orders', body);
-    return unwrap<Order>(res);
+    return normalizeOrder(unwrap<Order>(res));
   },
 
   getByUser: async (): Promise<Order[]> => {
     const res = await api.get('/orders/mine');
-    return unwrap<Order[]>(res);
+    return unwrap<Order[]>(res).map(normalizeOrder);
   },
 
   getById: async (id: string): Promise<Order | undefined> => {
     try {
       const res = await api.get(`/orders/${id}`);
-      return unwrap<Order>(res);
+      return normalizeOrder(unwrap<Order>(res));
     } catch {
       return undefined;
     }
