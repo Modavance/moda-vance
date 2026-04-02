@@ -34,8 +34,11 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; variant: 'info' | 'war
 const PAYMENT_LABELS: Record<string, string> = {
   bitcoin:  'Bitcoin (BTC)',
   ethereum: 'Ethereum (ETH)',
-  zelle:    'Zelle',
-  bill:     'Cash by Mail',
+  card:     'Card Payment',
+  paypal:   'PayPal',
+  // legacy values
+  zelle:    'Card Payment',
+  bill:     'PayPal',
 };
 
 export function OrderDetailPage() {

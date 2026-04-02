@@ -70,7 +70,7 @@ const checkoutSchema = z.object({
   state:         z.string().min(1, 'Required'),
   zip:           z.string().min(2, 'Valid postal code required'),
   country:       z.string().min(2, 'Required'),
-  paymentMethod: z.enum(['bitcoin', 'ethereum', 'zelle', 'bill']),
+  paymentMethod: z.enum(['bitcoin', 'ethereum', 'card', 'paypal']),
   couponCode:    z.string().optional(),
   agreeTerms:    z.boolean().refine((v) => v === true, { message: 'You must agree to the terms' }),
 });
@@ -91,8 +91,8 @@ type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
 const PAYMENT_METHODS = [
   { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
-  { id: 'zelle'    as const, label: 'Zelle',            icon: 'Z', desc: 'Get 10% discount',  discount: 0.10, highlight: true  },
-  { id: 'bill'     as const, label: 'Cash by Mail',     icon: '$', desc: 'Standard pricing',  discount: 0,    highlight: false },
+  { id: 'card'     as const, label: 'Card Payment',   icon: '💳', desc: 'Get 10% discount',  discount: 0.10, highlight: true  },
+  { id: 'paypal'   as const, label: 'PayPal',          icon: 'P', desc: 'Standard pricing',  discount: 0,    highlight: false },
 ];
 
 /* ── Component ───────────────────────────────────────────────────── */
@@ -123,7 +123,7 @@ export function CheckoutPage() {
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
       country:       savedAddr?.country       ?? 'United States',
-      paymentMethod: 'bitcoin',
+      paymentMethod: 'bitcoin' as const,
       firstName:     savedAddr?.firstName     ?? user?.firstName ?? '',
       lastName:      savedAddr?.lastName      ?? user?.lastName  ?? '',
       email:         savedAddr?.email         ?? user?.email     ?? '',

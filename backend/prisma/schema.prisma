@@ -39,8 +39,8 @@ enum OrderStatus {
 enum PaymentMethod {
   BITCOIN
   ETHEREUM
-  ZELLE
-  BILL
+  CARD
+  PAYPAL
 }
 
 enum CouponType {

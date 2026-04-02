@@ -8,8 +8,8 @@ import { OrderStatus, Prisma } from '@prisma/client';
 const PAYMENT_DISCOUNTS: Record<string, number> = {
   BITCOIN: 0.15,
   ETHEREUM: 0.15,
-  ZELLE: 0.10,
-  BILL: 0,
+  CARD: 0.10,
+  PAYPAL: 0,
 };
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
