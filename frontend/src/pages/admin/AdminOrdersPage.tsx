@@ -73,7 +73,11 @@ function StatusLogTimeline({ orderId, orderCreatedAt }: { orderId: string; order
     queryKey: ['status-logs', orderId],
     queryFn: async () => {
       const res = await adminApi.get(`/admin/orders/${orderId}/logs`);
-      return unwrap<OrderStatusLog[]>(res);
+      return unwrap<OrderStatusLog[]>(res).map(log => ({
+        ...log,
+        fromStatus: log.fromStatus ? (log.fromStatus as string).toLowerCase() as OrderStatus : log.fromStatus,
+        toStatus: (log.toStatus as string).toLowerCase() as OrderStatus,
+      }));
     },
   });
 
