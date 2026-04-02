@@ -39,7 +39,8 @@ export function AdminDashboard() {
     queryKey: ['admin-orders'],
     queryFn: async () => {
       const res = await adminApi.get('/admin/orders');
-      return unwrap<Order[]>(res);
+      const raw = unwrap<Record<string, unknown>[]>(res);
+      return raw.map(o => ({ ...o, status: String(o.status ?? '').toLowerCase() })) as Order[];
     },
   });
   const { data: customers = [] } = useQuery({

@@ -10,6 +10,11 @@ import type { Order, OrderStatus, OrderStatusLog } from '@/types';
 
 const STATUS_OPTIONS: OrderStatus[] = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
 
+// Backend returns uppercase statuses (PENDING), frontend uses lowercase (pending)
+function normalizeOrder(o: Record<string, unknown>): Order {
+  return { ...o, status: String(o.status ?? '').toLowerCase() } as Order;
+}
+
 const STATUS_STYLES: Record<OrderStatus, { bg: string; text: string; icon: React.ReactNode }> = {
   pending:    { bg: 'bg-amber-100',   text: 'text-amber-700',   icon: <Clock className="w-3.5 h-3.5" /> },
   confirmed:  { bg: 'bg-blue-100',    text: 'text-blue-700',    icon: <CheckCircle className="w-3.5 h-3.5" /> },
@@ -199,7 +204,8 @@ export function AdminOrdersPage() {
     queryKey: ['admin-orders'],
     queryFn: async () => {
       const res = await adminApi.get('/admin/orders');
-      return unwrap<Order[]>(res);
+      const raw = unwrap<Record<string, unknown>[]>(res);
+      return raw.map(normalizeOrder);
     },
   });
 
