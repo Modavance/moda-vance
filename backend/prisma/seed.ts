@@ -8,15 +8,15 @@ async function main() {
 
   // ─── Admin ────────────────────────────────────────────────────────────────
   const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@modavance.com';
-  const adminPassword = process.env.ADMIN_PASSWORD ?? 'admin123';
-  const adminHash = await bcrypt.hash(adminPassword, 12);
-
-  await prisma.admin.upsert({
-    where: { email: adminEmail },
-    update: { passwordHash: adminHash },
-    create: { email: adminEmail, passwordHash: adminHash },
-  });
-  console.log('✓ Admin seeded');
+  const existingAdmin = await prisma.admin.findUnique({ where: { email: adminEmail } });
+  if (!existingAdmin) {
+    const adminPassword = process.env.ADMIN_PASSWORD ?? 'admin123';
+    const adminHash = await bcrypt.hash(adminPassword, 12);
+    await prisma.admin.create({ data: { email: adminEmail, passwordHash: adminHash } });
+    console.log('✓ Admin created');
+  } else {
+    console.log('✓ Admin already exists, skipping');
+  }
 
   // ─── Products ────────────────────────────────────────────────────────────
   const products = [
