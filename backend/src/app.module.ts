@@ -16,6 +16,7 @@ import { SettingsModule } from './settings/settings.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { HealthModule } from './health/health.module';
 import { CustomersModule } from './customers/customers.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -33,6 +34,11 @@ import { CustomersModule } from './customers/customers.module';
         FRONTEND_URL:         Joi.string().uri().required(),
         ADMIN_EMAIL:          Joi.string().email().required(),
         ADMIN_PASSWORD:       Joi.string().min(6).required(),
+        SMTP_HOST:            Joi.string().required(),
+        SMTP_PORT:            Joi.number().default(587),
+        SMTP_SECURE:          Joi.boolean().default(false),
+        SMTP_USER:            Joi.string().email().required(),
+        SMTP_PASS:            Joi.string().required(),
       }),
     }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 60 }]),
@@ -50,6 +56,7 @@ import { CustomersModule } from './customers/customers.module';
     AnalyticsModule,
     HealthModule,
     CustomersModule,
+    EmailModule,
   ],
 })
 export class AppModule {}

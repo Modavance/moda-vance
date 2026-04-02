@@ -44,7 +44,8 @@ jobs:
             sed -i 's|FRONTEND_URL=.*|FRONTEND_URL="https://modavance.co"|' .env
             sed -i 's|NODE_ENV=.*|NODE_ENV="production"|' .env
             sed -i 's|ADMIN_PASSWORD=.*|ADMIN_PASSWORD="ModaAdmin2024!"|' .env
-            grep "FRONTEND_URL\|NODE_ENV\|ADMIN_PASSWORD" .env
+            grep -q "SMTP_HOST" .env || printf '\nSMTP_HOST="mail.modavance.co"\nSMTP_PORT=587\nSMTP_SECURE=false\nSMTP_USER="orders@modavance.co"\nSMTP_PASS="PLACEHOLDER"\n' >> .env
+            grep "FRONTEND_URL\|NODE_ENV\|ADMIN_PASSWORD\|SMTP_HOST" .env
 
             echo "==> Seeding database..."
             npx prisma db seed

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { EmailService } from '../email/email.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrderFilterDto } from './dto/order-filter.dto';
@@ -28,7 +29,10 @@ function generateOrderId(): string {
 @Injectable()
 export class OrdersService {
   private readonly logger = new Logger(OrdersService.name);
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly email: EmailService,
+  ) {}
 
   async create(dto: CreateOrderDto) {
     return this.prisma.$transaction(async (tx) => {
@@ -90,6 +94,22 @@ export class OrdersService {
       });
 
       this.logger.log(`Order created: ${order.id}`);
+
+      // Send confirmation email
+      const addr = dto.shippingAddress as { firstName?: string; email?: string };
+      if (addr.email) {
+        this.email.sendOrderConfirmation(addr.email, {
+          id: order.id,
+          firstName: addr.firstName ?? 'Customer',
+          items: order.items.map(i => ({ productName: i.productName, quantity: i.quantity, price: i.price })),
+          subtotal: order.subtotal,
+          discount: order.discount,
+          shipping: order.shipping,
+          total: order.total,
+          paymentMethod: order.paymentMethod,
+        }).catch(() => {});
+      }
+
       return order;
     });
   }
@@ -134,6 +154,14 @@ export class OrdersService {
       this.prisma.order.update({ where: { id }, data: { status: dto.status }, include: { items: true, statusLogs: true } }),
       this.prisma.orderStatusLog.create({ data: { orderId: id, fromStatus: order.status, toStatus: dto.status, note: dto.note ?? null } }),
     ]);
+
+    // Send status update email
+    const addr = order.shippingAddress as { firstName?: string; email?: string };
+    if (addr.email) {
+      const trackingNote = dto.note?.match(/[A-Z0-9]{8,}/)?.[0];
+      this.email.sendStatusUpdate(addr.email, addr.firstName ?? 'Customer', id, dto.status, trackingNote).catch(() => {});
+    }
+
     return updated;
   }
 
