@@ -4,7 +4,9 @@ import { CouponsService } from './coupons.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
 import { AdminJwtGuard } from '../common/guards/admin-jwt.guard';
+import { Public } from '../common/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin-coupons')
 @ApiBearerAuth('admin-jwt')
 @UseGuards(AdminJwtGuard)

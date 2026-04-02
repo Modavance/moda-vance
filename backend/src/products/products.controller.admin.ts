@@ -5,7 +5,9 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductFilterDto } from './dto/product-filter.dto';
 import { AdminJwtGuard } from '../common/guards/admin-jwt.guard';
+import { Public } from '../common/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin-products')
 @ApiBearerAuth('admin-jwt')
 @UseGuards(AdminJwtGuard)

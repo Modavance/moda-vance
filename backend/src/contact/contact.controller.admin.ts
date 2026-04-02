@@ -2,7 +2,9 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Query, UseGuards
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ContactService } from './contact.service';
 import { AdminJwtGuard } from '../common/guards/admin-jwt.guard';
+import { Public } from '../common/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin-contact')
 @ApiBearerAuth('admin-jwt')
 @UseGuards(AdminJwtGuard)

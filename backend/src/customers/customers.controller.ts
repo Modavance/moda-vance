@@ -2,8 +2,10 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { AdminJwtGuard } from '../common/guards/admin-jwt.guard';
+import { Public } from '../common/decorators/public.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
+@Public()
 @ApiTags('admin-customers')
 @ApiBearerAuth('admin-jwt')
 @UseGuards(AdminJwtGuard)

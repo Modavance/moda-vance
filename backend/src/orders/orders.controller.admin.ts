@@ -4,7 +4,9 @@ import { OrdersService } from './orders.service';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { OrderFilterDto } from './dto/order-filter.dto';
 import { AdminJwtGuard } from '../common/guards/admin-jwt.guard';
+import { Public } from '../common/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin-orders')
 @ApiBearerAuth('admin-jwt')
 @UseGuards(AdminJwtGuard)

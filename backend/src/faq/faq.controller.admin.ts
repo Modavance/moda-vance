@@ -4,7 +4,9 @@ import { FaqService } from './faq.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateFaqDto } from './dto/update-faq.dto';
 import { AdminJwtGuard } from '../common/guards/admin-jwt.guard';
+import { Public } from '../common/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin-faq')
 @ApiBearerAuth('admin-jwt')
 @UseGuards(AdminJwtGuard)

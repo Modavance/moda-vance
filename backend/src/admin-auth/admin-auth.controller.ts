@@ -19,6 +19,7 @@ export class AdminAuthController {
     return this.adminAuthService.login(dto);
   }
 
+  @Public()
   @UseGuards(AdminJwtGuard)
   @ApiBearerAuth('admin-jwt')
   @Get('me')
@@ -26,6 +27,7 @@ export class AdminAuthController {
     return this.adminAuthService.getMe(admin.adminId);
   }
 
+  @Public()
   @UseGuards(AdminJwtGuard)
   @ApiBearerAuth('admin-jwt')
   @Put('profile')
@@ -36,6 +38,7 @@ export class AdminAuthController {
     return this.adminAuthService.updateProfile(admin.adminId, dto);
   }
 
+  @Public()
   @UseGuards(AdminJwtGuard)
   @ApiBearerAuth('admin-jwt')
   @Put('password')

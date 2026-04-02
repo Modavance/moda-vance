@@ -4,7 +4,9 @@ import { BlogService } from './blog.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AdminJwtGuard } from '../common/guards/admin-jwt.guard';
+import { Public } from '../common/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin-blog')
 @ApiBearerAuth('admin-jwt')
 @UseGuards(AdminJwtGuard)
