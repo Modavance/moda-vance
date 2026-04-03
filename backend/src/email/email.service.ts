@@ -139,7 +139,7 @@ export class EmailService {
     );
   }
 
-  async sendStatusUpdate(to: string, firstName: string, orderId: string, status: string, trackingNumber?: string) {
+  async sendStatusUpdate(to: string, firstName: string, orderId: string, status: string, trackingNumber?: string, note?: string) {
     const statusMessages: Record<string, { label: string; msg: string; color: string }> = {
       confirmed:  { label: 'Order Confirmed',    msg: 'Your order has been confirmed and is now being prepared for shipment.',                                                                   color: '#2563eb' },
       processing: { label: 'Payment Verified',   msg: 'Great news — your payment has been verified. Our team is now packing your order and it will be dispatched shortly.',                     color: '#7c3aed' },
@@ -165,6 +165,12 @@ export class EmailService {
       <div style="padding:16px;background:#f8fafc;border-radius:10px;font-size:14px;margin-bottom:20px">
         <span style="color:#64748b;font-weight:600">Tracking Number: </span>
         <span style="font-family:monospace;background:#e2e8f0;padding:3px 10px;border-radius:6px;font-size:13px">${trackingNumber}</span>
+      </div>` : ''}
+
+      ${note ? `
+      <div style="padding:16px;background:#f8fafc;border-radius:10px;font-size:14px;margin-bottom:20px">
+        <span style="color:#64748b;font-weight:600">Note: </span>
+        <span style="color:#0f172a">${note}</span>
       </div>` : ''}
 
       ${status.toLowerCase() !== 'cancelled' ? `<a href="https://modavance.co/orders/${orderId}" style="display:inline-block;padding:13px 32px;background:#2563eb;color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px">View Order →</a>` : ''}

@@ -163,11 +163,10 @@ export class OrdersService {
       this.prisma.orderStatusLog.create({ data: { orderId: id, fromStatus: order.status, toStatus: dto.status, note: dto.note ?? null } }),
     ]);
 
-    // Send status update email
+    // Send status update email (skip for cancelled orders)
     const addr = order.shippingAddress as { firstName?: string; email?: string };
-    if (addr.email) {
-      const trackingNote = dto.note?.match(/[A-Z0-9]{8,}/)?.[0];
-      this.email.sendStatusUpdate(addr.email, addr.firstName ?? 'Customer', id, dto.status, trackingNote).catch(() => {});
+    if (addr.email && dto.status !== OrderStatus.CANCELLED) {
+      this.email.sendStatusUpdate(addr.email, addr.firstName ?? 'Customer', id, dto.status, dto.trackingNumber, dto.note).catch(() => {});
     }
 
     return updated;
