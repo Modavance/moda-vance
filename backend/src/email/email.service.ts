@@ -43,7 +43,7 @@ export class EmailService {
 
   private async send(to: string, subject: string, html: string) {
     try {
-      await sgMail.send({ from: FROM, to, subject, html: this.wrap(html) });
+      await sgMail.send({ from: FROM, to, subject, html: this.wrap(html), trackingSettings: { clickTracking: { enable: false, enableText: false } } });
       this.logger.log(`Email sent to ${to}: ${subject}`);
     } catch (err) {
       this.logger.error(`Failed to send email to ${to}: ${err}`);
@@ -154,7 +154,7 @@ export class EmailService {
         <span style="font-family:monospace;background:#e2e8f0;padding:3px 10px;border-radius:6px;font-size:13px">${trackingNumber}</span>
       </div>` : ''}
 
-      <a href="https://modavance.co/orders/${orderId}" style="display:inline-block;padding:13px 32px;background:#2563eb;color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px">View Order →</a>
+      ${status.toLowerCase() !== 'cancelled' ? `<a href="https://modavance.co/orders/${orderId}" style="display:inline-block;padding:13px 32px;background:#2563eb;color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px">View Order →</a>` : ''}
       `,
     );
   }
