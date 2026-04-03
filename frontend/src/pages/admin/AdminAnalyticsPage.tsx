@@ -28,13 +28,15 @@ export function AdminAnalyticsPage() {
     },
   });
 
-  const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
-  const totalOrders = orders.length;
+  const activeOrders = orders.filter((o: Order) => (o.status as string).toLowerCase() !== 'cancelled');
+
+  const totalRevenue = activeOrders.reduce((s, o) => s + o.total, 0);
+  const totalOrders = activeOrders.length;
   const totalCustomers = customers.length;
 
   const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monthlyMap: Record<string, { revenue: number; orders: number }> = {};
-  orders.forEach(o => {
+  activeOrders.forEach(o => {
     const d = new Date(o.createdAt);
     const key = monthNames[d.getMonth()];
     if (!monthlyMap[key]) monthlyMap[key] = { revenue: 0, orders: 0 };
