@@ -33,6 +33,7 @@ interface CreateOrderParams {
   };
   paymentMethod: string;
   couponCode?: string;
+  shippingCenter?: string;
 }
 
 export const orderService = {
@@ -64,6 +65,7 @@ export const orderService = {
       },
       paymentMethod: params.paymentMethod,
       couponCode: params.couponCode,
+      shippingCenter: params.shippingCenter,
     };
 
     const res = await api.post('/orders', body);
