@@ -18,7 +18,7 @@ const LOGO_HTML = `
 const FOOTER_HTML = `
 <hr style="margin:32px 0;border:none;border-top:1px solid #e2e8f0">
 <p style="color:#94a3b8;font-size:12px;text-align:center">
-  ModaVance · <a href="mailto:orders@modavance.co" style="color:#94a3b8">orders@modavance.co</a><br>
+  ModaVance · <a href="mailto:support@modavance.co" style="color:#94a3b8">support@modavance.co</a><br>
   Questions? Simply reply to this email — we respond within 24 hours.
 </p>`;
 
@@ -130,7 +130,7 @@ export class EmailService {
     const statusMessages: Record<string, { label: string; msg: string; color: string }> = {
       confirmed:  { label: 'Order Confirmed',    msg: 'Your order has been confirmed and is now being prepared for shipment.',                                                                   color: '#2563eb' },
       processing: { label: 'Payment Verified',   msg: 'Great news — your payment has been verified. Our team is now packing your order and it will be dispatched shortly.',                     color: '#7c3aed' },
-      shipped:    { label: 'Your Order Is On Its Way! 🚀', msg: 'Your package has been dispatched and is heading your way. Delivery typically takes 4–12 business days depending on your shipping center.', color: '#0891b2' },
+      shipped:    { label: 'Your Order Is On Its Way! 🚀', msg: 'Your package has been dispatched and is heading your way. Delivery typically takes 4–12 business days depending on your shipping center. Please check the delivery details for your region to get a more accurate estimate.', color: '#0891b2' },
       delivered:  { label: 'Order Delivered ✓',  msg: "Your order has been marked as delivered. We hope you're satisfied with your purchase! If you have any questions, don't hesitate to reach out.", color: '#16a34a' },
       cancelled:  { label: 'Order Cancelled',    msg: "Your order has been cancelled. If this was a mistake or you have any questions, please contact our support team.", color: '#dc2626' },
     };
