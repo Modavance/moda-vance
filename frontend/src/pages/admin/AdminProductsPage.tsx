@@ -129,17 +129,25 @@ function ProductFormModal({ product, onClose, onSave }: {
     variants:         product?.variants         ?? [{ id: 'v1', quantity: 100, price: 99 }] as ProductVariant[],
   });
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSave = async () => {
     const validImages = form.images.filter(Boolean);
     setSaving(true);
-    await onSave({
-      ...form,
-      images: validImages,
-      image: validImages[0] ?? '',
-    });
-    setSaving(false);
-    onClose();
+    setError('');
+    try {
+      await onSave({
+        ...form,
+        images: validImages,
+        image: validImages[0] ?? '',
+      });
+      onClose();
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      setError(Array.isArray(msg) ? msg.join(', ') : (msg ?? 'Failed to save product'));
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -237,6 +245,7 @@ function ProductFormModal({ product, onClose, onSave }: {
             </label>
           </div>
 
+          {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl px-4 py-2">{error}</p>}
           <button onClick={handleSave} disabled={saving}
             className="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-50">
             {saving ? 'Saving...' : product ? 'Save Changes' : 'Create Product'}
