@@ -76,6 +76,7 @@ export function RegisterPage() {
               label="Email Address"
               type="email"
               placeholder="you@example.com"
+              autoComplete="off"
               error={errors.email?.message}
               {...register('email')}
             />
@@ -83,6 +84,7 @@ export function RegisterPage() {
               label="Password"
               type={showPassword ? 'text' : 'password'}
               placeholder="At least 8 characters"
+              autoComplete="new-password"
               error={errors.password?.message}
               suffix={
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="p-0.5">
@@ -95,6 +97,7 @@ export function RegisterPage() {
               label="Confirm Password"
               type="password"
               placeholder="Re-enter password"
+              autoComplete="new-password"
               error={errors.confirmPassword?.message}
               {...register('confirmPassword')}
             />
