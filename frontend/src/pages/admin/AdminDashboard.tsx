@@ -51,11 +51,13 @@ export function AdminDashboard() {
     },
   });
 
-  const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
-  const totalOrders = orders.length;
+  const activeOrders = orders.filter(o => o.status !== 'cancelled');
+
+  const totalRevenue = activeOrders.reduce((s, o) => s + o.total, 0);
+  const totalOrders = activeOrders.length;
   const totalCustomers = customers.length;
   const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-  const pendingCount = orders.filter(o => o.status === 'pending').length;
+  const pendingCount = activeOrders.filter(o => o.status === 'pending').length;
 
   const revenueData = (() => {
     const days: { date: string; revenue: number; orders: number }[] = [];
@@ -64,7 +66,7 @@ export function AdminDashboard() {
       const d = new Date(now);
       d.setDate(d.getDate() - i);
       const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const dayOrders = orders.filter(o => {
+      const dayOrders = activeOrders.filter(o => {
         const od = new Date(o.createdAt);
         return od.getDate() === d.getDate() && od.getMonth() === d.getMonth() && od.getFullYear() === d.getFullYear();
       });
@@ -73,7 +75,7 @@ export function AdminDashboard() {
     return days;
   })();
 
-  const recentOrders = [...orders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
+  const recentOrders = [...activeOrders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
 
   const STATS = [
     { label: 'Total Revenue',    value: formatPrice(totalRevenue),      icon: DollarSign,  color: 'bg-blue-50 text-blue-600' },

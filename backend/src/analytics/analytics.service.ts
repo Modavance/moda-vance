@@ -6,9 +6,11 @@ export class AnalyticsService {
   private readonly logger = new Logger(AnalyticsService.name);
   constructor(private readonly prisma: PrismaService) {}
 
+  private readonly ACTIVE = { status: { not: 'CANCELLED' as const } };
+
   async getOverview() {
     const [orders, customers] = await Promise.all([
-      this.prisma.order.aggregate({ _sum: { total: true }, _count: { id: true } }),
+      this.prisma.order.aggregate({ where: this.ACTIVE, _sum: { total: true }, _count: { id: true } }),
       this.prisma.user.count(),
     ]);
     const totalRevenue = orders._sum.total ?? 0;
@@ -22,7 +24,7 @@ export class AnalyticsService {
     since.setMonth(since.getMonth() - 11);
     since.setDate(1);
     const orders = await this.prisma.order.findMany({
-      where: { createdAt: { gte: since } },
+      where: { createdAt: { gte: since }, ...this.ACTIVE },
       select: { total: true, createdAt: true },
     });
     const map = new Map<string, { revenue: number; orders: number }>();
@@ -37,12 +39,18 @@ export class AnalyticsService {
   }
 
   async getPaymentBreakdown() {
-    const orders = await this.prisma.order.groupBy({ by: ['paymentMethod'], _count: { id: true }, _sum: { total: true } });
+    const orders = await this.prisma.order.groupBy({ by: ['paymentMethod'], where: this.ACTIVE, _count: { id: true }, _sum: { total: true } });
     return orders.map((o) => ({ method: o.paymentMethod, count: o._count.id, revenue: o._sum.total ?? 0 }));
   }
 
   async getTopProducts() {
-    const items = await this.prisma.orderItem.groupBy({ by: ['productId', 'productName'], _sum: { quantity: true, price: true }, orderBy: { _sum: { quantity: 'desc' } }, take: 10 });
+    const items = await this.prisma.orderItem.groupBy({
+      by: ['productId', 'productName'],
+      where: { order: this.ACTIVE },
+      _sum: { quantity: true, price: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 10,
+    });
     return items.map((i) => ({ productId: i.productId, name: i.productName, totalQuantity: i._sum.quantity ?? 0, totalRevenue: i._sum.price ?? 0 }));
   }
 }
