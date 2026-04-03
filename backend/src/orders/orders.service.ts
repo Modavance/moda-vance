@@ -16,8 +16,17 @@ const PAYMENT_DISCOUNTS: Record<string, number> = {
 // Admin can change to any status except going back to the same one
 const LOCKED_STATUSES: OrderStatus[] = []; // no locked statuses for admin
 
-function generateOrderId(): string {
-  return `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+async function generateOrderId(tx: Prisma.TransactionClient): Promise<string> {
+  const last = await tx.order.findFirst({
+    where: { id: { startsWith: 'MV-' } },
+    orderBy: { createdAt: 'desc' },
+  });
+  let next = 500;
+  if (last) {
+    const m = last.id.match(/^MV-(\d+)$/);
+    if (m) next = parseInt(m[1]) + 1;
+  }
+  return `MV-${next}`;
 }
 
 @Injectable()
@@ -59,7 +68,7 @@ export class OrdersService {
 
       const order = await tx.order.create({
         data: {
-          id: generateOrderId(),
+          id: await generateOrderId(tx),
           userId: dto.userId ?? null,
           paymentMethod: dto.paymentMethod,
           couponCode: dto.couponCode ?? null,
