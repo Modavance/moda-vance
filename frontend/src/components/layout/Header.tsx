@@ -98,6 +98,20 @@ export function Header() {
                 )}
               </div>
 
+              <NavLink
+                to="/loyalty"
+                className={({ isActive }) =>
+                  cn(
+                    'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                    isActive
+                      ? 'text-blue-600 bg-blue-50'
+                      : 'text-slate-700 hover:text-blue-600 hover:bg-blue-50'
+                  )
+                }
+              >
+                ⭐ Rewards
+              </NavLink>
+
               {NAV_LINKS.slice(1).map((link) => (
                 <NavLink
                   key={link.href}
@@ -201,6 +215,15 @@ export function Header() {
                   {link.label}
                 </NavLink>
               ))}
+              <NavLink
+                to="/loyalty"
+                onClick={() => setMobileOpen(false)}
+                className={({ isActive }) =>
+                  cn('px-4 py-3 text-sm font-medium rounded-xl transition-colors', isActive ? 'text-blue-600 bg-blue-50' : 'text-slate-700 hover:bg-slate-50')
+                }
+              >
+                ⭐ ModaVance Rewards
+              </NavLink>
               <Link
                 to={user ? '/account' : '/login'}
                 onClick={() => setMobileOpen(false)}
