@@ -58,10 +58,13 @@ export class OrdersService {
         if (!coupon) throw new BadRequestException('Invalid coupon code');
         if (new Date(coupon.expiresAt) < new Date()) throw new BadRequestException('Coupon has expired');
         if (subtotal < coupon.minOrder) throw new BadRequestException(`Minimum order for this coupon is $${coupon.minOrder}`);
+        if (coupon.maxUsage > 0 && coupon.usageCount >= coupon.maxUsage) throw new BadRequestException('This coupon has already been used');
         couponDiscount = coupon.type === 'PERCENT' ? (subtotal * coupon.discount) / 100 : coupon.discount;
+        await tx.coupon.update({ where: { code: dto.couponCode }, data: { usageCount: { increment: 1 } } });
       }
 
-      const paymentDiscount = subtotal * (PAYMENT_DISCOUNTS[dto.paymentMethod] ?? 0);
+      // Crypto discount only applies if no coupon is used
+      const paymentDiscount = dto.couponCode ? 0 : subtotal * (PAYMENT_DISCOUNTS[dto.paymentMethod] ?? 0);
       const discount = couponDiscount + paymentDiscount;
       const shipping = dto.shipping ?? (subtotal >= 150 ? 0 : 9.99);
       const total = subtotal - discount + shipping;

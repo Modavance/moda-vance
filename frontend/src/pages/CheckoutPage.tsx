@@ -140,10 +140,12 @@ export function CheckoutPage() {
   const selectedCountry = watch('country');
 
   const paymentMethod  = PAYMENT_METHODS.find((p) => p.id === selectedPayment);
-  const cryptoDiscount = paymentMethod?.discount ?? 0;
+  const cryptoDiscountRate = paymentMethod?.discount ?? 0;
+  // Coupon and crypto discount cannot be combined — coupon takes priority
+  const cryptoDiscount = couponDiscount > 0 ? 0 : subtotal * cryptoDiscountRate;
   const shipping = 0; // Always free
   const dispatchFee = SHIPPING_REGIONS.find(r => r.id === shippingRegion)?.fee ?? 0;
-  const totalDiscount  = subtotal * cryptoDiscount + couponDiscount;
+  const totalDiscount  = cryptoDiscount + couponDiscount;
   const total          = subtotal - totalDiscount + dispatchFee;
 
   // State/province field config based on country
@@ -470,9 +472,12 @@ export function CheckoutPage() {
                   </div>
                   {cryptoDiscount > 0 && (
                     <div className="flex justify-between text-sm text-emerald-600 font-medium">
-                      <span>Crypto discount ({Math.round(cryptoDiscount * 100)}%) — BTC/ETH only</span>
-                      <span>−{formatPrice(subtotal * cryptoDiscount)}</span>
+                      <span>Crypto discount ({Math.round(cryptoDiscountRate * 100)}%) — BTC/ETH only</span>
+                      <span>−{formatPrice(cryptoDiscount)}</span>
                     </div>
+                  )}
+                  {couponDiscount > 0 && cryptoDiscountRate > 0 && (
+                    <p className="text-xs text-amber-600">⚠️ Crypto discount not applied — cannot combine with coupon</p>
                   )}
                   {couponDiscount > 0 && (
                     <div className="flex justify-between text-sm text-emerald-600 font-medium">

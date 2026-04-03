@@ -170,12 +170,14 @@ model Review {
 }
 
 model Coupon {
-  code      String     @id
-  discount  Float
-  type      CouponType
-  minOrder  Float      @default(0)
-  expiresAt DateTime
-  createdAt DateTime   @default(now())
+  code       String     @id
+  discount   Float
+  type       CouponType
+  minOrder   Float      @default(0)
+  expiresAt  DateTime
+  maxUsage   Int        @default(0)
+  usageCount Int        @default(0)
+  createdAt  DateTime   @default(now())
 }
 
 model BlogPost {

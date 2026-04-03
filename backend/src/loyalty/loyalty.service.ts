@@ -47,7 +47,7 @@ export class LoyaltyService {
     expiresAt.setDate(expiresAt.getDate() + 30);
 
     await this.prisma.$transaction([
-      this.prisma.coupon.create({ data: { code, discount, type: 'FIXED', minOrder: 0, expiresAt } }),
+      this.prisma.coupon.create({ data: { code, discount, type: 'FIXED', minOrder: 0, expiresAt, maxUsage: 1 } }),
       this.prisma.user.update({ where: { id: userId }, data: { loyaltyPoints: { decrement: 200 } } }),
     ]);
 
