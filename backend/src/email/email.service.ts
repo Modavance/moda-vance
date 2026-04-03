@@ -3,9 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import sgMail from '@sendgrid/mail';
 
 const LOGO_HTML = `
-<div style="text-align:center;margin-bottom:32px;padding:24px 0 16px">
-  <a href="https://modavance.co" style="text-decoration:none">
-    <span style="font-family:Arial,sans-serif;font-size:28px;font-weight:700;color:#0f172a;letter-spacing:-0.5px">Moda<span style="color:#2563eb">Vance</span></span>
+<div style="text-align:center;margin-bottom:32px">
+  <a href="https://modavance.co" style="text-decoration:none;display:inline-flex;align-items:center;gap:10px">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2L36.5 11V29L20 38L3.5 29V11L20 2Z" fill="url(#lgmv)"/>
+      <path d="M11 27V14L16 21L20 15L24 21L29 14V27" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="20" cy="30" r="1.5" fill="white" opacity="0.8"/>
+      <defs><linearGradient id="lgmv" x1="3.5" y1="2" x2="36.5" y2="38" gradientUnits="userSpaceOnUse"><stop stop-color="#2563EB"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs>
+    </svg>
+    <span style="font-family:sans-serif;font-size:24px;font-weight:700;color:#0f172a">Moda<span style="color:#2563eb">Vance</span></span>
   </a>
 </div>`;
 
