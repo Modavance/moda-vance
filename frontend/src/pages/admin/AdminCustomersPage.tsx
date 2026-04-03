@@ -102,8 +102,8 @@ export function AdminCustomersPage() {
                   <p className="text-slate-400 font-medium">No customers yet</p>
                 </td></tr>
               ) : filtered.map(customer => {
-                const tier = customer.totalSpent >= 500 ? { label: 'Gold', cls: 'bg-amber-100 text-amber-700' }
-                  : customer.totalSpent >= 100 ? { label: 'Silver', cls: 'bg-slate-100 text-slate-600' }
+                const tier = customer.totalSpent >= 3000 ? { label: 'Gold', cls: 'bg-amber-100 text-amber-700' }
+                  : customer.totalSpent >= 1000 ? { label: 'Silver', cls: 'bg-slate-100 text-slate-600' }
                   : { label: 'Bronze', cls: 'bg-orange-100 text-orange-700' };
                 return (
                   <tr key={customer.id} className="hover:bg-slate-50 transition-colors">
