@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as nodemailer from 'nodemailer';
+import * as sgMail from '@sendgrid/mail';
 
 const LOGO_HTML = `
 <div style="text-align:center;margin-bottom:32px">
@@ -18,30 +18,23 @@ const LOGO_HTML = `
 const FOOTER_HTML = `
 <hr style="margin:32px 0;border:none;border-top:1px solid #e2e8f0">
 <p style="color:#94a3b8;font-size:12px;text-align:center">
-  ModaVance · <a href="mailto:support@modavance.co" style="color:#94a3b8">support@modavance.co</a><br>
+  ModaVance · <a href="mailto:orders@modavance.co" style="color:#94a3b8">orders@modavance.co</a><br>
   Questions? Simply reply to this email — we respond within 24 hours.
 </p>`;
+
+const FROM = { email: 'orders@modavance.co', name: 'ModaVance' };
 
 @Injectable()
 export class EmailService {
   private readonly logger = new Logger(EmailService.name);
-  private transporter: nodemailer.Transporter;
 
   constructor(private readonly config: ConfigService) {
-    this.transporter = nodemailer.createTransport({
-      host: config.get<string>('SMTP_HOST'),
-      port: config.get<number>('SMTP_PORT') ?? 587,
-      secure: config.get<boolean>('SMTP_SECURE') ?? false,
-      tls: { rejectUnauthorized: false },
-      auth: {
-        user: config.get<string>('SMTP_USER'),
-        pass: config.get<string>('SMTP_PASS'),
-      },
-    });
-  }
-
-  private get from() {
-    return `ModaVance <orders@modavance.co>`;
+    const apiKey = config.get<string>('SENDGRID_API_KEY');
+    if (apiKey) {
+      sgMail.setApiKey(apiKey);
+    } else {
+      this.logger.warn('SENDGRID_API_KEY not set — emails will not be sent');
+    }
   }
 
   private wrap(content: string): string {
@@ -50,7 +43,7 @@ export class EmailService {
 
   private async send(to: string, subject: string, html: string) {
     try {
-      await this.transporter.sendMail({ from: this.from, to, subject, html: this.wrap(html) });
+      await sgMail.send({ from: FROM, to, subject, html: this.wrap(html) });
       this.logger.log(`Email sent to ${to}: ${subject}`);
     } catch (err) {
       this.logger.error(`Failed to send email to ${to}: ${err}`);
@@ -147,9 +140,9 @@ export class EmailService {
     const statusMessages: Record<string, { label: string; msg: string; color: string }> = {
       confirmed:  { label: 'Order Confirmed',    msg: 'Your order has been confirmed and is now being prepared for shipment.',                                                                   color: '#2563eb' },
       processing: { label: 'Payment Verified',   msg: 'Great news — your payment has been verified. Our team is now packing your order and it will be dispatched shortly.',                     color: '#7c3aed' },
-      shipped:    { label: 'Your Order Is On Its Way! 🚀', msg: 'Your package has been dispatched and is heading your way. Delivery typically takes 4–12 business days depending on your shipping center. Please check the delivery details for your region to get a more accurate estimate.', color: '#0891b2' },
-      delivered:  { label: 'Order Delivered ✓',  msg: "Your order has been marked as delivered. We hope you're satisfied with your purchase! If you have any questions or concerns, don't hesitate to reach out.", color: '#16a34a' },
-      cancelled:  { label: 'Order Cancelled',    msg: 'Your order has been cancelled. If this was a mistake or you have any questions, please contact our support team and we\'ll be happy to help.', color: '#dc2626' },
+      shipped:    { label: 'Your Order Is On Its Way! 🚀', msg: 'Your package has been dispatched and is heading your way. Delivery typically takes 4–12 business days depending on your shipping center.', color: '#0891b2' },
+      delivered:  { label: 'Order Delivered ✓',  msg: "Your order has been marked as delivered. We hope you're satisfied with your purchase! If you have any questions, don't hesitate to reach out.", color: '#16a34a' },
+      cancelled:  { label: 'Order Cancelled',    msg: "Your order has been cancelled. If this was a mistake or you have any questions, please contact our support team.", color: '#dc2626' },
     };
 
     const s = statusMessages[status.toLowerCase()] ?? { label: status, msg: '', color: '#64748b' };

@@ -44,13 +44,8 @@ jobs:
             sed -i 's|FRONTEND_URL=.*|FRONTEND_URL="https://modavance.co"|' .env
             sed -i 's|NODE_ENV=.*|NODE_ENV="production"|' .env
             sed -i 's|ADMIN_PASSWORD=.*|ADMIN_PASSWORD="ModaAdmin2024!"|' .env
-            grep -q "SMTP_HOST" .env || printf '\nSMTP_HOST="smtp.gmail.com"\nSMTP_PORT=587\nSMTP_SECURE=false\nSMTP_USER="modavance.shop@gmail.com"\nSMTP_PASS="swbpjvcebczvakmj"\n' >> .env
-            sed -i 's|SMTP_HOST=.*|SMTP_HOST="smtp.gmail.com"|' .env
-            sed -i 's|SMTP_PORT=.*|SMTP_PORT=587|' .env
-            sed -i 's|SMTP_SECURE=.*|SMTP_SECURE=false|' .env
-            sed -i 's|SMTP_USER=.*|SMTP_USER="modavance.shop@gmail.com"|' .env
-            sed -i 's|SMTP_PASS=.*|SMTP_PASS="swbpjvcebczvakmj"|' .env
-            grep "FRONTEND_URL\|NODE_ENV\|ADMIN_PASSWORD\|SMTP_HOST\|SMTP_USER" .env
+            grep -q "SENDGRID_API_KEY" .env && sed -i 's|SENDGRID_API_KEY=.*|SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY }}"|' .env || echo 'SENDGRID_API_KEY="${{ secrets.SENDGRID_API_KEY }}"' >> .env
+            grep "FRONTEND_URL\|NODE_ENV\|ADMIN_PASSWORD" .env
 
             echo "==> Seeding database..."
             npx prisma db seed
