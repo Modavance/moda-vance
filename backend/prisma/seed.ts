@@ -270,7 +270,7 @@ Try each product on separate days and note how each affects your focus, mood, an
   if (couponCount === 0) {
     await prisma.coupon.createMany({
       data: [
-        { code: 'WELCOME10', discount: 10, type: 'PERCENT', minOrder: 0, expiresAt: new Date('2026-12-31') },
+        { code: 'WELCOME10', discount: 10, type: 'PERCENT', minOrder: 0, expiresAt: new Date('2026-12-31'), onePerEmail: true },
         { code: 'BULK20', discount: 20, type: 'PERCENT', minOrder: 150, expiresAt: new Date('2026-12-31') },
         { code: 'SAVE30', discount: 30, type: 'FIXED', minOrder: 100, expiresAt: new Date('2026-12-31') },
       ],

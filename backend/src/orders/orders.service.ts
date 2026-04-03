@@ -59,6 +59,12 @@ export class OrdersService {
         if (new Date(coupon.expiresAt) < new Date()) throw new BadRequestException('Coupon has expired');
         if (subtotal < coupon.minOrder) throw new BadRequestException(`Minimum order for this coupon is $${coupon.minOrder}`);
         if (coupon.maxUsage > 0 && coupon.usageCount >= coupon.maxUsage) throw new BadRequestException('This coupon has already been used');
+        if (coupon.onePerEmail) {
+          const email = (dto.shippingAddress as { email?: string }).email ?? '';
+          const alreadyUsed = await tx.couponUsage.findUnique({ where: { couponCode_email: { couponCode: dto.couponCode, email } } });
+          if (alreadyUsed) throw new BadRequestException('This coupon has already been used with this email address');
+          await tx.couponUsage.create({ data: { couponCode: dto.couponCode, email } });
+        }
         couponDiscount = coupon.type === 'PERCENT' ? (subtotal * coupon.discount) / 100 : coupon.discount;
         await tx.coupon.update({ where: { code: dto.couponCode }, data: { usageCount: { increment: 1 } } });
       }

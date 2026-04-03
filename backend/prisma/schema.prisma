@@ -171,14 +171,28 @@ model Review {
 }
 
 model Coupon {
-  code       String     @id
-  discount   Float
-  type       CouponType
-  minOrder   Float      @default(0)
-  expiresAt  DateTime
-  maxUsage   Int        @default(0)
-  usageCount Int        @default(0)
-  createdAt  DateTime   @default(now())
+  code        String        @id
+  discount    Float
+  type        CouponType
+  minOrder    Float         @default(0)
+  expiresAt   DateTime
+  maxUsage    Int           @default(0)
+  usageCount  Int           @default(0)
+  onePerEmail Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+
+  usages CouponUsage[]
+}
+
+model CouponUsage {
+  id         String   @id @default(cuid())
+  couponCode String
+  email      String
+  usedAt     DateTime @default(now())
+
+  coupon Coupon @relation(fields: [couponCode], references: [code], onDelete: Cascade)
+
+  @@unique([couponCode, email])
 }
 
 model BlogPost {
