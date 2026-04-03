@@ -34,7 +34,7 @@ import { EmailModule } from './email/email.module';
         FRONTEND_URL:         Joi.string().uri().required(),
         ADMIN_EMAIL:          Joi.string().email().required(),
         ADMIN_PASSWORD:       Joi.string().min(6).required(),
-        SENDGRID_API_KEY:     Joi.string().optional(),
+        SENDGRID_API_KEY:     Joi.string().allow('').optional(),
       }),
     }),
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 60 }]),
