@@ -179,7 +179,13 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               <p className="text-sm font-semibold text-slate-900 capitalize">{order.paymentMethod}</p>
               {order.shippingCenter && (
                 <p className="text-xs text-slate-500 mt-1">
-                  Shipping center: <span className="font-semibold uppercase text-slate-700">{order.shippingCenter === 'india' ? '🇮🇳 India' : order.shippingCenter === 'eu' ? '🇪🇺 Europe (EU)' : '🇺🇸 US / Rest of World'}</span>
+                  Dispatch center: <span className="font-semibold text-slate-700">
+                    {order.shippingCenter === 'india' ? '🇮🇳 India (Standard)' :
+                     order.shippingCenter === 'eu'    ? '🇪🇺 Europe (EU) +$30' :
+                     order.shippingCenter === 'us'    ? '🇺🇸 United States / Canada +$45' :
+                     order.shippingCenter === 'other' ? '🌍 Rest of World +$35' :
+                     order.shippingCenter}
+                  </span>
                 </p>
               )}
               <div className="mt-2 space-y-1 text-xs text-slate-500">
