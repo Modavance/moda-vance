@@ -41,7 +41,7 @@ export class EmailService {
   }
 
   private get from() {
-    return `ModaVance <${this.config.get('SMTP_USER')}>`;
+    return `ModaVance <orders@modavance.co>`;
   }
 
   private wrap(content: string): string {
@@ -95,7 +95,7 @@ export class EmailService {
     const paymentLabel: Record<string, string> = {
       bitcoin:  'Bitcoin (BTC) — 15% discount applied',
       ethereum: 'Ethereum (ETH) — 15% discount applied',
-      card:     'Card Payment — 10% discount applied',
+      card:     'Card Payment',
       paypal:   'PayPal',
     };
 
