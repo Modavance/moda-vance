@@ -38,6 +38,7 @@ export class AuthService {
         firstName: dto.firstName,
         lastName: dto.lastName,
         passwordHash,
+        loyaltyPoints: 50,
       },
     });
 
@@ -46,7 +47,7 @@ export class AuthService {
     const token = this.jwtService.sign({ sub: user.id, email: user.email });
     return {
       token,
-      user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName },
+      user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName, loyaltyPoints: user.loyaltyPoints },
     };
   }
 
@@ -61,7 +62,7 @@ export class AuthService {
     const token = this.jwtService.sign({ sub: user.id, email: user.email });
     return {
       token,
-      user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName },
+      user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName, loyaltyPoints: user.loyaltyPoints },
     };
   }
 

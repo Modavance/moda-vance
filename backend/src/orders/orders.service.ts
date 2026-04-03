@@ -99,6 +99,19 @@ export class OrdersService {
 
       this.logger.log(`Order created: ${order.id}`);
 
+      // Award loyalty points if user is logged in
+      if (order.userId) {
+        const prevOrders = await tx.order.findMany({
+          where: { userId: order.userId, status: { not: OrderStatus.CANCELLED }, id: { not: order.id } },
+          select: { total: true },
+        });
+        const totalSpent = prevOrders.reduce((sum, o) => sum + o.total, 0);
+        const tier = totalSpent >= 3000 ? 'GOLD' : totalSpent >= 1000 ? 'SILVER' : 'BRONZE';
+        const multiplier = tier === 'GOLD' ? 1.5 : tier === 'SILVER' ? 1.2 : 1;
+        const pointsEarned = Math.floor(order.total * multiplier);
+        await tx.user.update({ where: { id: order.userId }, data: { loyaltyPoints: { increment: pointsEarned } } });
+      }
+
       // Send confirmation email
       const addr = dto.shippingAddress as { firstName?: string; email?: string };
       if (addr.email) {

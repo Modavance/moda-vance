@@ -20,6 +20,7 @@ import { OrderDetailPage } from '@/pages/OrderDetailPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { PrivacyPage } from '@/pages/PrivacyPage';
 import { TermsPage } from '@/pages/TermsPage';
+import { LoyaltyPage } from '@/pages/LoyaltyPage';
 import { AdminLoginPage } from '@/pages/admin/AdminLoginPage';
 import { AdminDashboard } from '@/pages/admin/AdminDashboard';
 import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage';
@@ -61,6 +62,7 @@ export const router = createBrowserRouter([
       { path: 'blog/:slug', element: <BlogPostPage /> },
       { path: 'privacy', element: <PrivacyPage /> },
       { path: 'terms', element: <TermsPage /> },
+      { path: 'loyalty', element: <LoyaltyPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

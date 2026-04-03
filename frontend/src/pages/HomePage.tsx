@@ -117,6 +117,41 @@ export function HomePage() {
       <RecentlyViewedSection />
 
       <HowItWorks />
+
+      {/* Loyalty Program Section */}
+      <section className="py-16 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
+                ⭐ ModaVance Rewards
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Every order earns you points</h2>
+              <p className="text-blue-100 text-lg mb-8">Join our loyalty program and unlock exclusive discounts, early access, and VIP perks as you shop.</p>
+              <Link
+                to="/loyalty"
+                className="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-7 py-3 rounded-xl hover:bg-blue-50 transition-colors"
+              >
+                Learn More <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { icon: '🥉', tier: 'Bronze', perk: '$5 discount per 200 pts' },
+                { icon: '🥈', tier: 'Silver', perk: '$7 discount + early access' },
+                { icon: '🥇', tier: 'Gold', perk: '$10 off + free strip' },
+              ].map((t) => (
+                <div key={t.tier} className="bg-white/10 rounded-2xl p-4 text-center backdrop-blur-sm">
+                  <div className="text-3xl mb-2">{t.icon}</div>
+                  <p className="font-bold text-sm">{t.tier}</p>
+                  <p className="text-blue-200 text-xs mt-1">{t.perk}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Testimonials />
       <TrustSection />
       <NewsletterSection />
