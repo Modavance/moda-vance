@@ -3,15 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import sgMail from '@sendgrid/mail';
 
 const LOGO_HTML = `
-<div style="text-align:center;margin-bottom:32px">
-  <a href="https://modavance.co" style="text-decoration:none;display:inline-flex;align-items:center;gap:10px">
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 2L36.5 11V29L20 38L3.5 29V11L20 2Z" fill="url(#lg)"/>
-      <path d="M11 27V14L16 21L20 15L24 21L29 14V27" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <circle cx="20" cy="30" r="1.5" fill="white" opacity="0.8"/>
-      <defs><linearGradient id="lg" x1="3.5" y1="2" x2="36.5" y2="38" gradientUnits="userSpaceOnUse"><stop stop-color="#2563EB"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient></defs>
-    </svg>
-    <span style="font-family:sans-serif;font-size:24px;font-weight:700;color:#0f172a">Moda<span style="color:#2563eb">Vance</span></span>
+<div style="text-align:center;margin-bottom:32px;padding:24px 0 16px">
+  <a href="https://modavance.co" style="text-decoration:none">
+    <span style="font-family:Arial,sans-serif;font-size:28px;font-weight:700;color:#0f172a;letter-spacing:-0.5px">Moda<span style="color:#2563eb">Vance</span></span>
   </a>
 </div>`;
 
@@ -100,12 +94,21 @@ export class EmailService {
       </p>
 
       <h2 style="font-size:15px;color:#0f172a;margin-bottom:12px">Order Summary</h2>
-      <div style="padding:16px;background:#f8fafc;border-radius:10px;font-size:14px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Subtotal</span><span>$${order.subtotal.toFixed(2)}</span></div>
-        ${order.discount > 0 ? `<div style="display:flex;justify-content:space-between;margin-bottom:6px;color:#16a34a"><span>Discount</span><span>−$${order.discount.toFixed(2)}</span></div>` : ''}
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Shipping</span><span>${order.shipping === 0 ? '<span style="color:#16a34a">FREE</span>' : '$' + order.shipping.toFixed(2)}</span></div>
-        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;padding-top:10px;border-top:1px solid #e2e8f0"><span>Total</span><span>$${order.total.toFixed(2)}</span></div>
-      </div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:10px;font-size:14px;padding:16px">
+        <tr>
+          <td style="padding:6px 16px;color:#64748b">Subtotal</td>
+          <td style="padding:6px 16px;text-align:right;color:#0f172a">$${order.subtotal.toFixed(2)}</td>
+        </tr>
+        ${order.discount > 0 ? `<tr><td style="padding:6px 16px;color:#16a34a">Discount</td><td style="padding:6px 16px;text-align:right;color:#16a34a">−$${order.discount.toFixed(2)}</td></tr>` : ''}
+        <tr>
+          <td style="padding:6px 16px;color:#64748b">Shipping</td>
+          <td style="padding:6px 16px;text-align:right;color:#0f172a">${order.shipping === 0 ? '<span style="color:#16a34a">FREE</span>' : '$' + order.shipping.toFixed(2)}</td>
+        </tr>
+        <tr style="border-top:2px solid #e2e8f0">
+          <td style="padding:10px 16px 6px;font-weight:700;font-size:16px;color:#0f172a">Total</td>
+          <td style="padding:10px 16px 6px;text-align:right;font-weight:700;font-size:16px;color:#0f172a">$${order.total.toFixed(2)}</td>
+        </tr>
+      </table>
 
       <div style="margin-top:20px;padding:16px;background:#eff6ff;border-radius:10px;border:1px solid #bfdbfe;font-size:14px">
         <strong style="color:#1e40af">Payment: ${paymentLabel[order.paymentMethod.toLowerCase()] ?? order.paymentMethod}</strong>
