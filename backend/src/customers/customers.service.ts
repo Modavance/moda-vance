@@ -24,7 +24,7 @@ export class CustomersService {
           firstName: true,
           lastName: true,
           createdAt: true,
-          orders: { select: { total: true } },
+          orders: { where: { status: { not: 'CANCELLED' } }, select: { total: true } },
         },
         orderBy: { createdAt: 'desc' },
       }),
