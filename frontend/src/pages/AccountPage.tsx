@@ -52,7 +52,7 @@ export function AccountPage() {
     queryKey: ['loyalty-info'],
     queryFn: async () => {
       const res = await api.get('/loyalty/info');
-      return unwrap<{ loyaltyPoints: number; tier: string; totalSpent: number; redeemValue: number }>(res);
+      return unwrap<{ loyaltyPoints: number; tier: string; totalSpent: number; redeemValue: number; pointsExpiresAt: string | null }>(res);
     },
     enabled: !!user,
   });
@@ -149,6 +149,9 @@ export function AccountPage() {
                 )}
                 {loyaltyPoints < 200 && (
                   <p className="mt-2 text-xs text-blue-500">{200 - loyaltyPoints} more points to redeem</p>
+                )}
+                {loyaltyInfo?.pointsExpiresAt && (
+                  <p className="mt-1 text-xs text-slate-400">Expires: {new Date(loyaltyInfo.pointsExpiresAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                 )}
               </div>
 

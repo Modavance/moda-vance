@@ -112,7 +112,9 @@ export class OrdersService {
         const tier = totalSpent >= 3000 ? 'GOLD' : totalSpent >= 1000 ? 'SILVER' : 'BRONZE';
         const multiplier = tier === 'GOLD' ? 1.5 : tier === 'SILVER' ? 1.2 : 1;
         const pointsEarned = Math.floor(order.total * multiplier);
-        await tx.user.update({ where: { id: order.userId }, data: { loyaltyPoints: { increment: pointsEarned } } });
+        const pointsExpiresAt = new Date();
+        pointsExpiresAt.setMonth(pointsExpiresAt.getMonth() + 18);
+        await tx.user.update({ where: { id: order.userId }, data: { loyaltyPoints: { increment: pointsEarned }, pointsExpiresAt } });
       }
 
       // Send confirmation email

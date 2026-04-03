@@ -18,8 +18,18 @@ function getRedeemValue(tier: string): number {
 export class LoyaltyService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private async checkAndExpirePoints(userId: string) {
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { loyaltyPoints: true, pointsExpiresAt: true } });
+    if (user.pointsExpiresAt && new Date() > user.pointsExpiresAt && user.loyaltyPoints > 0) {
+      await this.prisma.user.update({ where: { id: userId }, data: { loyaltyPoints: 0, pointsExpiresAt: null } });
+      return 0;
+    }
+    return user.loyaltyPoints;
+  }
+
   async getInfo(userId: string) {
-    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { loyaltyPoints: true } });
+    const loyaltyPoints = await this.checkAndExpirePoints(userId);
+    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { pointsExpiresAt: true } });
     const orders = await this.prisma.order.findMany({
       where: { userId, status: { not: OrderStatus.CANCELLED } },
       select: { total: true },
@@ -27,12 +37,13 @@ export class LoyaltyService {
     const totalSpent = orders.reduce((sum, o) => sum + o.total, 0);
     const tier = getTier(totalSpent);
     const redeemValue = getRedeemValue(tier);
-    return { loyaltyPoints: user.loyaltyPoints, tier, totalSpent, redeemValue };
+    return { loyaltyPoints, tier, totalSpent, redeemValue, pointsExpiresAt: user.pointsExpiresAt };
   }
 
   async redeem(userId: string) {
+    const currentPoints = await this.checkAndExpirePoints(userId);
     const user = await this.prisma.user.findUniqueOrThrow({ where: { id: userId }, select: { loyaltyPoints: true, email: true } });
-    if (user.loyaltyPoints < 200) throw new BadRequestException('You need at least 200 points to redeem a discount');
+    if (currentPoints < 200) throw new BadRequestException('You need at least 200 points to redeem a discount');
 
     const orders = await this.prisma.order.findMany({
       where: { userId, status: { not: OrderStatus.CANCELLED } },

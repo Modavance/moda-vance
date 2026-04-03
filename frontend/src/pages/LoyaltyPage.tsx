@@ -49,7 +49,7 @@ const STEPS = [
 const FAQS = [
   { q: 'When do I earn points?', a: 'Points are added automatically after each purchase. The amount depends on your tier.' },
   { q: 'How do I redeem?', a: 'Go to your account page, click "Redeem Points" and a discount code will be generated instantly and shown to you.' },
-  { q: 'Do points expire?', a: 'No — your points never expire.' },
+  { q: 'Do points expire?', a: 'Points are valid for 18 months from your last purchase. Every time you place an order, the 18-month clock resets.' },
   { q: 'How do I move up a tier?', a: 'Tiers are based on your total amount spent. Once you cross the threshold, your tier upgrades automatically.' },
   { q: 'Can I use multiple discount codes?', a: 'One discount code per order. You can redeem multiple times as long as you have enough points.' },
 ];
