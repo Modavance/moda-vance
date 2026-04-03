@@ -56,6 +56,7 @@ export interface Order {
   discount: number;
   total: number;
   shippingAddress: Address;
+  shippingCenter?: string;
   paymentMethod: PaymentMethod;
   trackingNumber?: string;
   estimatedDelivery?: Date;

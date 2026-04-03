@@ -177,10 +177,15 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
             <div className="p-4 bg-slate-50 rounded-xl">
               <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Payment</p>
               <p className="text-sm font-semibold text-slate-900 capitalize">{order.paymentMethod}</p>
+              {order.shippingCenter && (
+                <p className="text-xs text-slate-500 mt-1">
+                  Shipping center: <span className="font-semibold uppercase text-slate-700">{order.shippingCenter === 'india' ? '🇮🇳 India' : order.shippingCenter === 'eu' ? '🇪🇺 Europe (EU)' : '🇺🇸 US / Rest of World'}</span>
+                </p>
+              )}
               <div className="mt-2 space-y-1 text-xs text-slate-500">
                 <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
                 {order.discount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount</span><span>−{formatPrice(order.discount)}</span></div>}
-                <div className="flex justify-between"><span>Shipping</span><span className="text-emerald-600 font-semibold">{order.shipping === 0 ? 'FREE' : formatPrice(order.shipping)}</span></div>
+                <div className="flex justify-between"><span>Dispatch fee</span><span className="font-semibold">{order.shipping === 0 ? 'FREE' : formatPrice(order.shipping)}</span></div>
                 <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1"><span>Total</span><span>{formatPrice(order.total)}</span></div>
               </div>
             </div>

@@ -91,7 +91,7 @@ type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
 const PAYMENT_METHODS = [
   { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
   { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
-  { id: 'card'     as const, label: 'Card Payment',   icon: '💳', desc: 'Get 10% discount',  discount: 0.10, highlight: true  },
+  { id: 'card'     as const, label: 'Card Payment',   icon: '💳', desc: 'Standard pricing',  discount: 0,    highlight: false },
   { id: 'paypal'   as const, label: 'PayPal',          icon: 'P', desc: 'Standard pricing',  discount: 0,    highlight: false },
 ];
 
@@ -228,6 +228,7 @@ export function CheckoutPage() {
         subtotal,
         discount: totalDiscount,
         shipping: dispatchFee,
+        shippingCenter: shippingRegion,
       });
 
       orderPlaced.current = true;
@@ -469,7 +470,7 @@ export function CheckoutPage() {
                   </div>
                   {cryptoDiscount > 0 && (
                     <div className="flex justify-between text-sm text-emerald-600 font-medium">
-                      <span>Crypto discount ({Math.round(cryptoDiscount * 100)}%)</span>
+                      <span>Crypto discount ({Math.round(cryptoDiscount * 100)}%) — BTC/ETH only</span>
                       <span>−{formatPrice(subtotal * cryptoDiscount)}</span>
                     </div>
                   )}

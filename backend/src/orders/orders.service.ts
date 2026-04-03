@@ -9,7 +9,7 @@ import { OrderStatus, Prisma } from '@prisma/client';
 const PAYMENT_DISCOUNTS: Record<string, number> = {
   BITCOIN: 0.15,
   ETHEREUM: 0.15,
-  CARD: 0.10,
+  CARD: 0,
   PAYPAL: 0,
 };
 
