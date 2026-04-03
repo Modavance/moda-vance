@@ -7,6 +7,7 @@ import {
 import { adminApi, unwrap } from '@/services/api';
 import { normalizeOrder } from '@/utils/normalizers';
 import { formatPrice, formatDate } from '@/utils/formatters';
+import { useNotificationStore } from '@/store/notificationStore';
 import type { Order, OrderStatus, OrderStatusLog } from '@/types';
 
 const STATUS_OPTIONS: OrderStatus[] = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
@@ -30,13 +31,14 @@ function StatusBadge({ status }: { status: OrderStatus }) {
   );
 }
 
-function ConfirmStatusDialog({ orderId, fromStatus, toStatus, note, onNoteChange, onConfirm, onCancel }: {
-  orderId: string; fromStatus: OrderStatus; toStatus: OrderStatus; note: string;
-  onNoteChange: (v: string) => void; onConfirm: () => void; onCancel: () => void;
+function ConfirmStatusDialog({ orderId, fromStatus, toStatus, note, trackingNumber, onNoteChange, onTrackingChange, onConfirm, onCancel, saving }: {
+  orderId: string; fromStatus: OrderStatus; toStatus: OrderStatus; note: string; trackingNumber: string; saving: boolean;
+  onNoteChange: (v: string) => void; onTrackingChange: (v: string) => void; onConfirm: () => void; onCancel: () => void;
 }) {
   const from = STATUS_STYLES[fromStatus];
   const to = STATUS_STYLES[toStatus];
   const isDanger = toStatus === 'cancelled';
+  const isShipped = toStatus === 'shipped';
   return (
     <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl">
@@ -53,15 +55,24 @@ function ConfirmStatusDialog({ orderId, fromStatus, toStatus, note, onNoteChange
             <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full capitalize ${to.bg} ${to.text}`}>{to.icon} {toStatus}</span>
           </div>
           {isDanger && <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">This will cancel the order. This action cannot be easily undone.</div>}
+          {isShipped && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-slate-500 uppercase">Tracking Number <span className="font-normal text-slate-400 normal-case">(optional)</span></label>
+              <input type="text" value={trackingNumber} onChange={e => onTrackingChange(e.target.value)} placeholder="e.g. TRK123456789CN"
+                className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+          )}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-slate-500 uppercase">Note <span className="font-normal text-slate-400 normal-case">(optional)</span></label>
-            <textarea rows={2} value={note} onChange={e => onNoteChange(e.target.value)} placeholder={toStatus === 'shipped' ? 'e.g. Tracking #TRK123456789' : 'e.g. Payment confirmed'}
+            <textarea rows={2} value={note} onChange={e => onNoteChange(e.target.value)} placeholder={isShipped ? 'e.g. Shipped via DHL Express' : 'e.g. Payment confirmed'}
               className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
           </div>
         </div>
         <div className="p-4 border-t border-slate-100 flex gap-3">
-          <button onClick={onCancel} className="flex-1 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
-          <button onClick={onConfirm} className={`flex-1 py-2.5 text-sm font-semibold text-white rounded-xl transition-colors ${isDanger ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}>Confirm Change</button>
+          <button onClick={onCancel} disabled={saving} className="flex-1 py-2.5 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors disabled:opacity-50">Cancel</button>
+          <button onClick={onConfirm} disabled={saving} className={`flex-1 py-2.5 text-sm font-semibold text-white rounded-xl transition-colors disabled:opacity-50 ${isDanger ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}>
+            {saving ? 'Saving...' : 'Confirm Change'}
+          </button>
         </div>
       </div>
     </div>
@@ -179,13 +190,18 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               <p className="text-sm font-semibold text-slate-900 capitalize">{order.paymentMethod}</p>
               {order.shippingCenter && (
                 <p className="text-xs text-slate-500 mt-1">
-                  Dispatch center: <span className="font-semibold text-slate-700">
-                    {order.shippingCenter === 'india' ? '🇮🇳 India (Standard)' :
-                     order.shippingCenter === 'eu'    ? '🇪🇺 Europe (EU) +$30' :
-                     order.shippingCenter === 'us'    ? '🇺🇸 United States / Canada +$45' :
-                     order.shippingCenter === 'other' ? '🌍 Rest of World +$35' :
+                  Dispatch: <span className="font-semibold text-slate-700">
+                    {order.shippingCenter === 'india' ? '🇮🇳 India' :
+                     order.shippingCenter === 'eu'    ? '🇪🇺 Europe (EU)' :
+                     order.shippingCenter === 'us'    ? '🇺🇸 US / Canada' :
+                     order.shippingCenter === 'other' ? '🌍 Rest of World' :
                      order.shippingCenter}
                   </span>
+                </p>
+              )}
+              {order.trackingNumber && (
+                <p className="text-xs text-slate-500 mt-1">
+                  Tracking: <span className="font-semibold text-cyan-700 font-mono">{order.trackingNumber}</span>
                 </p>
               )}
               <div className="mt-2 space-y-1 text-xs text-slate-500">
@@ -207,10 +223,12 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
 
 export function AdminOrdersPage() {
   const queryClient = useQueryClient();
+  const { success: notifySuccess, error: notifyError } = useNotificationStore();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'all'>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [pending, setPending] = useState<{ orderId: string; fromStatus: OrderStatus; toStatus: OrderStatus; note: string } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [pending, setPending] = useState<{ orderId: string; fromStatus: OrderStatus; toStatus: OrderStatus; note: string; trackingNumber: string } | null>(null);
 
   const { data: orders = [] } = useQuery<Order[]>({
     queryKey: ['admin-orders'],
@@ -229,17 +247,30 @@ export function AdminOrdersPage() {
   });
 
   const handleRequestStatusChange = (orderId: string, fromStatus: OrderStatus, toStatus: OrderStatus) => {
-    setPending({ orderId, fromStatus, toStatus, note: '' });
+    setPending({ orderId, fromStatus, toStatus, note: '', trackingNumber: '' });
   };
 
   const handleConfirmStatusChange = async () => {
     if (!pending) return;
-    const { orderId, fromStatus, toStatus, note } = pending;
-    await adminApi.patch(`/admin/orders/${orderId}/status`, { status: toStatus, note: note.trim() || undefined });
-    queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
-    queryClient.invalidateQueries({ queryKey: ['status-logs', orderId] });
-    if (selectedOrder?.id === orderId) setSelectedOrder(prev => prev ? { ...prev, status: toStatus, updatedAt: new Date() } : null);
-    setPending(null);
+    const { orderId, toStatus, note, trackingNumber } = pending;
+    setSaving(true);
+    try {
+      await adminApi.patch(`/admin/orders/${orderId}/status`, {
+        status: toStatus,
+        note: note.trim() || undefined,
+        trackingNumber: trackingNumber.trim() || undefined,
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
+      queryClient.invalidateQueries({ queryKey: ['status-logs', orderId] });
+      if (selectedOrder?.id === orderId) setSelectedOrder(prev => prev ? { ...prev, status: toStatus, updatedAt: new Date(), trackingNumber: trackingNumber.trim() || prev.trackingNumber } : null);
+      notifySuccess(`Status updated to ${toStatus}`);
+      setPending(null);
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Failed to update status';
+      notifyError(typeof msg === 'string' ? msg : 'Failed to update status');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const statusCounts = orders.reduce((acc, o) => { acc[o.status] = (acc[o.status] ?? 0) + 1; return acc; }, {} as Record<string, number>);
@@ -295,7 +326,10 @@ export function AdminOrdersPage() {
                   <td className="px-5 py-4 font-bold text-slate-900">{formatPrice(order.total)}</td>
                   <td className="px-5 py-4 text-xs text-slate-500 capitalize">{order.paymentMethod}</td>
                   <td className="px-5 py-4 text-xs text-slate-500">{formatDate(order.createdAt)}</td>
-                  <td className="px-5 py-4"><StatusBadge status={order.status} /></td>
+                  <td className="px-5 py-4">
+                    <StatusBadge status={order.status} />
+                    {order.trackingNumber && <p className="text-[11px] text-cyan-600 font-mono mt-1">{order.trackingNumber}</p>}
+                  </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-2">
                       <button onClick={() => setSelectedOrder(order)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Eye className="w-4 h-4" /></button>
@@ -320,7 +354,10 @@ export function AdminOrdersPage() {
       {selectedOrder && <OrderDetailModal order={selectedOrder} onClose={() => setSelectedOrder(null)} onRequestStatusChange={handleRequestStatusChange} />}
       {pending && (
         <ConfirmStatusDialog orderId={pending.orderId} fromStatus={pending.fromStatus} toStatus={pending.toStatus} note={pending.note}
-          onNoteChange={v => setPending(p => p ? { ...p, note: v } : null)} onConfirm={handleConfirmStatusChange} onCancel={() => setPending(null)} />
+          trackingNumber={pending.trackingNumber} saving={saving}
+          onNoteChange={v => setPending(p => p ? { ...p, note: v } : null)}
+          onTrackingChange={v => setPending(p => p ? { ...p, trackingNumber: v } : null)}
+          onConfirm={handleConfirmStatusChange} onCancel={() => setPending(null)} />
       )}
     </div>
   );

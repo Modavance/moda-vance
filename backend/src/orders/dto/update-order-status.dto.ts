@@ -10,4 +10,8 @@ export class UpdateOrderStatusDto {
   @IsOptional()
   @IsString()
   note?: string;
+
+  @IsOptional()
+  @IsString()
+  trackingNumber?: string;
 }

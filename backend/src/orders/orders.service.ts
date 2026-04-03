@@ -13,14 +13,8 @@ const PAYMENT_DISCOUNTS: Record<string, number> = {
   PAYPAL: 0,
 };
 
-const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-  PENDING:    ['CONFIRMED', 'CANCELLED'],
-  CONFIRMED:  ['PROCESSING', 'CANCELLED'],
-  PROCESSING: ['SHIPPED', 'CANCELLED'],
-  SHIPPED:    ['DELIVERED'],
-  DELIVERED:  [],
-  CANCELLED:  [],
-};
+// Admin can change to any status except going back to the same one
+const LOCKED_STATUSES: OrderStatus[] = []; // no locked statuses for admin
 
 function generateOrderId(): string {
   return `ORD-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
@@ -60,7 +54,7 @@ export class OrdersService {
 
       const paymentDiscount = subtotal * (PAYMENT_DISCOUNTS[dto.paymentMethod] ?? 0);
       const discount = couponDiscount + paymentDiscount;
-      const shipping = subtotal >= 150 ? 0 : 9.99;
+      const shipping = dto.shipping ?? (subtotal >= 150 ? 0 : 9.99);
       const total = subtotal - discount + shipping;
 
       const order = await tx.order.create({
@@ -70,6 +64,7 @@ export class OrdersService {
           paymentMethod: dto.paymentMethod,
           couponCode: dto.couponCode ?? null,
           shippingAddress: dto.shippingAddress as unknown as Prisma.InputJsonValue,
+          shippingCenter: dto.shippingCenter ?? null,
           subtotal, shipping, discount, total,
           items: {
             create: dto.items.map((item) => {
@@ -146,12 +141,16 @@ export class OrdersService {
 
   async updateStatus(id: string, dto: UpdateOrderStatusDto) {
     const order = await this.findById(id);
-    const allowed = VALID_TRANSITIONS[order.status];
-    if (!allowed.includes(dto.status)) {
-      throw new BadRequestException(`Cannot transition from ${order.status} to ${dto.status}`);
+    if (order.status === dto.status) {
+      throw new BadRequestException(`Order is already ${dto.status}`);
     }
+    if (LOCKED_STATUSES.includes(order.status)) {
+      throw new BadRequestException(`Cannot change status from ${order.status}`);
+    }
+    const orderUpdate: Record<string, unknown> = { status: dto.status };
+    if (dto.trackingNumber) orderUpdate.trackingNumber = dto.trackingNumber;
     const [updated] = await this.prisma.$transaction([
-      this.prisma.order.update({ where: { id }, data: { status: dto.status }, include: { items: true, statusLogs: true } }),
+      this.prisma.order.update({ where: { id }, data: orderUpdate, include: { items: true, statusLogs: true } }),
       this.prisma.orderStatusLog.create({ data: { orderId: id, fromStatus: order.status, toStatus: dto.status, note: dto.note ?? null } }),
     ]);
 

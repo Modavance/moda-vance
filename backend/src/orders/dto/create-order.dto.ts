@@ -29,4 +29,8 @@ export class CreateOrderDto {
   @IsString()
   @Transform(({ value }: { value: string }) => value?.toUpperCase())
   couponCode?: string;
+
+  @IsOptional()
+  @IsString()
+  shippingCenter?: string;
 }
