@@ -77,14 +77,6 @@ export class EmailService {
     total: number;
     paymentMethod: string;
   }) {
-    const itemsHtml = order.items.map(i =>
-      `<tr>
-        <td style="padding:10px 0;color:#0f172a;border-bottom:1px solid #f1f5f9">${i.productName}</td>
-        <td style="padding:10px 0;text-align:center;color:#64748b;border-bottom:1px solid #f1f5f9">×${i.quantity}</td>
-        <td style="padding:10px 0;text-align:right;font-weight:600;color:#0f172a;border-bottom:1px solid #f1f5f9">$${i.price.toFixed(2)}</td>
-      </tr>`
-    ).join('');
-
     const paymentLabel: Record<string, string> = {
       bitcoin:  'Bitcoin (BTC) — 15% discount applied',
       ethereum: 'Ethereum (ETH) — 15% discount applied',
@@ -108,18 +100,7 @@ export class EmailService {
       </p>
 
       <h2 style="font-size:15px;color:#0f172a;margin-bottom:12px">Order Summary</h2>
-      <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <thead>
-          <tr style="background:#f8fafc">
-            <th style="padding:10px;text-align:left;color:#64748b;font-weight:600">Product</th>
-            <th style="padding:10px;text-align:center;color:#64748b;font-weight:600">Qty</th>
-            <th style="padding:10px;text-align:right;color:#64748b;font-weight:600">Price</th>
-          </tr>
-        </thead>
-        <tbody>${itemsHtml}</tbody>
-      </table>
-
-      <div style="margin-top:12px;padding:16px;background:#f8fafc;border-radius:10px;font-size:14px">
+      <div style="padding:16px;background:#f8fafc;border-radius:10px;font-size:14px">
         <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Subtotal</span><span>$${order.subtotal.toFixed(2)}</span></div>
         ${order.discount > 0 ? `<div style="display:flex;justify-content:space-between;margin-bottom:6px;color:#16a34a"><span>Discount</span><span>−$${order.discount.toFixed(2)}</span></div>` : ''}
         <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:#64748b">Shipping</span><span>${order.shipping === 0 ? '<span style="color:#16a34a">FREE</span>' : '$' + order.shipping.toFixed(2)}</span></div>
