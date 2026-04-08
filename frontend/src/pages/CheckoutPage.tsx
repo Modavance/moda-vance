@@ -339,7 +339,7 @@ export function CheckoutPage() {
               {/* Dispatch Center Fee */}
               <div className="bg-white rounded-2xl border border-slate-100 p-6">
                 <h2 className="font-bold text-slate-900 text-lg mb-1">Dispatch Center</h2>
-                <p className="text-sm text-slate-500 mb-4">Select your region. A dispatch center fee is added based on destination.</p>
+                <p className="text-sm text-slate-500 mb-4">Select your region. A dispatch center fee is added based on the selected dispatch center.</p>
                 <div className="grid grid-cols-2 gap-3">
                   {SHIPPING_REGIONS.map((r) => (
                     <button
