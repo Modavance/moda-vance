@@ -81,9 +81,9 @@ type CheckoutForm = z.infer<typeof checkoutSchema>;
 
 const SHIPPING_REGIONS = [
   { id: 'india', label: 'India (Standard)', fee: 0 },
-  { id: 'eu', label: 'Europe (EU)', fee: 30 },
-  { id: 'us', label: 'United States / Canada', fee: 45 },
-  { id: 'other', label: 'Rest of World', fee: 35 },
+  { id: 'eu', label: 'Europe Express (EU)', fee: 30 },
+  { id: 'us', label: 'United States Express', fee: 45 },
+  { id: 'uk', label: 'UK Express', fee: 30 },
 ] as const;
 
 type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
