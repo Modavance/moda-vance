@@ -233,6 +233,7 @@ export function CheckoutPage() {
         shipping: dispatchFee,
         shippingCenter: shippingRegion,
         couponCode: couponApplied || undefined,
+        paymentFee: paymentFee || undefined,
       });
 
       orderPlaced.current = true;

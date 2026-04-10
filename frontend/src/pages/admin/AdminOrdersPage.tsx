@@ -192,10 +192,10 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               {order.shippingCenter && (
                 <p className="text-xs text-slate-500 mt-1">
                   Dispatch: <span className="font-semibold text-slate-700">
-                    {order.shippingCenter === 'india' ? '🇮🇳 India' :
-                     order.shippingCenter === 'eu'    ? '🇪🇺 Europe (EU)' :
-                     order.shippingCenter === 'us'    ? '🇺🇸 US / Canada' :
-                     order.shippingCenter === 'other' ? '🌍 Rest of World' :
+                    {order.shippingCenter === 'india' ? '🇮🇳 India (Standard)' :
+                     order.shippingCenter === 'eu'    ? '🇪🇺 Europe Express (EU)' :
+                     order.shippingCenter === 'us'    ? '🇺🇸 United States Express' :
+                     order.shippingCenter === 'uk'    ? '🇬🇧 UK Express' :
                      order.shippingCenter}
                   </span>
                 </p>
@@ -208,7 +208,9 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               <div className="mt-2 space-y-1 text-xs text-slate-500">
                 <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
                 {order.discount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount{order.couponCode ? ` (${order.couponCode})` : ''}</span><span>−{formatPrice(order.discount)}</span></div>}
-                <div className="flex justify-between"><span>Dispatch fee</span><span className="font-semibold">{order.shipping === 0 ? 'FREE' : formatPrice(order.shipping)}</span></div>
+                <div className="flex justify-between"><span>Shipping</span><span className="font-semibold text-emerald-600">FREE</span></div>
+                {order.shipping > 0 && <div className="flex justify-between"><span>Dispatch Center Fee</span><span className="font-semibold">+{formatPrice(order.shipping)}</span></div>}
+                {order.paymentFee > 0 && <div className="flex justify-between"><span>Processing Fee</span><span className="font-semibold">+{formatPrice(order.paymentFee)}</span></div>}
                 <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1"><span>Total</span><span>{formatPrice(order.total)}</span></div>
               </div>
             </div>

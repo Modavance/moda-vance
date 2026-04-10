@@ -58,6 +58,7 @@ export interface Order {
   shippingAddress: Address;
   shippingCenter?: string;
   couponCode?: string;
+  paymentFee?: number;
   paymentMethod: PaymentMethod;
   trackingNumber?: string;
   estimatedDelivery?: Date;

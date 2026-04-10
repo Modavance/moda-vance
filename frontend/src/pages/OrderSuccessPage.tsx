@@ -353,6 +353,12 @@ export function OrderSuccessPage() {
                   <span className="font-semibold">+{formatPrice(order.shipping)}</span>
                 </div>
               )}
+              {order.paymentFee > 0 && (
+                <div className="flex justify-between text-slate-600">
+                  <span>Processing Fee</span>
+                  <span className="font-semibold">+{formatPrice(order.paymentFee)}</span>
+                </div>
+              )}
               <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-100">
                 <span>Total Paid</span>
                 <span>{formatPrice(order.total)}</span>

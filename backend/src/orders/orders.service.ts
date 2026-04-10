@@ -134,6 +134,7 @@ export class OrdersService {
           discount: order.discount,
           couponCode: (order as any).couponCode ?? undefined,
           dispatchFee: order.shipping,
+          paymentFee: (order as any).paymentFee ?? 0,
           total: order.total,
           paymentMethod: order.paymentMethod,
         }).catch(() => {});

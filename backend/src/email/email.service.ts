@@ -75,6 +75,7 @@ export class EmailService {
     discount: number;
     couponCode?: string;
     dispatchFee: number;
+    paymentFee?: number;
     total: number;
     paymentMethod: string;
   }) {
@@ -112,6 +113,7 @@ export class EmailService {
           <td style="padding:6px 16px;text-align:right;color:#16a34a;font-weight:600">FREE</td>
         </tr>
         ${order.dispatchFee > 0 ? `<tr><td style="padding:6px 16px;color:#64748b">Dispatch Center Fee</td><td style="padding:6px 16px;text-align:right;color:#0f172a">+$${order.dispatchFee.toFixed(2)}</td></tr>` : ''}
+        ${order.paymentFee && order.paymentFee > 0 ? `<tr><td style="padding:6px 16px;color:#64748b">Processing Fee</td><td style="padding:6px 16px;text-align:right;color:#0f172a">+$${order.paymentFee.toFixed(2)}</td></tr>` : ''}
         <tr style="border-top:2px solid #e2e8f0">
           <td style="padding:10px 16px 6px;font-weight:700;font-size:16px;color:#0f172a">Total</td>
           <td style="padding:10px 16px 6px;text-align:right;font-weight:700;font-size:16px;color:#0f172a">$${order.total.toFixed(2)}</td>
