@@ -345,10 +345,14 @@ export function OrderSuccessPage() {
               )}
               <div className="flex justify-between text-slate-600">
                 <span>Shipping</span>
-                <span className={order.shipping === 0 ? 'text-emerald-600 font-semibold' : ''}>
-                  {order.shipping === 0 ? 'FREE' : formatPrice(order.shipping)}
-                </span>
+                <span className="text-emerald-600 font-semibold">FREE</span>
               </div>
+              {order.shipping > 0 && (
+                <div className="flex justify-between text-slate-600">
+                  <span>Dispatch Center Fee</span>
+                  <span className="font-semibold">+{formatPrice(order.shipping)}</span>
+                </div>
+              )}
               <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-100">
                 <span>Total Paid</span>
                 <span>{formatPrice(order.total)}</span>
