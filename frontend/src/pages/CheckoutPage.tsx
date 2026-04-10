@@ -89,10 +89,10 @@ const SHIPPING_REGIONS = [
 type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
 
 const PAYMENT_METHODS = [
-  { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
-  { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, highlight: true  },
-  { id: 'card'     as const, label: 'Card Payment',   icon: '💳', desc: 'Standard pricing',  discount: 0,    highlight: false },
-  { id: 'paypal'   as const, label: 'PayPal',          icon: 'P', desc: 'Standard pricing',  discount: 0,    highlight: false },
+  { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, fee: 0,  highlight: true  },
+  { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, fee: 0,  highlight: true  },
+  { id: 'card'     as const, label: 'Card Payment',   icon: '💳', desc: '+$10 processing fee', discount: 0,  fee: 10, highlight: false },
+  { id: 'paypal'   as const, label: 'PayPal',          icon: 'P', desc: '+$10 processing fee', discount: 0,  fee: 10, highlight: false },
 ];
 
 /* ── Component ───────────────────────────────────────────────────── */
@@ -145,8 +145,9 @@ export function CheckoutPage() {
   const cryptoDiscount = couponDiscount > 0 ? 0 : subtotal * cryptoDiscountRate;
   const shipping = 0; // Always free
   const dispatchFee = SHIPPING_REGIONS.find(r => r.id === shippingRegion)?.fee ?? 0;
+  const paymentFee = paymentMethod?.fee ?? 0;
   const totalDiscount  = cryptoDiscount + couponDiscount;
-  const total          = subtotal - totalDiscount + dispatchFee;
+  const total          = subtotal - totalDiscount + dispatchFee + paymentFee;
 
   // State/province field config based on country
   const getStateConfig = () => {
@@ -494,6 +495,12 @@ export function CheckoutPage() {
                     <div className="flex justify-between text-sm text-slate-600">
                       <span>Dispatch Center Fee</span>
                       <span className="font-semibold text-slate-800">+${dispatchFee}</span>
+                    </div>
+                  )}
+                  {paymentFee > 0 && (
+                    <div className="flex justify-between text-sm text-slate-600">
+                      <span>Processing Fee</span>
+                      <span className="font-semibold text-slate-800">+${paymentFee}</span>
                     </div>
                   )}
                   <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-100">
