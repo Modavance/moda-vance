@@ -180,10 +180,11 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
             <div className="p-4 bg-slate-50 rounded-xl">
               <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Ship To</p>
               <p className="text-sm font-semibold text-slate-900">{order.shippingAddress.firstName} {order.shippingAddress.lastName}</p>
-              <p className="text-xs text-slate-500">{order.shippingAddress.street}</p>
-              <p className="text-xs text-slate-500">{order.shippingAddress.city}, {order.shippingAddress.state}</p>
-              <p className="text-xs text-slate-500">{order.shippingAddress.email}</p>
+              <p className="text-xs text-slate-500">{order.shippingAddress.street}{order.shippingAddress.apt ? `, ${order.shippingAddress.apt}` : ''}</p>
+              <p className="text-xs text-slate-500">{order.shippingAddress.city}{order.shippingAddress.state ? `, ${order.shippingAddress.state}` : ''}{order.shippingAddress.zip ? ` ${order.shippingAddress.zip}` : ''}</p>
               <p className="text-xs text-slate-500">{order.shippingAddress.country}</p>
+              <p className="text-xs text-slate-500">{order.shippingAddress.email}</p>
+              {order.shippingAddress.phone && <p className="text-xs text-slate-500">{order.shippingAddress.phone}</p>}
             </div>
             <div className="p-4 bg-slate-50 rounded-xl">
               <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Payment</p>
