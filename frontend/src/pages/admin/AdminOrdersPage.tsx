@@ -206,7 +206,7 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               )}
               <div className="mt-2 space-y-1 text-xs text-slate-500">
                 <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
-                {order.discount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount</span><span>−{formatPrice(order.discount)}</span></div>}
+                {order.discount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount{order.couponCode ? ` (${order.couponCode})` : ''}</span><span>−{formatPrice(order.discount)}</span></div>}
                 <div className="flex justify-between"><span>Dispatch fee</span><span className="font-semibold">{order.shipping === 0 ? 'FREE' : formatPrice(order.shipping)}</span></div>
                 <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-1"><span>Total</span><span>{formatPrice(order.total)}</span></div>
               </div>

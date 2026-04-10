@@ -57,6 +57,7 @@ export interface Order {
   total: number;
   shippingAddress: Address;
   shippingCenter?: string;
+  couponCode?: string;
   paymentMethod: PaymentMethod;
   trackingNumber?: string;
   estimatedDelivery?: Date;

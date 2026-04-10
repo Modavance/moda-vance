@@ -340,7 +340,7 @@ export function OrderSuccessPage() {
               <div className="flex justify-between text-slate-600"><span>Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
               {order.discount > 0 && (
                 <div className="flex justify-between text-emerald-600 font-medium">
-                  <span>Discount saved</span><span>−{formatPrice(order.discount)}</span>
+                  <span>Discount saved{order.couponCode ? ` (${order.couponCode})` : ''}</span><span>−{formatPrice(order.discount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-slate-600">
