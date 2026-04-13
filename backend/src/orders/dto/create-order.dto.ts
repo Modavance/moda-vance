@@ -24,6 +24,7 @@ export class CreateOrderDto {
   @IsOptional() @IsNumber() subtotal?: number;
   @IsOptional() @IsNumber() shipping?: number;
   @IsOptional() @IsNumber() discount?: number;
+  @IsOptional() @IsNumber() paymentFee?: number;
 
   @IsOptional()
   @IsString()

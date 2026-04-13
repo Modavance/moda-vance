@@ -73,7 +73,8 @@ export class OrdersService {
       const paymentDiscount = dto.couponCode ? 0 : subtotal * (PAYMENT_DISCOUNTS[dto.paymentMethod] ?? 0);
       const discount = couponDiscount + paymentDiscount;
       const shipping = dto.shipping ?? (subtotal >= 150 ? 0 : 9.99);
-      const total = subtotal - discount + shipping;
+      const paymentFee = dto.paymentFee ?? 0;
+      const total = subtotal - discount + shipping + paymentFee;
 
       const order = await tx.order.create({
         data: {
