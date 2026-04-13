@@ -102,13 +102,13 @@ function buildPaymentInstructions(s: Record<string, string>, total: number) {
       ],
     },
     bill: {
-      title: 'Complete Your Cash by Mail Payment',
+      title: 'Check Your Email for Payment Details',
       color: 'bg-slate-50 border-slate-200',
       steps: [
-        `Mail cash or a money order for $${total.toFixed(2)} to the address in your confirmation email.`,
-        'Please send payment within 48 hours to hold your order.',
-        'Your order will be processed once payment is received.',
-        'You\'ll receive a shipping confirmation email once it ships.',
+        'Payment instructions have been sent to your email address.',
+        'Please check your inbox and spam/junk folder.',
+        'Complete the payment within 48 hours to hold your order.',
+        'Your order will be processed once payment is confirmed.',
       ],
     },
   };
@@ -198,6 +198,7 @@ export function OrderSuccessPage() {
   }
 
   const currentStep = STATUS_WEIGHT[order.status];
+  const resolvedPaymentFee = order.paymentFee ?? (['card', 'paypal'].includes(order.paymentMethod) ? 10 : 0);
   const paymentInstructions = buildPaymentInstructions(settings, order.total);
   const instructions = paymentInstructions[order.paymentMethod as keyof typeof paymentInstructions]
     ?? paymentInstructions.bill;
@@ -353,10 +354,10 @@ export function OrderSuccessPage() {
                   <span className="font-semibold">+{formatPrice(order.shipping)}</span>
                 </div>
               )}
-              {order.paymentFee > 0 && (
+              {resolvedPaymentFee > 0 && (
                 <div className="flex justify-between text-slate-600">
                   <span>Processing Fee</span>
-                  <span className="font-semibold">+{formatPrice(order.paymentFee)}</span>
+                  <span className="font-semibold">+{formatPrice(resolvedPaymentFee)}</span>
                 </div>
               )}
               <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-100">

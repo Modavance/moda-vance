@@ -133,9 +133,9 @@ export class OrdersService {
           items: order.items.map(i => ({ productName: i.productName, quantity: i.quantity, price: i.price })),
           subtotal: order.subtotal,
           discount: order.discount,
-          couponCode: (order as any).couponCode ?? undefined,
+          couponCode: order.couponCode ?? undefined,
           dispatchFee: order.shipping,
-          paymentFee: (order as any).paymentFee ?? 0,
+          paymentFee: paymentFee,
           total: order.total,
           paymentMethod: order.paymentMethod,
         }).catch(() => {});
