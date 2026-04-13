@@ -207,7 +207,7 @@ function OrderDetailModal({ order, onClose, onRequestStatusChange }: {
               )}
               <div className="mt-2 space-y-1 text-xs text-slate-500">
                 <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
-                {order.discount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount{order.couponCode ? ` (${order.couponCode})` : ''}</span><span>−{formatPrice(order.discount)}</span></div>}
+                {order.discount > 0 && <div className="flex justify-between text-emerald-600"><span>Coupon discount{order.couponCode ? ` (${order.couponCode})` : ''}</span><span>−{formatPrice(order.discount)}</span></div>}
                 <div className="flex justify-between"><span>Shipping</span><span className="font-semibold text-emerald-600">FREE</span></div>
                 {order.shipping > 0 && <div className="flex justify-between"><span>Dispatch Center Fee</span><span className="font-semibold">+{formatPrice(order.shipping)}</span></div>}
                 {(order.paymentFee ?? (['card', 'paypal'].includes(order.paymentMethod) ? 10 : 0)) > 0 && <div className="flex justify-between"><span>Processing Fee</span><span className="font-semibold">+{formatPrice(order.paymentFee ?? 10)}</span></div>}
