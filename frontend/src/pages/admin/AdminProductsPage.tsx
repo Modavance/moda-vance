@@ -137,18 +137,18 @@ function ProductFormModal({ product, onClose, onSave }: {
     setError('');
     try {
       // Strip fields the backend DTO doesn't accept
-      const { ...payload } = form as Record<string, unknown>;
-      delete payload.rating;
-      delete payload.reviewCount;
-      const cleanVariants = (form.variants as Array<Record<string, unknown>>).map(
-        ({ id: _id, productId: _pid, ...v }) => v
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { rating: _rating, reviewCount: _rc, ...rest } = form;
+      const cleanVariants = form.variants.map(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ({ id: _id, ...v }) => ({ ...v, id: '' }) as ProductVariant
       );
       await onSave({
-        ...payload,
+        ...(rest as Partial<Product>),
         variants: cleanVariants,
         images: validImages,
         image: validImages[0] ?? '',
-      } as Parameters<typeof onSave>[0]);
+      });
       onClose();
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
