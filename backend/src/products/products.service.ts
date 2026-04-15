@@ -37,9 +37,16 @@ export class ProductsService {
   }
 
   async create(dto: CreateProductDto) {
-    const { variants, images, effects, ...rest } = dto;
+    const { variants, images, effects, rating, reviewCount, ...rest } = dto;
     const product = await this.prisma.product.create({
-      data: { ...rest, images: images as unknown as Prisma.InputJsonValue, effects: effects as unknown as Prisma.InputJsonValue, variants: { create: variants.map((v, i) => ({ ...v, sortOrder: v.sortOrder ?? i })) } },
+      data: {
+        ...rest,
+        ...(rating !== undefined && { rating }),
+        ...(reviewCount !== undefined && { reviewCount }),
+        images: images as unknown as Prisma.InputJsonValue,
+        effects: effects as unknown as Prisma.InputJsonValue,
+        variants: { create: variants.map((v, i) => { const { id: _id, productId: _pid, ...vData } = v; return { ...vData, sortOrder: vData.sortOrder ?? i }; }) },
+      },
       include: { variants: { orderBy: { sortOrder: 'asc' } } },
     });
     this.logger.log(`Product created: ${product.id}`);
@@ -48,10 +55,17 @@ export class ProductsService {
 
   async update(id: string, dto: UpdateProductDto) {
     await this.findById(id);
-    const { variants, images, effects, ...rest } = dto;
+    const { variants, images, effects, rating, reviewCount, ...rest } = dto;
     const product = await this.prisma.product.update({
       where: { id },
-      data: { ...rest, ...(images && { images: images as unknown as Prisma.InputJsonValue }), ...(effects && { effects: effects as unknown as Prisma.InputJsonValue }), ...(variants && { variants: { deleteMany: {}, create: variants.map((v, i) => ({ ...v, sortOrder: v.sortOrder ?? i })) } }) },
+      data: {
+        ...rest,
+        ...(rating !== undefined && { rating }),
+        ...(reviewCount !== undefined && { reviewCount }),
+        ...(images && { images: images as unknown as Prisma.InputJsonValue }),
+        ...(effects && { effects: effects as unknown as Prisma.InputJsonValue }),
+        ...(variants && { variants: { deleteMany: {}, create: variants.map((v, i) => { const { id: _id, productId: _pid, ...vData } = v; return { ...vData, sortOrder: vData.sortOrder ?? i }; }) } }),
+      },
       include: { variants: { orderBy: { sortOrder: 'asc' } } },
     });
     return this.castJsonFields(product);

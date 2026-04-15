@@ -189,8 +189,8 @@ Modafinil at 300mg provides the same mechanism — dopamine reuptake inhibition 
 
 **Quality Assurance**
 Manufactured in Sun Pharma's WHO-GMP and FDA-inspected facilities in India. Same rigorous quality standards as Modalert 200mg.`,
-    image: 'https://i.imgur.com/9g5ftDZ.png',
-    images: ['https://i.imgur.com/9g5ftDZ.png'],
+    image: 'https://i.imgur.com/HaRjkET.png',
+    images: ['https://i.imgur.com/HaRjkET.png'],
     variants: [
       { id: 'modasafe300-30', quantity: 30, price: 89, originalPrice: 100 },
       { id: 'modasafe300-50', quantity: 50, price: 119, originalPrice: 159 },
@@ -206,6 +206,7 @@ Manufactured in Sun Pharma's WHO-GMP and FDA-inspected facilities in India. Same
     badge: 'new',
     inStock: true,
     featured: false,
+    indiaOnly: true,
     createdAt: new Date('2024-06-01'),
   },
   {
@@ -250,6 +251,7 @@ Produced in HAB Pharmaceuticals' ISO 9001:2015 and WHO-GMP certified facilities,
     badge: 'new',
     inStock: true,
     featured: false,
+    indiaOnly: true,
     createdAt: new Date('2024-06-01'),
   },
   {
@@ -291,6 +293,7 @@ Manufactured by Sun Pharmaceuticals in WHO-GMP certified facilities to the same 
     badge: 'new',
     inStock: true,
     featured: false,
+    indiaOnly: true,
     createdAt: new Date('2024-06-01'),
   },
   {
@@ -335,6 +338,7 @@ HAB Pharmaceuticals operates ISO 9001:2015 certified, WHO-GMP compliant faciliti
     badge: 'new',
     inStock: true,
     featured: false,
+    indiaOnly: true,
     createdAt: new Date('2024-06-01'),
   },
   {

@@ -2,7 +2,7 @@ export interface Product {
   id: string;
   name: string;
   slug: string;
-  brand: 'Sun Pharma' | 'HAB Pharma';
+  brand: string;
   category: 'modafinil' | 'armodafinil' | 'mix';
   strength: string;
   pillsPerStrip: number;
@@ -19,6 +19,7 @@ export interface Product {
   badge?: 'bestseller' | 'new' | 'sale' | 'popular';
   inStock: boolean;
   featured: boolean;
+  indiaOnly?: boolean;
   createdAt: Date;
 }
 

@@ -3,9 +3,11 @@ import {
   IsArray, ValidateNested, ArrayMinSize, IsNumber, IsPositive, Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Brand, Category, ProductBadge } from '@prisma/client';
+import { Category, ProductBadge } from '@prisma/client';
 
 export class CreateVariantDto {
+  @IsOptional() @IsString() id?: string;
+  @IsOptional() @IsString() productId?: string;
   @IsInt() @IsPositive() quantity!: number;
   @IsNumber() @IsPositive() price!: number;
   @IsOptional() @IsNumber() originalPrice?: number;
@@ -17,7 +19,7 @@ export class CreateVariantDto {
 export class CreateProductDto {
   @IsString() name!: string;
   @IsString() slug!: string;
-  @IsEnum(Brand) brand!: Brand;
+  @IsString() brand!: string;
   @IsEnum(Category) category!: Category;
   @IsString() strength!: string;
   @IsInt() @IsPositive() pillsPerStrip!: number;
@@ -28,6 +30,8 @@ export class CreateProductDto {
   @IsArray() @IsString({ each: true }) effects!: string[];
   @IsString() ingredients!: string;
   @IsString() manufacturer!: string;
+  @IsOptional() @IsNumber() rating?: number;
+  @IsOptional() @IsInt() reviewCount?: number;
   @IsOptional() @IsEnum(ProductBadge) badge?: ProductBadge;
   @IsOptional() @IsBoolean() inStock?: boolean;
   @IsOptional() @IsBoolean() featured?: boolean;

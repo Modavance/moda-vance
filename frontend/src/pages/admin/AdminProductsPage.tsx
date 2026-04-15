@@ -115,7 +115,7 @@ function ProductFormModal({ product, onClose, onSave }: {
 }) {
   const [form, setForm] = useState({
     name:             product?.name             ?? '',
-    brand:            product?.brand            ?? 'Sun Pharma' as Product['brand'],
+    brand:            product?.brand            ?? '',
     category:         product?.category         ?? 'modafinil' as Product['category'],
     strength:         product?.strength         ?? '200mg',
     shortDescription: product?.shortDescription ?? '',
@@ -136,11 +136,19 @@ function ProductFormModal({ product, onClose, onSave }: {
     setSaving(true);
     setError('');
     try {
+      // Strip fields the backend DTO doesn't accept
+      const { ...payload } = form as Record<string, unknown>;
+      delete payload.rating;
+      delete payload.reviewCount;
+      const cleanVariants = (form.variants as Array<Record<string, unknown>>).map(
+        ({ id: _id, productId: _pid, ...v }) => v
+      );
       await onSave({
-        ...form,
+        ...payload,
+        variants: cleanVariants,
         images: validImages,
         image: validImages[0] ?? '',
-      });
+      } as Parameters<typeof onSave>[0]);
       onClose();
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
@@ -168,11 +176,9 @@ function ProductFormModal({ product, onClose, onSave }: {
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-slate-500 uppercase">Brand</label>
-              <select value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value as Product['brand'] })}
-                className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="Sun Pharma">Sun Pharma</option>
-                <option value="HAB Pharma">HAB Pharma</option>
-              </select>
+              <input value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })}
+                placeholder="e.g. Sun Pharma, HAB Pharma..."
+                className="border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-slate-500 uppercase">Category</label>
@@ -286,7 +292,7 @@ export function AdminProductsPage() {
         variants: data.variants ?? [{ id: 'v1', quantity: 100, price: 99 }],
         effects: [],
         ingredients: '',
-        manufacturer: data.brand ?? 'Sun Pharma',
+        manufacturer: data.brand ?? '',
         ...data,
       };
       await adminApi.post('/admin/products', newProduct);

@@ -103,7 +103,9 @@ export function CheckoutPage() {
   const notify = useNotificationStore();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [shippingRegion, setShippingRegion] = useState<ShippingRegion>('us');
+  const isIndiaOnly = items.some(item => item.product?.indiaOnly);
+  const availableRegions = isIndiaOnly ? SHIPPING_REGIONS.filter(r => r.id === 'india') : SHIPPING_REGIONS;
+  const [shippingRegion, setShippingRegion] = useState<ShippingRegion>(isIndiaOnly ? 'india' : 'us');
   const orderPlaced = useRef(false);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState('');
@@ -344,7 +346,7 @@ export function CheckoutPage() {
                 <h2 className="font-bold text-slate-900 text-lg mb-1">Dispatch Center</h2>
                 <p className="text-sm text-slate-500 mb-4">Select your region. A dispatch center fee is added based on the selected dispatch center.</p>
                 <div className="grid grid-cols-2 gap-3">
-                  {SHIPPING_REGIONS.map((r) => (
+                  {availableRegions.map((r) => (
                     <button
                       key={r.id}
                       type="button"

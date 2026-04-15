@@ -9,11 +9,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Brand {
-  SUN_PHARMA
-  HAB_PHARMA
-}
-
 enum Category {
   MODAFINIL
   ARMODAFINIL
@@ -68,7 +63,7 @@ model Product {
   id               String        @id @default(cuid())
   name             String
   slug             String        @unique
-  brand            Brand
+  brand            String
   category         Category
   strength         String
   pillsPerStrip    Int
