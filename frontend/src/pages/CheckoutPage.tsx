@@ -103,7 +103,8 @@ export function CheckoutPage() {
   const notify = useNotificationStore();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const isIndiaOnly = items.some(item => item.product?.indiaOnly);
+  const INDIA_ONLY_SLUGS = ['modasafe-300mg', 'modasmart-400mg', 'modasafe-a-250mg', 'artvigil-250mg'];
+  const isIndiaOnly = items.some(item => INDIA_ONLY_SLUGS.includes(item.product?.slug ?? ''));
   const availableRegions = isIndiaOnly ? SHIPPING_REGIONS.filter(r => r.id === 'india') : SHIPPING_REGIONS;
   const [shippingRegion, setShippingRegion] = useState<ShippingRegion>(isIndiaOnly ? 'india' : 'us');
   const orderPlaced = useRef(false);
