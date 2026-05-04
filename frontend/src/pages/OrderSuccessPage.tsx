@@ -67,27 +67,16 @@ const STATUS_WEIGHT: Record<OrderStatus, number> = {
 };
 
 function buildPaymentInstructions(s: Record<string, string>, total: number) {
-  const btcWallet = s['payment.bitcoin.wallet']  ?? '(wallet address will be in your confirmation email)';
-  const ethWallet = s['payment.ethereum.wallet'] ?? '(wallet address will be in your confirmation email)';
+  const usdtWallet = s['payment.usdt.wallet'] ?? '(wallet address will be in your confirmation email)';
 
   return {
-    bitcoin: {
-      title: 'Complete Your Bitcoin Payment',
-      color: 'bg-amber-50 border-amber-200',
+    usdt: {
+      title: 'Complete Your USDT Payment',
+      color: 'bg-emerald-50 border-emerald-200',
       steps: [
-        `Send exactly the BTC equivalent of $${total.toFixed(2)} USD to: ${btcWallet}`,
-        'Send payment from your Bitcoin wallet within 48 hours of placing your order.',
+        `Send exactly $${total.toFixed(2)} USDT (TRC-20) to: ${usdtWallet}`,
+        'Send payment from your USDT wallet within 48 hours of placing your order.',
         'Once confirmed on-chain (1 confirmation), your order ships automatically.',
-        'You\'ll receive a shipping notification with tracking number.',
-      ],
-    },
-    ethereum: {
-      title: 'Complete Your Ethereum Payment',
-      color: 'bg-purple-50 border-purple-200',
-      steps: [
-        `Send exactly the ETH equivalent of $${total.toFixed(2)} USD to: ${ethWallet}`,
-        'Send payment from your Ethereum wallet within 48 hours of placing your order.',
-        'Once confirmed (1 confirmation), your order ships automatically.',
         'You\'ll receive a shipping notification with tracking number.',
       ],
     },

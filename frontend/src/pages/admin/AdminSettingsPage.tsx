@@ -64,24 +64,12 @@ export function AdminSettingsPage() {
       {/* Bitcoin */}
       <div className="bg-white rounded-2xl border border-slate-100 p-6">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center"><span className="text-amber-600 font-bold text-sm">₿</span></div>
-          <div><h2 className="font-bold text-slate-900">Bitcoin (BTC)</h2><p className="text-xs text-slate-400">Wallet address shown in order confirmation emails</p></div>
+          <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center"><span className="text-emerald-600 font-bold text-sm">₮</span></div>
+          <div><h2 className="font-bold text-slate-900">USDT (TRC-20)</h2><p className="text-xs text-slate-400">Wallet address shown in order confirmation emails</p></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2"><Input label="Bitcoin Wallet Address" value={values['payment.bitcoin.wallet'] ?? ''} onChange={e => set('payment.bitcoin.wallet', e.target.value)} placeholder="bc1q..." /></div>
-          <Input label="Discount (%)" type="number" value={values['payment.bitcoin.discount'] ?? '15'} onChange={e => set('payment.bitcoin.discount', e.target.value)} />
-        </div>
-      </div>
-
-      {/* Ethereum */}
-      <div className="bg-white rounded-2xl border border-slate-100 p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 bg-purple-50 rounded-xl flex items-center justify-center"><span className="text-purple-600 font-bold text-sm">Ξ</span></div>
-          <div><h2 className="font-bold text-slate-900">Ethereum (ETH)</h2><p className="text-xs text-slate-400">Wallet address shown in order confirmation emails</p></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2"><Input label="Ethereum Wallet Address" value={values['payment.ethereum.wallet'] ?? ''} onChange={e => set('payment.ethereum.wallet', e.target.value)} placeholder="0x..." /></div>
-          <Input label="Discount (%)" type="number" value={values['payment.ethereum.discount'] ?? '15'} onChange={e => set('payment.ethereum.discount', e.target.value)} />
+          <div className="md:col-span-2"><Input label="USDT Wallet Address (TRC-20)" value={values['payment.usdt.wallet'] ?? ''} onChange={e => set('payment.usdt.wallet', e.target.value)} placeholder="T..." /></div>
+          <Input label="Discount (%)" type="number" value={values['payment.usdt.discount'] ?? '15'} onChange={e => set('payment.usdt.discount', e.target.value)} />
         </div>
       </div>
 

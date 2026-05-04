@@ -80,10 +80,9 @@ export class EmailService {
     paymentMethod: string;
   }) {
     const paymentLabel: Record<string, string> = {
-      bitcoin:  'Bitcoin (BTC) — 15% discount applied',
-      ethereum: 'Ethereum (ETH) — 15% discount applied',
-      card:     'Card Payment',
-      paypal:   'PayPal',
+      usdt:   'USDT (TRC-20) — 15% discount applied',
+      card:   'Card Payment',
+      paypal: 'PayPal',
     };
 
     await this.send(
@@ -120,18 +119,11 @@ export class EmailService {
         </tr>
       </table>
 
-      ${order.paymentMethod.toLowerCase() === 'bitcoin' ? `
-      <div style="margin-top:20px;padding:20px;background:#fffbeb;border-radius:10px;border:1px solid #fcd34d;font-size:14px">
-        <strong style="color:#92400e;font-size:15px">Payment: Bitcoin (BTC) — 15% discount applied</strong>
-        <p style="color:#78350f;margin:12px 0 6px">Please send exactly <strong>$${order.total.toFixed(2)} USD worth of BTC</strong> to the following address:</p>
-        <div style="background:#fff;border:1px solid #fcd34d;border-radius:8px;padding:12px;margin:10px 0;word-break:break-all;font-family:monospace;font-size:13px;color:#0f172a">33R6AM8AtSUQmS2HLaprrRAKyMX3hgSuyc</div>
-        <p style="color:#92400e;margin:8px 0 0;font-size:13px">⚠️ Please include your order number <strong>${order.id}</strong> in the transaction note if possible. Your order will be processed once payment is confirmed.</p>
-      </div>` : order.paymentMethod.toLowerCase() === 'ethereum' ? `
-      <div style="margin-top:20px;padding:20px;background:#f5f3ff;border-radius:10px;border:1px solid #a78bfa;font-size:14px">
-        <strong style="color:#4c1d95;font-size:15px">Payment: Ethereum (ETH) — 15% discount applied</strong>
-        <p style="color:#5b21b6;margin:12px 0 6px">Please send exactly <strong>$${order.total.toFixed(2)} USD worth of ETH</strong> to the following address:</p>
-        <div style="background:#fff;border:1px solid #a78bfa;border-radius:8px;padding:12px;margin:10px 0;word-break:break-all;font-family:monospace;font-size:13px;color:#0f172a">0x6ab56c1ce255f81e6414b34f7288a49f4fba51b0</div>
-        <p style="color:#4c1d95;margin:8px 0 0;font-size:13px">⚠️ Please include your order number <strong>${order.id}</strong> in the transaction note if possible. Your order will be processed once payment is confirmed.</p>
+      ${order.paymentMethod.toLowerCase() === 'usdt' ? `
+      <div style="margin-top:20px;padding:20px;background:#ecfdf5;border-radius:10px;border:1px solid #6ee7b7;font-size:14px">
+        <strong style="color:#065f46;font-size:15px">Payment: USDT (TRC-20) — 15% discount applied</strong>
+        <p style="color:#047857;margin:12px 0 6px">Please send exactly <strong>$${order.total.toFixed(2)} USDT (TRC-20)</strong> to the wallet address that will be provided in your confirmation email.</p>
+        <p style="color:#065f46;margin:8px 0 0;font-size:13px">⚠️ Please include your order number <strong>${order.id}</strong> in the transaction note if possible. Your order will be processed once payment is confirmed.</p>
       </div>` : `
       <div style="margin-top:20px;padding:16px;background:#eff6ff;border-radius:10px;border:1px solid #bfdbfe;font-size:14px">
         <strong style="color:#1e40af">Payment: ${paymentLabel[order.paymentMethod.toLowerCase()] ?? order.paymentMethod}</strong>

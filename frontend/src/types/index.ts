@@ -98,7 +98,7 @@ export interface Address {
   country: string;
 }
 
-export type PaymentMethod = 'bitcoin' | 'ethereum' | 'zelle' | 'bill';
+export type PaymentMethod = 'usdt' | 'zelle' | 'bill' | 'card' | 'paypal';
 
 export interface User {
   id: string;

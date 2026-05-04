@@ -524,10 +524,8 @@ const DEFAULT_SETTINGS: Setting[] = [
   { key: 'contact.email',            value: 'support@modavance.com' },
   { key: 'contact.response_time',    value: 'Within 24 hours, 7 days a week' },
   { key: 'contact.phone',            value: '' },
-  { key: 'payment.bitcoin.wallet',   value: '' },
-  { key: 'payment.bitcoin.discount', value: '15' },
-  { key: 'payment.ethereum.wallet',  value: '' },
-  { key: 'payment.ethereum.discount', value: '15' },
+  { key: 'payment.usdt.wallet',   value: '' },
+  { key: 'payment.usdt.discount', value: '15' },
 ];
 
 export async function seedDatabase() {

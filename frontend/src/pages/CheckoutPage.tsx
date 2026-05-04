@@ -70,7 +70,7 @@ const checkoutSchema = z.object({
   state:         z.string().min(1, 'Required'),
   zip:           z.string().min(2, 'Valid postal code required'),
   country:       z.string().min(2, 'Required'),
-  paymentMethod: z.enum(['bitcoin', 'ethereum', 'card', 'paypal']),
+  paymentMethod: z.enum(['usdt', 'card', 'paypal']),
   couponCode:    z.string().optional(),
   agreeTerms:    z.boolean().refine((v) => v === true, { message: 'You must agree to the terms' }),
 });
@@ -89,10 +89,9 @@ const SHIPPING_REGIONS = [
 type ShippingRegion = typeof SHIPPING_REGIONS[number]['id'];
 
 const PAYMENT_METHODS = [
-  { id: 'bitcoin'  as const, label: 'Bitcoin (BTC)',  icon: '₿', desc: 'Get 15% discount', discount: 0.15, fee: 0,  highlight: true  },
-  { id: 'ethereum' as const, label: 'Ethereum (ETH)', icon: 'Ξ', desc: 'Get 15% discount', discount: 0.15, fee: 0,  highlight: true  },
-  { id: 'card'     as const, label: 'Card Payment',   icon: '💳', desc: '+$10 processing fee', discount: 0,  fee: 10, highlight: false },
-  { id: 'paypal'   as const, label: 'PayPal',          icon: 'P', desc: '+$10 processing fee', discount: 0,  fee: 10, highlight: false },
+  { id: 'usdt'  as const, label: 'USDT (TRC-20)',  icon: '₮', desc: 'Get 15% discount', discount: 0.15, fee: 0,  highlight: true  },
+  { id: 'card'  as const, label: 'Card Payment',   icon: '💳', desc: '+$10 processing fee', discount: 0,  fee: 10, highlight: false },
+  { id: 'paypal' as const, label: 'PayPal',        icon: 'P',  desc: '+$10 processing fee', discount: 0,  fee: 10, highlight: false },
 ];
 
 /* ── Component ───────────────────────────────────────────────────── */
@@ -126,7 +125,7 @@ export function CheckoutPage() {
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
       country:       savedAddr?.country       ?? 'United States',
-      paymentMethod: 'bitcoin' as const,
+      paymentMethod: 'usdt' as const,
       firstName:     savedAddr?.firstName     ?? user?.firstName ?? '',
       lastName:      savedAddr?.lastName      ?? user?.lastName  ?? '',
       email:         savedAddr?.email         ?? user?.email     ?? '',
@@ -395,9 +394,9 @@ export function CheckoutPage() {
                   ))}
                 </div>
 
-                {(selectedPayment === 'bitcoin' || selectedPayment === 'ethereum') && (
-                  <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200 text-sm text-amber-800">
-                    <strong>Payment instructions</strong> will be sent to your email after order confirmation, along with the wallet address and exact amount.
+                {selectedPayment === 'usdt' && (
+                  <div className="mt-4 p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-sm text-emerald-800">
+                    <strong>USDT payment instructions</strong> will be sent to your email after order confirmation, along with the TRC-20 wallet address and exact amount.
                   </div>
                 )}
                 {selectedPayment === 'card' && (
